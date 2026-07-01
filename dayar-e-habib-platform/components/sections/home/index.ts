@@ -1,0 +1,9 @@
+export { Hero } from "./hero";
+export { Trust } from "./trust";
+export { FeaturedPackages } from "./featured-packages";
+export { JourneyTimeline } from "./journey-timeline";
+export { Services } from "./services";
+export { WhyChooseUs } from "./why-choose-us";
+export { Testimonials } from "./testimonials";
+export { Faq } from "./faq";
+export { Cta } from "./cta";
