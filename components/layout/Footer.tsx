@@ -144,7 +144,7 @@ export function Footer() {
               </div>
               <div className="pt-3 border-t border-white/5">
                 <span className="font-extrabold text-[#FCFAF5]/90 block text-[10px] tracking-wide text-accent uppercase">Flight Booking & Visa</span>
-                <a href="tel:+919820786726" className="hover:text-accent transition-colors font-medium block mt-1">+91 9820 786 726</a>
+                <a href="tel:+916230142301" className="hover:text-accent transition-colors font-medium block mt-1">+91 62301 42301</a>
               </div>
             </div>
           </div>

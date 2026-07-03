@@ -210,54 +210,58 @@ export const PACKAGES_DATA: Package[] = [
     slug: "classic-ziyarat",
     categorySlug: "ziyarat",
     destinationSlugs: ["baghdad"],
-    title: "Classic Ziyarat Package",
-    duration: "12 Days",
+    title: "11vi Sharif in Baghdad - Classic Ziyarat",
+    duration: "11 Days",
     highlights: [
-      "Visit the sacred Dome of Maula Ali (A.S.) in Najaf",
-      "Ziyarat at the holy Dome of Imam Hussain (A.S.) in Karbala",
-      "Visit the historic Dome of Sheikh Abdul Qadir Jilani in Baghdad",
-      "Guided historical tours led by experienced scholars"
+      "Celebrate 11vi Sharif in Baghdad",
+      "Najaf Al-Ashraf stay: 2 Nights",
+      "Baghdad stay: 6 Nights (Sadun, Atlas Baghdad)",
+      "Karbala stay: 2 Nights",
+      "Confirmed departures: 17th, 18th & 19th September (Mumbai departure)"
     ],
     availability: "Open",
-    priceMin: null,
-    priceCurrency: null,
-    imageUrl: null,
+    priceMin: 135000,
+    priceCurrency: "INR",
+    imageUrl: "/ziyarat-dome.png",
     videoUrl: null,
     galleryUrls: [],
     active: true,
     featured: true,
     displayOrder: 3,
     createdAt: "2026-06-30T12:00:00Z",
-    seoTitle: "Classic Ziyarat Tour Package | Dayar-E-Habib",
-    seoDescription: "Join our next scholar-guided Ziyarat group to Baghdad and holy shrines. Includes visa clearances, hotels and flight ticket support.",
+    seoTitle: "11vi Sharif Baghdad & Holy Ziyarat Package | Dayar-E-Habib",
+    seoDescription: "Join our 11-day confirmed Ziyarat group to celebrate 11vi Sharif in Baghdad. Includes 6 nights in Baghdad, 2 nights in Najaf, 2 nights in Karbala, and direct flights.",
     itinerary: [
-      { dayNumber: 1, title: "Arrive in Baghdad", description: "Airport pickup and check-in to Baghdad hotel." },
-      { dayNumber: 2, title: "Salutations to Sheikh Abdul Qadir Jilani", description: "Visit to the shrine of Ghaus-e-Azam, with educational lecture." },
-      { dayNumber: 4, title: "Najaf & Kufa Shrines", description: "Depart for Najaf. Visit Hazrat Ali (A.S.) shrine and historic Kufa mosques." },
-      { dayNumber: 7, title: "Karbala Holy Places", description: "Travel to Karbala Al-Mualla. Spend days visiting the shrines of Imam Hussain (A.S.) and Hazrat Abbas (A.S.)." },
-      { dayNumber: 12, title: "Baghdad Return & Flight", description: "Transfer back to Baghdad Airport for return flight." }
+      { dayNumber: 1, title: "Day 1-2 | Najaf Stay (2 Nights)", description: "Arrive at Najaf Airport. Check-in to your hotel. Perform ziyarat at the sacred Dome of Maula Ali (A.S.), Masjid Kufa, and Wadi-us-Salaam." },
+      { dayNumber: 3, title: "Day 3-8 | Baghdad - 11vi Sharif (6 Nights)", description: "Transfer to Baghdad. Check-in to Atlas Baghdad Hotel in Sadun (6-night stay). Perform devotions and celebrate 11vi Sharif at the sacred Dome of Ghaus-e-Azam Sheikh Abdul Qadir Jilani." },
+      { dayNumber: 9, title: "Day 9-10 | Karbala Al-Mualla (2 Nights)", description: "Transfer to Karbala. Visit the holy shrines of Imam Hussain (A.S.) and Hazrat Abbas (A.S.) with local scholar guidance." },
+      { dayNumber: 11, title: "Day 11 | Return Flight to Mumbai", description: "Transfer to Baghdad Airport. Board your direct flight by Iraqi Airways back to Mumbai." }
     ],
     inclusions: [
-      "Iraq Visa approval processing",
-      "Round-trip flight booking support",
-      "Ground security and private bus transfers",
-      "Hotel stays in Baghdad, Najaf, and Karbala",
-      "All daily meals (Breakfast, Lunch, Dinner)",
-      "Guide services led by historical scholars"
+      "Direct flight tickets by Iraqi Airways (Mumbai departure)",
+      "Iraq Electronic Visa processing approval",
+      "Mandatory Travel Insurance cover",
+      "Hotel stays (6 Nights Baghdad Sadun, 2 Nights Najaf, 2 Nights Karbala)",
+      "Full board Indian buffet meals (Breakfast, Lunch & Dinner)",
+      "Local group transfers in modern AC buses",
+      "Complimentary Travel Kit",
+      "Experienced guide & scholar theological coordination"
     ],
     exclusions: [
-      "Individual charity donations",
-      "Emergency medical bills not covered by travel health policies"
+      "Personal expenses, laundry, and local tips",
+      "Any additional excess baggage charges above airline allowance"
     ],
     hotels: [
-      { name: "Grand Baghdad Court", location: "Baghdad", rating: "4 Star", distance: "Close to holy shrines" },
-      { name: "Karbala Heritage Inn", location: "Karbala", rating: "4 Star", distance: "Walking distance to Haram boundaries" }
+      { name: "Atlas Baghdad Hotel", location: "Sadun, Baghdad", rating: "Premium Stay", distance: "6 Nights stay" },
+      { name: "Luxury Najaf Shrines Stay", location: "Najaf", rating: "4 Star", distance: "2 Nights stay" },
+      { name: "Karbala Holy Shrines stay", location: "Karbala", rating: "4 Star", distance: "2 Nights stay" }
     ],
     flights: [
-      { airline: "FlyDubai / Emirates", route: "Mumbai (BOM) - Baghdad (BGW) - Mumbai (BOM)", class: "Economy", details: "Connecting flights via Dubai" }
+      { airline: "Iraqi Airways", route: "Mumbai (BOM) - Baghdad (BGW) - Mumbai (BOM) [Direct Flight]", class: "Economy Class", details: "Confirmed departures: 17th, 18th, and 19th September" }
     ],
     faqs: [
-      { question: "Is it safe to travel for Ziyarat?", answer: "Yes, our groups travel with private security coordinates and adhere strictly to vetted safe travel lanes." }
+      { question: "What airlines are used for the Ziyarat package?", answer: "We use direct flights operated by Iraqi Airways from Mumbai to Baghdad." },
+      { question: "Is visa processing included in the package cost?", answer: "Yes, the package cost of 1,35,000 INR includes the Iraq visa approval processing, travel insurance, and all board meals." }
     ]
   }
 ];

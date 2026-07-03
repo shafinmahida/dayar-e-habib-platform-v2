@@ -31,8 +31,8 @@ export const CONTACT_DATA = {
       role: "Hajj & Ziyarat Inquiry",
     },
     flights: {
-      phone: "+91 98207 86726",
-      role: "Flight Booking Dept",
+      phone: "+91 62301 42301",
+      role: "Flight Booking & Visa Dept",
     },
     umrah: {
       phone: "+91 98927 34480",

@@ -153,7 +153,7 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
                       <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[9px] font-bold tracking-widest text-muted-foreground uppercase pt-1">
                         <span className="flex items-center gap-1.5">
                           <MapPin className="size-3 text-accent" />
-                          <span>{pkg.slug === "classic-ziyarat" ? "Baghdad & Karbala" : destinationNames}</span>
+                          <span>{pkg.slug === "classic-ziyarat" ? "Baghdad, Najaf & Karbala" : destinationNames}</span>
                         </span>
                         <span className="flex items-center gap-1.5">
                           <Calendar className="size-3 text-accent" />

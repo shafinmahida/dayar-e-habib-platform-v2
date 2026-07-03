@@ -33,7 +33,7 @@ export const DEPARTMENTS_DATA: Department[] = [
     name: "Logistics & Flight Bookings",
     description: "Dedicated visa processing, flight bookings, and hotel booking support.",
     email: "dhtinfo@gmail.com",
-    phone: "+91 98207 86726", // Khalil Bumedia
+    phone: "+91 62301 42301", // Flight Booking & Visa
     active: true,
     displayOrder: 4,
   },
