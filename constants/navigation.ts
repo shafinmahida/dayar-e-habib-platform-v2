@@ -17,17 +17,15 @@ export type NavLink = {
 
 export const NAV_LINKS: NavLink[] = [
   { label: "Home", href: ROUTES.home },
-  { label: "About", href: ROUTES.about },
-  { label: "Hajj", href: ROUTES.hajj },
-  { label: "Umrah", href: ROUTES.umrah },
-  { label: "Tours", href: ROUTES.tours },
-  { label: "Visa", href: ROUTES.visa },
-  { label: "Hotels", href: ROUTES.hotels },
+  { label: "Hajj Packages", href: ROUTES.hajj },
+  { label: "Umrah Packages", href: ROUTES.umrah },
+  { label: "Ziyarat Packages", href: ROUTES.tours },
   { label: "Gallery", href: ROUTES.gallery },
+  { label: "About", href: ROUTES.about },
   { label: "Contact", href: ROUTES.contact },
 ];
 
 export const CTA_BOOK_NOW = {
-  label: "Book Now",
+  label: "Contact Us",
   href: ROUTES.contact,
 } as const;

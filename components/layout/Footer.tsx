@@ -54,18 +54,18 @@ export function Footer() {
   const primaryOffice = CONTACT_DATA.offices.find(o => o.active) || CONTACT_DATA.offices[0];
 
   return (
-    <footer className="bg-[#1F1A16] text-[#FCFAF5] border-t border-border/5">
+    <footer className="bg-[#1E1A16] text-[#FCFAF5] border-t border-white/5">
       <Container className="py-20 lg:py-24">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-12">
           
-          {/* Column 1: Logo & Branding */}
-          <div className="space-y-8 sm:col-span-2 lg:col-span-4">
-            <Link href="/" className="inline-block">
+          {/* Column 1: Logo & Branding (Expanded to col-span-4 to fit wide logo without overlap) */}
+          <div className="space-y-6 sm:col-span-2 lg:col-span-4">
+            <Link href="/" className="inline-block hover:scale-[1.02] transition-transform duration-300">
               {/* Force white/light-ivory color custom property for logo in dark footer */}
-              <Logo className="[--logo-primary:#FCFAF5] h-11 w-auto text-[#FCFAF5]" />
+              <Logo className="[--logo-primary:#FCFAF5] h-18 lg:h-22 w-auto text-[#FCFAF5]" />
             </Link>
-            <p className="max-w-sm text-sm leading-relaxed text-primary-foreground/70">
-              Serving pilgrims since 1986 with trust, transparency, and dedicated personal care.
+            <p className="max-w-xs text-xs sm:text-sm leading-relaxed text-[#FCFAF5]/70">
+              Serving pilgrims since 1986 with trust, transparency, and dedicated personal care. Guided by years of experience and theological excellence.
             </p>
             <div className="flex items-center gap-2.5">
               {SOCIALS_DATA.filter(s => s.active).map(({ label, url, platform }) => {
@@ -77,7 +77,7 @@ export function Footer() {
                     key={label}
                     href={url}
                     aria-label={label}
-                    className="inline-flex size-9 items-center justify-center rounded-md border border-primary-foreground/15 text-primary-foreground/75 transition-all duration-200 hover:border-primary-foreground/30 hover:bg-primary-foreground/5 hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground/30"
+                    className="inline-flex size-9 items-center justify-center rounded-none border border-white/10 text-[#FCFAF5]/70 transition-all duration-300 hover:border-accent hover:bg-accent hover:text-white focus-visible:outline-none"
                   >
                     <Icon className="size-4 shrink-0" aria-hidden="true" />
                   </Link>
@@ -86,94 +86,112 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Our Services */}
-          <div className="lg:col-span-2 space-y-5">
-            <h3 className="font-heading text-xs font-semibold tracking-widest text-primary-foreground/55 uppercase">
-              Our Services
-            </h3>
-            <ul role="list" className="space-y-3.5">
-              {SERVICES_DATA.filter(s => s.active).map((service) => (
-                <li key={service.slug}>
-                  <Link
-                    href={`/services/${service.slug}`}
-                    className="text-sm text-primary-foreground/75 transition-colors hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground/30 rounded-sm"
-                  >
-                    {service.title}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+          {/* Column 2: Navigation & Services Stack (Sized to col-span-2) */}
+          <div className="lg:col-span-2 space-y-8">
+            <div className="space-y-4">
+              <h3 className="font-heading text-[9px] font-black tracking-widest text-[#FCFAF5]/50 uppercase">
+                Our Services
+              </h3>
+              <ul role="list" className="space-y-2.5">
+                {SERVICES_DATA.filter(s => s.active).map((service) => (
+                  <li key={service.slug}>
+                    <Link
+                      href={`/tours/${service.slug === 'ziyarat' ? 'classic-ziyarat' : service.slug === 'hajj' ? 'premium-hajj' : 'deluxe-umrah'}`}
+                      className="text-xs text-[#FCFAF5]/85 transition-colors hover:text-accent focus-visible:outline-none"
+                    >
+                      {service.title === "Holy Places Ziyarat" ? "Ziyarat Tours" : service.title}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
+            <div className="space-y-4">
+              <h3 className="font-heading text-[9px] font-black tracking-widest text-[#FCFAF5]/50 uppercase">
+                Quick Links
+              </h3>
+              <ul role="list" className="space-y-2.5">
+                {[
+                  { label: "About Us", href: "/about" },
+                  { label: "Our Packages", href: "/tours" },
+                  { label: "Gallery", href: "/gallery" },
+                  { label: "Contact Us", href: "/contact" },
+                ].map((link) => (
+                  <li key={link.label}>
+                    <Link
+                      href={link.href}
+                      className="text-xs text-[#FCFAF5]/85 transition-colors hover:text-accent focus-visible:outline-none"
+                    >
+                      {link.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </div>
           </div>
 
-          {/* Column 3: Quick Links */}
-          <div className="lg:col-span-2 space-y-5">
-            <h3 className="font-heading text-xs font-semibold tracking-widest text-primary-foreground/55 uppercase">
-              Quick Links
+          {/* Column 3: Dedicated Coordinator Specialists (col-span-3) */}
+          <div className="lg:col-span-3 space-y-5">
+            <h3 className="font-heading text-[9px] font-black tracking-widest text-[#FCFAF5]/50 uppercase">
+              Dedicated Inquiries
             </h3>
-            <ul role="list" className="space-y-3.5">
-              {[
-                { label: "About Us", href: "/about" },
-                { label: "Our Packages", href: "/tours" },
-                { label: "Gallery", href: "/gallery" },
-                { label: "Travel Guide", href: "/contact" },
-                { label: "FAQs", href: "/contact#faq" },
-                { label: "Contact Us", href: "/contact" },
-              ].map((link) => (
-                <li key={link.label}>
-                  <Link
-                    href={link.href}
-                    className="text-sm text-primary-foreground/75 transition-colors hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground/30 rounded-sm"
-                  >
-                    {link.label}
-                  </Link>
-                </li>
-              ))}
-            </ul>
+            <div className="space-y-4 text-xs leading-relaxed text-[#FCFAF5]/70">
+              <div>
+                <span className="font-extrabold text-[#FCFAF5]/90 block text-[10px] tracking-wide text-accent uppercase">Hajj, Umrah & Ziyarat</span>
+                <div className="space-y-1 mt-1">
+                  <a href="tel:+919819399555" className="hover:text-accent transition-colors font-medium block">+91 98193 99555</a>
+                  <a href="tel:+919892734480" className="hover:text-accent transition-colors font-medium block">+91 98927 34480</a>
+                </div>
+              </div>
+              <div className="pt-3 border-t border-white/5">
+                <span className="font-extrabold text-[#FCFAF5]/90 block text-[10px] tracking-wide text-accent uppercase">Flight Booking & Visa</span>
+                <a href="tel:+919820786726" className="hover:text-accent transition-colors font-medium block mt-1">+91 9820 786 726</a>
+              </div>
+            </div>
           </div>
 
           {/* Column 4: Contact Us */}
-          <div className="space-y-5 sm:col-span-2 lg:col-span-4">
-            <h3 className="font-heading text-xs font-semibold tracking-widest text-primary-foreground/55 uppercase">
+          <div className="lg:col-span-3 space-y-5">
+            <h3 className="font-heading text-[9px] font-black tracking-widest text-[#FCFAF5]/50 uppercase">
               Contact Us
             </h3>
             <ul role="list" className="space-y-4">
               {primaryOffice && (
-                <li className="flex items-start gap-3.5 text-sm text-primary-foreground/70">
+                <li className="flex items-start gap-3.5 text-xs text-[#FCFAF5]/70">
                   <MapPin
-                    className="mt-0.5 size-4 shrink-0 text-[#FAF9F6]/50"
+                    className="mt-0.5 size-4 shrink-0 text-accent"
                     aria-hidden="true"
                   />
                   <address className="not-italic leading-relaxed">{primaryOffice.address}</address>
                 </li>
               )}
-              <li className="flex items-start gap-3.5 text-sm text-primary-foreground/70">
+              <li className="flex items-start gap-3.5 text-xs text-[#FCFAF5]/70">
                 <Phone
-                  className="mt-0.5 size-4 shrink-0 text-[#FAF9F6]/50"
+                  className="mt-0.5 size-4 shrink-0 text-accent"
                   aria-hidden="true"
                 />
                 <a
                   href={`tel:${CONTACT_DATA.primaryPhone.replace(/\s/g, "")}`}
-                  className="transition-colors hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground/30 rounded-sm"
+                  className="transition-colors hover:text-accent focus-visible:outline-none"
                 >
                   {CONTACT_DATA.primaryPhone}
                 </a>
               </li>
-              <li className="flex items-start gap-3.5 text-sm text-primary-foreground/70">
+              <li className="flex items-start gap-3.5 text-xs text-[#FCFAF5]/70">
                 <Mail
-                  className="mt-0.5 size-4 shrink-0 text-[#FAF9F6]/50"
+                  className="mt-0.5 size-4 shrink-0 text-accent"
                   aria-hidden="true"
                 />
                 <a
                   href={`mailto:${CONTACT_DATA.primaryEmail}`}
-                  className="transition-colors hover:text-primary-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary-foreground/30 rounded-sm"
+                  className="transition-colors hover:text-accent focus-visible:outline-none"
                 >
                   {CONTACT_DATA.primaryEmail}
                 </a>
               </li>
               {primaryOffice?.workingHours && (
-                <li className="flex items-start gap-3.5 text-sm text-primary-foreground/70">
+                <li className="flex items-start gap-3.5 text-xs text-[#FCFAF5]/70">
                   <Clock
-                    className="mt-0.5 size-4 shrink-0 text-[#FAF9F6]/50"
+                    className="mt-0.5 size-4 shrink-0 text-accent"
                     aria-hidden="true"
                   />
                   <span>{primaryOffice.workingHours}</span>
@@ -186,15 +204,15 @@ export function Footer() {
       </Container>
 
       {/* Copyright Footer Bottom Bar */}
-      <div className="border-t border-border/5 bg-[#1F1A16]/50 py-8">
+      <div className="border-t border-white/5 bg-[#1E1A16]/40 py-8">
         <Container className="flex flex-col items-center justify-between gap-4 sm:flex-row">
-          <p className="text-xs text-primary-foreground/50">
+          <p className="text-xs text-[#FCFAF5]/40">
             © {currentYear} {SITE_NAME}. All Rights Reserved.
           </p>
-          <div className="flex gap-4 text-xs text-primary-foreground/50">
-            <Link href="/contact" className="hover:text-primary-foreground/80 transition-colors">Privacy Policy</Link>
+          <div className="flex gap-4 text-xs text-[#FCFAF5]/40">
+            <Link href="/contact" className="hover:text-accent transition-colors">Privacy Policy</Link>
             <span>|</span>
-            <Link href="/contact" className="hover:text-primary-foreground/80 transition-colors">Terms & Conditions</Link>
+            <Link href="/contact" className="hover:text-accent transition-colors">Terms & Conditions</Link>
           </div>
         </Container>
       </div>

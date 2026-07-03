@@ -9,54 +9,63 @@ import { COMPANY_DATA } from "@/constants/company";
 
 export function Hero() {
   return (
-    <section className="relative overflow-hidden bg-background min-h-[85vh] lg:min-h-[92vh] flex items-center border-b border-border pb-16 lg:pb-0">
-      {/* Soft radial backdrop canvas glow */}
+    <section className="relative overflow-hidden bg-background flex items-center border-b border-border/20 py-16 lg:py-24">
+      {/* Soft atmospheric gradient */}
       <div 
-        className="absolute inset-0 -z-10 bg-[radial-gradient(ellipse_75%_65%_at_50%_15%,rgba(133,105,54,0.045)_0%,transparent_90%)]" 
+        className="absolute inset-0 -z-10 bg-[radial-gradient(circle_at_70%_20%,rgba(138,106,54,0.065)_0%,transparent_70%)]" 
       />
       
-      <Container className="py-20 lg:py-0">
-        <div className="grid gap-16 lg:grid-cols-12 lg:items-center">
-          {/* Left Text Column - Luxury Editorial Proportions */}
-          <div className="flex flex-col items-start text-left lg:col-span-7 xl:col-span-6 space-y-10">
-            
-            <div className="text-[10px] font-extrabold tracking-[0.3em] text-accent uppercase">
-              Established {COMPANY_DATA.establishedYear} — Serving Pilgrims
+      <Container className="w-full">
+        <div className="grid gap-12 lg:grid-cols-12 items-center">
+          {/* Left Panel: Narrative Intro */}
+          <div className="lg:col-span-6 xl:col-span-6 space-y-8 flex flex-col justify-center text-left">
+            <div className="inline-flex items-center gap-2.5 rounded-full border border-[#8A6A36]/20 bg-[#F2EBDB]/60 px-4 py-1.5 text-[8.5px] font-black tracking-widest text-[#8A6A36] uppercase w-fit select-none">
+              <span className="relative flex h-1.5 w-1.5">
+                <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent"></span>
+              </span>
+              <span>Serving Pilgrims Since 1986</span>
             </div>
 
-            <h1 className="font-heading text-5xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground leading-[1.05] max-w-lg">
-              A Heritage <br />
-              of Faith. <br />
-              <span className="text-muted-foreground font-normal italic">Guided by Trust.</span>
-            </h1>
+            {/* Headline */}
+            <div className="space-y-4">
+              <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground leading-[1.08] max-w-xl">
+                A Sacred <br />
+                Journey. <br />
+                <span className="text-muted-foreground/80 font-normal italic font-serif">Guided by Faith.</span>
+              </h1>
+              <p className="max-w-md text-xs sm:text-sm leading-relaxed text-muted-foreground/90 font-medium">
+                Established in {COMPANY_DATA.establishedYear}, Dayar-E-Habib orchestrates premium, scholar-led Hajj, Umrah, and Ziyarat experiences, focusing on deep personal devotion and comfort.
+              </p>
+            </div>
 
-            <p className="max-w-md text-sm sm:text-base leading-relaxed text-muted-foreground font-medium">
-              We specialize in premium, scholar-led Hajj, Umrah, and Ziyarat journeys, prioritizing quiet personal devotion, comfort, and transparent care.
-            </p>
-
-            <div className="flex flex-col sm:flex-row gap-5 w-full sm:w-auto pt-4">
+            {/* CTAs */}
+            <div className="flex flex-col sm:flex-row gap-4 w-full sm:w-auto">
               <Link
                 href="/tours"
                 className={cn(
                   buttonVariants({ variant: "default", size: "lg" }),
-                  "h-12 px-8 font-bold tracking-widest uppercase text-[9px] flex items-center justify-center gap-2"
+                  "h-14 px-9 font-extrabold tracking-[0.25em] uppercase text-[9px] flex items-center justify-center gap-2.5",
+                  "bg-primary text-primary-foreground hover:bg-accent transition-all duration-300 rounded-none shadow-none"
                 )}
               >
-                <span>Explore Journeys</span>
+                <span>View Offerings</span>
                 <ArrowRight className="size-3.5" />
               </Link>
               <Link
                 href="/contact"
                 className={cn(
                   buttonVariants({ variant: "outline", size: "lg" }),
-                  "h-12 px-8 font-bold tracking-widest uppercase text-[9px] flex items-center justify-center"
+                  "h-14 px-9 font-extrabold tracking-[0.25em] uppercase text-[9px] flex items-center justify-center",
+                  "border border-border bg-transparent hover:bg-card/85 text-foreground transition-all duration-300 rounded-none"
                 )}
               >
                 Connect with Advisor
               </Link>
             </div>
-            
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-10 border-t border-border w-full text-[9px] font-extrabold tracking-[0.2em] text-muted-foreground uppercase">
+
+            {/* Registrations List */}
+            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-8 border-t border-border/40 w-full text-[9px] font-black tracking-[0.2em] text-muted-foreground/80 uppercase">
               {COMPANY_DATA.registrations.map((reg) => (
                 <div key={reg} className="flex items-center gap-2">
                   <span className="size-1 rounded-full bg-accent" aria-hidden="true" />
@@ -66,30 +75,32 @@ export function Hero() {
             </div>
           </div>
 
-          {/* Right Column: Premium Photography Frame with Arched Portals & Video loop indicator */}
-          <div className="relative lg:col-span-5 xl:col-span-6 w-full flex items-center justify-center lg:justify-end">
-            <div className="relative w-full aspect-[4/5] sm:aspect-square lg:aspect-[4/5] max-w-[460px] overflow-hidden rounded-arch-t border border-border bg-card p-3 shadow-[0_12px_40px_rgba(0,0,0,0.02)]">
-              {/* Luxury sepia wash overlay */}
-              <div className="absolute inset-0 bg-[#856936]/4 mix-blend-color z-10 pointer-events-none" />
-              <div className="absolute inset-0 bg-gradient-to-t from-background/20 to-transparent z-10 pointer-events-none" />
-              
-              {/* Quiet Media Looping Indicator Badge */}
-              <div className="absolute bottom-6 left-6 z-20 flex items-center gap-2 rounded-xs bg-[#1F1A16]/85 px-3 py-1.5 text-[8px] font-extrabold tracking-widest text-[#FCFAF5] uppercase backdrop-blur-xs select-none">
-                <span className="relative flex h-1.5 w-1.5">
-                  <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
-                  <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent"></span>
-                </span>
-                <span>Masjid Al-Haram — Live</span>
-              </div>
+          {/* Right Panel: Portrait Editorial Frame */}
+          <div className="relative lg:col-span-6 xl:col-span-6 w-full flex items-center justify-center lg:justify-end">
+            <div className="relative w-full aspect-[4/5] max-w-[460px] overflow-hidden rounded-none border border-border bg-card p-3 shadow-[0_24px_60px_rgba(0,0,0,0.02)] group transition-all duration-700 hover:border-accent/40">
+              <div className="relative w-full h-full overflow-hidden border border-border/30 rounded-none bg-muted">
+                {/* Luxury tint overlay */}
+                <div className="absolute inset-0 bg-[#8A6A36]/3 mix-blend-color z-10 pointer-events-none" />
+                <div className="absolute inset-0 bg-gradient-to-t from-[#1E1A16]/20 via-transparent to-transparent z-10 pointer-events-none" />
+                
+                {/* Live Status Badge */}
+                <div className="absolute bottom-6 left-6 z-20 flex items-center gap-2.5 rounded-none bg-[#1E1A16]/90 px-4 py-2 text-[8px] font-black tracking-[0.25em] text-[#FCFAF5] uppercase select-none border border-border/10">
+                  <span className="relative flex h-1.5 w-1.5">
+                    <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
+                    <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent"></span>
+                  </span>
+                  <span>Masjid Al-Haram — Golden Hour</span>
+                </div>
 
-              <Image
-                src="/makkah-hero.png"
-                alt="Kaaba at Masjid Al-Haram in Makkah, framed in an understated Islamic arch shape"
-                fill
-                sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                className="object-cover rounded-arch-t transition-transform duration-700 ease-out hover:scale-102"
-                priority
-              />
+                <Image
+                  src="/kaaba-sunset.png"
+                  alt="Kaaba at Masjid Al-Haram in Makkah, framed in an understated modern gallery frame"
+                  fill
+                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+                  className="object-cover rounded-none transition-transform duration-[1200ms] ease-out group-hover:scale-104"
+                  priority
+                />
+              </div>
             </div>
           </div>
         </div>

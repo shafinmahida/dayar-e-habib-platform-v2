@@ -5,6 +5,7 @@ import {
   Footer,
   Navbar,
 } from "@/components/layout";
+import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/constants/site";
 import { fontBody, fontHeading, fontSerif } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
@@ -35,6 +36,7 @@ export default function RootLayout({
         <Navbar />
         <main className="flex-1">{children}</main>
         <Footer />
+        <WhatsAppFloat />
       </body>
     </html>
   );

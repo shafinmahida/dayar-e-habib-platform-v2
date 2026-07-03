@@ -7,7 +7,6 @@ import {
   SheetHeader,
   SheetTitle,
 } from "@/components/ui/sheet";
-import { BookNowButton } from "@/components/layout/BookNowButton";
 import { Logo } from "@/components/layout/Logo";
 import { NavLinks } from "@/components/layout/NavLinks";
 import type { MobileNavProps } from "@/types/navigation";
@@ -42,10 +41,6 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
             onNavigate={handleNavigate}
           />
         </nav>
-
-        <div className="mt-auto border-t border-border p-6 bg-secondary/20">
-          <BookNowButton className="w-full h-11" onNavigate={handleNavigate} />
-        </div>
       </SheetContent>
     </Sheet>
   );

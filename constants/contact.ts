@@ -1,14 +1,18 @@
-import type { ContactInfo } from "@/types/contact";
+export interface SpecialistInfo {
+  name: string;
+  phone: string;
+  role: string;
+}
 
-export const CONTACT_DATA: ContactInfo = {
-  primaryPhone: "+91 98927 34480",
+export const CONTACT_DATA = {
+  primaryPhone: "+91 70457 07070",
   primaryEmail: "dhtinfo@gmail.com",
   offices: [
     {
       slug: "mumbai-hq",
       name: "Head Office — Mumbai",
       address: "265 S.V.P. Road, Karim Mansion, Shop 1, Opp. Khoja Kabarastan, Mumbai - 400009, India",
-      phone: "+91 98927 34480",
+      phone: "+91 70457 07070",
       email: "dhtinfo@gmail.com",
       mapLink: null,
       workingHours: "10:00 AM - 7:00 PM (Mon - Sat)",
@@ -16,4 +20,23 @@ export const CONTACT_DATA: ContactInfo = {
       displayOrder: 1,
     },
   ],
+  specialists: {
+    brand: {
+      name: "Dayar-E-Habib",
+      phone: "+91 70457 07070",
+      role: "General & WhatsApp Coordinator",
+    },
+    hajj: {
+      phone: "+91 98193 99555",
+      role: "Hajj & Ziyarat Inquiry",
+    },
+    flights: {
+      phone: "+91 98207 86726",
+      role: "Flight Booking Dept",
+    },
+    umrah: {
+      phone: "+91 98927 34480",
+      role: "Umrah & Visa Inquiry",
+    },
+  },
 };

@@ -8,7 +8,7 @@ export function Logo({ className, variant = "full" }: LogoProps) {
       <svg
         xmlns="http://www.w3.org/2000/svg"
         viewBox="300 1100 2150 3950"
-        className={cn("h-16 md:h-20 w-auto shrink-0 select-none", className)}
+        className={cn("h-12 w-auto shrink-0 select-none", className)}
         fillRule="evenodd"
         clipRule="evenodd"
         aria-label={`${BRAND_NAME} Mark`}
@@ -38,7 +38,7 @@ export function Logo({ className, variant = "full" }: LogoProps) {
     <svg
       xmlns="http://www.w3.org/2000/svg"
       viewBox="0 0 25400 5926.66"
-      className={cn("h-16 md:h-20 lg:h-24 w-auto shrink-0 select-none", className)}
+      className={cn("h-12 w-auto shrink-0 select-none", className)}
       fillRule="evenodd"
       clipRule="evenodd"
       aria-label={`${BRAND_NAME} Logo`}
