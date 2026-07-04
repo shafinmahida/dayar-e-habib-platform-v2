@@ -46,27 +46,25 @@ export const PACKAGES_DATA: Package[] = [
       { dayNumber: 38, title: "Jun-16 | Madina Departure", description: "Final check out, transfer to airport for return flight." }
     ],
     inclusions: [
-      "Hajj Visa & Health Insurance clearance",
-      "Round-trip airfare ticket options with premium carriers",
-      "All ground transfers in modern, air-conditioned buses",
-      "Accommodations at pre-selected hotels (close to the Haram bounds)",
-      "Dedicated air-conditioned camps in Mina (KSA Ministry certified)",
-      "Daily buffet meals (breakfast, lunch, and dinner)",
-      "Scholar seminars and daily guide coordination",
-      "Zamzam water and Hajj gift kits"
+      "Accommodation in Star Hotels at Both Holy Places",
+      "Buffet Breakfast, Lunch and Dinner",
+      "Return Air Fare (By Convenient Airlines)",
+      "Air Conditioned Road Transportation in Saudi Arabia",
+      "Moulim Fees",
+      "Complimentary Laundry Service",
+      "5 Liters ZAM ZAM Can",
+      "Travel Kit"
     ],
     exclusions: [
-      "Personal expenses, laundry, and extra room services",
-      "Excess baggage charges above airline allowances",
-      "Optional private tour excursions during rest days",
-      "Any additional travel permits outside Saudi Arabia"
+      "Cost of Qurbani",
+      "Transportation Cost of Tawaf-e-Ziarah",
+      "Excess baggage charges above standard limits"
     ],
     hotels: [
-      { name: "Accommodation in Standard Hotel in Madina", location: "Madinah at Markaziya", rating: "Standard Hotel", distance: "25th Zil Qada to 4th Zil Haj" },
-      { name: "Accommodation in Apartment at Azizia/Kakia", location: "Makkah at Azizia/Kakia", rating: "Apartment Building", distance: "4th Zil Haj to 15th Zil Haj" }
+      { name: "Accommodation in Star Hotels", location: "Makkah & Madinah", rating: "Standard Quality", distance: "Convenient distances to Holy Places" }
     ],
     flights: [
-      { airline: "Saudi Arabian Airlines / Direct Carriers", route: "Mumbai (BOM) - Jeddah (JED) / Madinah (MED) - Mumbai (BOM)", class: "Economy Class", details: "Direct flights with flexible check-in support" }
+      { airline: "Convenient Airlines", route: "Mumbai (BOM) - Saudi Arabia (JED/MED) - Mumbai (BOM)", class: "Economy Class", details: "Inflight meals and baggage included" }
     ],
     faqs: [
       { question: "What are the required documents for booking Hajj?", answer: "You must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card." },
@@ -122,27 +120,25 @@ export const PACKAGES_DATA: Package[] = [
       { dayNumber: 20, title: "May-21 | Azizya Day-20", description: "Farewell Tawaf at Haram, transfer to Jeddah Airport for return flight." }
     ],
     inclusions: [
-      "Hajj Visa & Health Insurance clearance",
-      "Round-trip airfare ticket options with premium carriers",
-      "All ground transfers in modern, air-conditioned buses",
-      "Accommodations at pre-selected hotels (close to the Haram bounds)",
-      "Dedicated air-conditioned camps in Mina (KSA Ministry certified)",
-      "Daily buffet meals (breakfast, lunch, and dinner)",
-      "Scholar seminars and daily guide coordination",
-      "Zamzam water and Hajj gift kits"
+      "Accommodation in Star Hotels at Both Holy Places",
+      "Buffet Breakfast, Lunch and Dinner",
+      "Return Air Fare (By Convenient Airlines)",
+      "Air Conditioned Road Transportation in Saudi Arabia",
+      "Moulim Fees",
+      "Complimentary Laundry Service",
+      "5 Liters ZAM ZAM Can",
+      "Travel Kit"
     ],
     exclusions: [
-      "Personal expenses, laundry, and extra room services",
-      "Excess baggage charges above airline allowances",
-      "Optional private tour excursions during rest days",
-      "Any additional travel permits outside Saudi Arabia"
+      "Cost of Qurbani",
+      "Transportation Cost of Tawaf-e-Ziarah",
+      "Excess baggage charges above standard limits"
     ],
     hotels: [
-      { name: "Accommodation in Standard Hotel in Madina", location: "Madinah at Markaziya", rating: "Standard Hotel", distance: "25th Zil Qada to 4th Zil Haj" },
-      { name: "Accommodation in Apartment at Azizia/Kakia", location: "Makkah at Azizia/Kakia", rating: "Apartment Building", distance: "4th Zil Haj to 15th Zil Haj" }
+      { name: "Accommodation in Star Hotels", location: "Makkah & Madinah", rating: "Standard Quality", distance: "Convenient distances to Holy Places" }
     ],
     flights: [
-      { airline: "Saudi Arabian Airlines / Direct Carriers", route: "Mumbai (BOM) - Jeddah (JED) / Madinah (MED) - Mumbai (BOM)", class: "Economy Class", details: "Direct flights with flexible check-in support" }
+      { airline: "Convenient Airlines", route: "Mumbai (BOM) - Saudi Arabia (JED/MED) - Mumbai (BOM)", class: "Economy Class", details: "Inflight meals and baggage included" }
     ],
     faqs: [
       { question: "What are the required documents for booking Hajj?", answer: "You must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card." },

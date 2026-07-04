@@ -8,8 +8,8 @@ export function BrandPreloader() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Check if preloader has already run in this session to protect user UX
-    const hasRun = sessionStorage.getItem("dh-preloader-run");
+    // Check if preloader has already run in localStorage to protect user UX
+    const hasRun = localStorage.getItem("dh-preloader-run");
     if (hasRun) {
       return;
     }
@@ -28,8 +28,8 @@ export function BrandPreloader() {
     const hideTimer = setTimeout(() => {
       setMounted(false);
       document.body.style.overflow = "";
-      sessionStorage.setItem("dh-preloader-run", "true");
-    }, 2500);
+      localStorage.setItem("dh-preloader-run", "true");
+    }, 3900); // 1.5s + 2.4s transition window
 
     return () => {
       clearTimeout(mountTimer);
@@ -43,22 +43,31 @@ export function BrandPreloader() {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] bg-[#F2EBDB] flex items-center justify-center transition-all duration-[1000ms] ease-in-out ${
-        visible ? "opacity-0 pointer-events-none scale-[1.02]" : "opacity-100"
+      className={`fixed inset-0 z-[100] bg-[#F2EBDB] flex items-center justify-center transition-opacity duration-[1000ms] ease-in-out ${
+        visible ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
-      <div className="relative flex flex-col items-center gap-6 text-center px-6">
+      <div className="relative flex flex-col items-center gap-8 text-center px-6">
         {/* Animated Logo - Scaling and translating toward top-left corner */}
         <div
-          className={`transition-all duration-[1000ms] ease-in-out ${
-            visible 
-              ? "scale-[0.2] opacity-0 -translate-x-[42vw] -translate-y-[45vh]" 
-              : "scale-100 opacity-100 animate-in zoom-in-95 duration-1000"
-          }`}
+          className="transition-all"
+          style={
+            visible
+              ? {
+                  transform: "translate(-42vw, -45vh) scale(0.08)",
+                  opacity: 0,
+                  transition: "all 2.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                }
+              : {
+                  transform: "translate(0, 0) scale(1)",
+                  opacity: 1,
+                  transition: "all 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+                }
+          }
         >
           <Logo
             variant="full"
-            className="h-16 sm:h-20 md:h-24 lg:h-28 w-auto text-foreground"
+            className="h-28 sm:h-36 md:h-44 lg:h-52 w-auto text-foreground"
           />
         </div>
 

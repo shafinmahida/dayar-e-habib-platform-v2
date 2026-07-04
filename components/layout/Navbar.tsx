@@ -23,7 +23,7 @@ export function Navbar() {
   const pathname = usePathname();
 
   useEffect(() => {
-    const run = sessionStorage.getItem("dh-preloader-run");
+    const run = localStorage.getItem("dh-preloader-run");
     if (!run) {
       const initTimer = setTimeout(() => {
         setHasPreloaded(false);
