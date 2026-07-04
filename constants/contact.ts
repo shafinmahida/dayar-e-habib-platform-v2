@@ -5,14 +5,14 @@ export interface SpecialistInfo {
 }
 
 export const CONTACT_DATA = {
-  primaryPhone: "+91 70457 07070",
+  primaryPhone: "+91 7045 707070",
   primaryEmail: "dhtinfo@gmail.com",
   offices: [
     {
       slug: "mumbai-hq",
       name: "Head Office — Mumbai",
       address: "265 S.V.P. Road, Karim Mansion, Shop 1, Opp. Khoja Kabarastan, Mumbai - 400009, India",
-      phone: "+91 70457 07070",
+      phone: "+91 7045 707070",
       email: "dhtinfo@gmail.com",
       mapLink: null,
       workingHours: "10:00 AM - 9:00 PM (Mon - Sat)",
@@ -23,7 +23,7 @@ export const CONTACT_DATA = {
   specialists: {
     brand: {
       name: "Dayar-E-Habib",
-      phone: "+91 70457 07070",
+      phone: "+91 7045 707070",
       role: "General & WhatsApp Coordinator",
     },
     hajj: {

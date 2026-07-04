@@ -127,9 +127,14 @@ export default async function PackageDetailPage({ params }: PackageDetailPagePro
             {/* Itinerary */}
             {pkg.itinerary && (
               <div className="space-y-6 pt-8 border-t border-border/60">
-                <h3 className="font-heading text-xl font-bold tracking-tight text-foreground">
-                  Planned Itinerary
-                </h3>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                  <h3 className="font-heading text-xl font-bold tracking-tight text-foreground">
+                    Planned Itinerary
+                  </h3>
+                  <span className="inline-flex items-center text-[9px] font-black tracking-widest text-accent bg-accent/5 border border-accent/20 px-3 py-1 uppercase rounded-none select-none">
+                    * Details and timelines are tentative
+                  </span>
+                </div>
                 <PackageItinerary itinerary={pkg.itinerary} />
               </div>
             )}

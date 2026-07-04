@@ -117,15 +117,56 @@ export default function ContactPage() {
               <p className="text-sm leading-relaxed text-muted-foreground">
                 Dayar-E-Habib Tours & Travels is fully licensed and recognized by major global aviation and pilgrimage authorities:
               </p>
-              <div className="flex flex-wrap items-center gap-8 pt-2">
-                <div className="relative h-16 w-32 bg-[#FCFAF5] p-2 border border-border/40 hover:border-accent/30 transition-all duration-300">
-                  <Image src="/aihutoa-logo.png" alt="AIHUTOA Member Logo" fill className="object-contain p-1" />
+              <div className="grid gap-4 sm:grid-cols-3 pt-2">
+                {/* Ministry of Minority Affairs (India) */}
+                <div className="flex items-center gap-3.5 bg-card border border-border p-4 hover:border-accent/40 transition-all duration-300">
+                  <div className="relative h-14 w-16 shrink-0">
+                    <Image
+                      src="/minority-affairs-logo.png"
+                      alt="Ministry of Minority Affairs Government of India Logo"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="text-[7.5px] font-black tracking-widest text-accent uppercase leading-none">Government of India</div>
+                    <div className="text-[10px] font-extrabold text-foreground uppercase leading-tight">Ministry of Minority Affairs</div>
+                    <div className="text-[7.5px] font-bold text-muted-foreground/80 uppercase leading-none">Hajj Organiser License</div>
+                  </div>
                 </div>
-                <div className="relative h-16 w-32 bg-[#FCFAF5] p-2 border border-border/40 hover:border-accent/30 transition-all duration-300">
-                  <Image src="/iata-logo.png" alt="IATA Certified Logo" fill className="object-contain p-1" />
+
+                {/* IATA Certified */}
+                <div className="flex items-center gap-3.5 bg-card border border-border p-4 hover:border-accent/40 transition-all duration-300">
+                  <div className="relative h-14 w-12 shrink-0">
+                    <Image
+                      src="/iata-logo.png"
+                      alt="IATA Certified Logo"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="text-[7.5px] font-black tracking-widest text-accent uppercase leading-none">Accredited Agency</div>
+                    <div className="text-[10px] font-extrabold text-foreground uppercase leading-tight">IATA Certified</div>
+                    <div className="text-[7.5px] font-bold text-muted-foreground/80 uppercase leading-none">Global Aviation Standard</div>
+                  </div>
                 </div>
-                <div className="relative h-16 w-32 bg-[#FCFAF5] p-2 border border-border/40 hover:border-accent/30 transition-all duration-300">
-                  <Image src="/minority-affairs-logo.png" alt="Ministry of Minority Affairs Government of India Logo" fill className="object-contain p-1" />
+
+                {/* AIHUTOA Member */}
+                <div className="flex items-center gap-3.5 bg-card border border-border p-4 hover:border-accent/40 transition-all duration-300">
+                  <div className="relative h-14 w-12 shrink-0">
+                    <Image
+                      src="/aihutoa-logo.png"
+                      alt="AIHUTOA Member Logo"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="text-[7.5px] font-black tracking-widest text-accent uppercase leading-none">Registered Association</div>
+                    <div className="text-[10px] font-extrabold text-foreground uppercase leading-tight">AIHUTOA Member</div>
+                    <div className="text-[7.5px] font-bold text-muted-foreground/80 uppercase leading-none">National Pilgrimage Body</div>
+                  </div>
                 </div>
               </div>
             </div>

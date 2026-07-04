@@ -64,31 +64,62 @@ export function Hero() {
               </Link>
             </div>
 
-            {/* Accreditations & Memberships Logos */}
-            <div className="pt-8 border-t border-border/40 w-full flex flex-wrap items-center gap-8 opacity-90 select-none">
-              <div className="relative h-11 w-20">
-                <Image
-                  src="/aihutoa-logo.png"
-                  alt="AIHUTOA Member"
-                  fill
-                  className="object-contain filter grayscale contrast-125 brightness-95 hover:grayscale-0 transition-all duration-300"
-                />
-              </div>
-              <div className="relative h-10 w-22">
-                <Image
-                  src="/iata-logo.png"
-                  alt="IATA Certified"
-                  fill
-                  className="object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
-                />
-              </div>
-              <div className="relative h-12 w-28">
-                <Image
-                  src="/minority-affairs-logo.png"
-                  alt="Ministry of Minority Affairs"
-                  fill
-                  className="object-contain filter grayscale contrast-125 brightness-95 hover:grayscale-0 transition-all duration-300"
-                />
+            {/* Accreditations & Memberships */}
+            <div className="pt-8 border-t border-border/40 w-full space-y-3">
+              <h4 className="text-[9px] font-black tracking-widest text-muted-foreground/60 uppercase select-none">
+                Accreditations & Memberships
+              </h4>
+              <div className="flex flex-wrap items-stretch gap-3 select-none">
+                {/* Ministry of Minority Affairs (India) */}
+                <div className="flex items-center gap-3 bg-card/15 border border-border/25 px-4 py-2.5 transition-all duration-300 hover:border-accent/35">
+                  <div className="relative h-12 w-14 shrink-0">
+                    <Image
+                      src="/minority-affairs-logo.png"
+                      alt="Ministry of Minority Affairs Logo"
+                      fill
+                      className="object-contain filter grayscale contrast-125 brightness-95 hover:grayscale-0 transition-all duration-300"
+                    />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="text-[7.5px] font-black tracking-widest text-accent uppercase leading-none">Government of India</div>
+                    <div className="text-[10px] font-extrabold text-foreground uppercase leading-tight">Ministry of Minority Affairs</div>
+                    <div className="text-[7.5px] font-bold text-muted-foreground/80 uppercase leading-none">Hajj Organiser License</div>
+                  </div>
+                </div>
+
+                {/* IATA Certified */}
+                <div className="flex items-center gap-3 bg-card/15 border border-border/25 px-4 py-2.5 transition-all duration-300 hover:border-accent/35">
+                  <div className="relative h-12 w-12 shrink-0">
+                    <Image
+                      src="/iata-logo.png"
+                      alt="IATA Certified Logo"
+                      fill
+                      className="object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                    />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="text-[7.5px] font-black tracking-widest text-accent uppercase leading-none">Accredited Agency</div>
+                    <div className="text-[10px] font-extrabold text-foreground uppercase leading-tight">IATA Certified</div>
+                    <div className="text-[7.5px] font-bold text-muted-foreground/80 uppercase leading-none">Global Aviation Standard</div>
+                  </div>
+                </div>
+
+                {/* AIHUTOA Member */}
+                <div className="flex items-center gap-3 bg-card/15 border border-border/25 px-4 py-2.5 transition-all duration-300 hover:border-accent/35">
+                  <div className="relative h-12 w-12 shrink-0">
+                    <Image
+                      src="/aihutoa-logo.png"
+                      alt="AIHUTOA Member Logo"
+                      fill
+                      className="object-contain filter grayscale contrast-125 brightness-95 hover:grayscale-0 transition-all duration-300"
+                    />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="text-[7.5px] font-black tracking-widest text-accent uppercase leading-none">Registered Association</div>
+                    <div className="text-[10px] font-extrabold text-foreground uppercase leading-tight">AIHUTOA Member</div>
+                    <div className="text-[7.5px] font-bold text-muted-foreground/80 uppercase leading-none">National Pilgrimage Body</div>
+                  </div>
+                </div>
               </div>
             </div>
           </div>

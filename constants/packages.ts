@@ -32,16 +32,16 @@ export const PACKAGES_DATA: Package[] = [
       { dayNumber: 3, title: "May-12 | Azizya Day-3", description: "Preparatory Hajj briefing and theological lectures." },
       { dayNumber: 4, title: "May-13 | Azizya Day-4", description: "Final Hajj briefing and preparation for Ihram." },
       { dayNumber: 5, title: "May-14 | Dhul Hijjah-8 | Hajj Day-5", description: "Hajj begins: Wear Ihram and transfer to Mina camps." },
-      { dayNumber: 6, title: "May-15 | Dhul Hijjah-9 | Hajj Day-6", description: "Stand at Mount Arafat (Wuquf) and spend night under sky in Muzdalifah." },
+      { dayNumber: 6, title: "May-15 | Dhul Hijjah-9 | Hajj Day-6", description: "Stay at Arafat (*Wuquf*) and spend the night under the open sky at Muzdalifah." },
       { dayNumber: 7, title: "May-16 | Dhul Hijjah-10 | Hajj Day-7", description: "Stoning at Jamarat, Qurbani, Halq (shaving head), and perform Tawaf-e-Ziyarah." },
       { dayNumber: 8, title: "May-17 | Dhul Hijjah-11 | Hajj Day-8", description: "Stay in Mina for prayers and perform afternoon stoning." },
       { dayNumber: 9, title: "May-18 | Dhul Hijjah-12 | Hajj Day-9", description: "Stoning at Jamarat and complete Mina rituals. Return to Azizya hotel." },
       { dayNumber: 10, title: "May-19 | Azizya Day-10", description: "Post-Hajj rest and devotional recovery at Azizya hotel." },
-      { dayNumber: 11, title: "May-20 | Azizya Day-11", description: "Azizya lectures and community reflections." },
-      { dayNumber: 12, title: "May-21 | Azizya Day-12", description: "Spiritual lectures on post-Hajj life." },
+      { dayNumber: 11, title: "May-20 | Azizya Day-11", description: "(Engage in worship and rest.)" },
+      { dayNumber: 12, title: "May-21 | Azizya Day-12", description: "(Engage in worship and rest.)" },
       { dayNumber: 13, title: "May-22 | Azizya Day-13", description: "Check out from Azizya and prepare to move to Haram hotel." },
       { dayNumber: 14, title: "May-23 to Jun-5 | Haram Days 14-27", description: "Enjoy 14 glorious days of continuous prayer and devotion in hotel close to Haram boundaries." },
-      { dayNumber: 28, title: "Jun-6 | Makkah/Madinah Transition", description: "Check out from Makkah, travel to Madinah, check-in to Al-Masjid an-Nabawi hotel." },
+      { dayNumber: 28, title: "Jun-6 | Makkah/Madinah Transition", description: "(Check out from Makkah, travel to Madinah Munawwarah, and check in at the hotel in Madinah Munawwarah.)" },
       { dayNumber: 29, title: "Jun-7 to Jun-15 | Madina Days 29-37", description: "Spend 9 spiritual days in Madinah at Prophet's Mosque including local historical Ziyarats." },
       { dayNumber: 38, title: "Jun-16 | Madina Departure", description: "Final check out, transfer to airport for return flight." }
     ],
@@ -62,15 +62,16 @@ export const PACKAGES_DATA: Package[] = [
       "Any additional travel permits outside Saudi Arabia"
     ],
     hotels: [
-      { name: "Premium Makkah Grand Hotel", location: "Makkah", rating: "5 Star", distance: "250m from Haram" },
-      { name: "Diyar Madinah Royal", location: "Madinah", rating: "5 Star", distance: "150m from Haram boundaries" }
+      { name: "Accommodation in Standard Hotel in Madina", location: "Madinah at Markaziya", rating: "Standard Hotel", distance: "25th Zil Qada to 4th Zil Haj" },
+      { name: "Accommodation in Apartment at Azizia/Kakia", location: "Makkah at Azizia/Kakia", rating: "Apartment Building", distance: "4th Zil Haj to 15th Zil Haj" }
     ],
     flights: [
-      { airline: "Saudi Arabian Airlines", route: "Mumbai (BOM) - Jeddah (JED) / Madinah (MED) - Mumbai (BOM)", class: "Economy / Business Options Available", details: "Direct flights with flexible check-in support" }
+      { airline: "Saudi Arabian Airlines / Direct Carriers", route: "Mumbai (BOM) - Jeddah (JED) / Madinah (MED) - Mumbai (BOM)", class: "Economy Class", details: "Direct flights with flexible check-in support" }
     ],
     faqs: [
-      { question: "What is the average group size for the Hajj package?", answer: "We maintain a maximum ratio of 25 pilgrims per guide to ensure dedicated support and personal care." },
-      { question: "Is scholar guidance provided throughout the journey?", answer: "Yes, our groups are accompanied by religious scholars who guide pilgrims through all Hajj rituals and lectures." }
+      { question: "What are the required documents for booking Hajj?", answer: "You must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card." },
+      { question: "What is the standard room occupancy?", answer: "Standard accommodation features 4 to 5 pilgrims per room. Double or triple sharing rooms can be arranged upon request at adjusted brochure rates." },
+      { question: "What is the Hajj package cancellation policy?", answer: "Once booking confirmation is submitted, Hajj package payments are fully non-refundable under all cancellation circumstances." }
     ]
   },
   {
@@ -112,7 +113,7 @@ export const PACKAGES_DATA: Package[] = [
       { dayNumber: 11, title: "May-12 | Azizya Day-11", description: "Theological lectures on Hajj rituals." },
       { dayNumber: 12, title: "May-13 | Azizya Day-12", description: "Hajj preparation briefing with religious scholars." },
       { dayNumber: 13, title: "May-14 | Dhul Hijjah-8 | Hajj Day-13", description: "Hajj begins: Wear Ihram and transfer to Mina air-conditioned camps." },
-      { dayNumber: 14, title: "May-15 | Dhul Hijjah-9 | Hajj Day-14", description: "Stand at Mount Arafat (Wuquf) and spend night in Muzdalifah." },
+      { dayNumber: 14, title: "May-15 | Dhul Hijjah-9 | Hajj Day-14", description: "Stay at Arafat (*Wuquf*) and spend the night under the open sky at Muzdalifah." },
       { dayNumber: 15, title: "May-16 | Dhul Hijjah-10 | Hajj Day-15", description: "Stoning at Jamarat, Qurbani, Halq (shaving head), and perform Tawaf-e-Ziyarah." },
       { dayNumber: 16, title: "May-17 | Dhul Hijjah-11 | Hajj Day-16", description: "Stay in Mina, perform afternoon stoning." },
       { dayNumber: 17, title: "May-18 | Dhul Hijjah-12 | Hajj Day-17", description: "Stoning at Jamarat, conclude Hajj days, transfer to Azizya hotel." },
@@ -137,15 +138,16 @@ export const PACKAGES_DATA: Package[] = [
       "Any additional travel permits outside Saudi Arabia"
     ],
     hotels: [
-      { name: "Premium Makkah Grand Hotel", location: "Makkah", rating: "5 Star", distance: "250m from Haram" },
-      { name: "Diyar Madinah Royal", location: "Madinah", rating: "5 Star", distance: "150m from Haram boundaries" }
+      { name: "Accommodation in Standard Hotel in Madina", location: "Madinah at Markaziya", rating: "Standard Hotel", distance: "25th Zil Qada to 4th Zil Haj" },
+      { name: "Accommodation in Apartment at Azizia/Kakia", location: "Makkah at Azizia/Kakia", rating: "Apartment Building", distance: "4th Zil Haj to 15th Zil Haj" }
     ],
     flights: [
-      { airline: "Saudi Arabian Airlines", route: "Mumbai (BOM) - Jeddah (JED) / Madinah (MED) - Mumbai (BOM)", class: "Economy / Business Options Available", details: "Direct flights with flexible check-in support" }
+      { airline: "Saudi Arabian Airlines / Direct Carriers", route: "Mumbai (BOM) - Jeddah (JED) / Madinah (MED) - Mumbai (BOM)", class: "Economy Class", details: "Direct flights with flexible check-in support" }
     ],
     faqs: [
-      { question: "What is the average group size for the Hajj package?", answer: "We maintain a maximum ratio of 25 pilgrims per guide to ensure dedicated support and personal care." },
-      { question: "Is scholar guidance provided throughout the journey?", answer: "Yes, our groups are accompanied by religious scholars who guide pilgrims through all Hajj rituals and lectures." }
+      { question: "What are the required documents for booking Hajj?", answer: "You must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card." },
+      { question: "What is the standard room occupancy?", answer: "Standard accommodation features 4 to 5 pilgrims per room. Double or triple sharing rooms can be arranged upon request at adjusted brochure rates." },
+      { question: "What is the Hajj package cancellation policy?", answer: "Once booking confirmation is submitted, Hajj package payments are fully non-refundable under all cancellation circumstances." }
     ]
   },
   {
