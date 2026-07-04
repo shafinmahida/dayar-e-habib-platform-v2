@@ -19,6 +19,32 @@ export function PackageEnquiry({ packageTitle }: PackageEnquiryProps) {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     if (!name || !phone) return;
+
+    // Send formatted email to dhtinfo@gmail.com
+    const recipient = "dhtinfo@gmail.com";
+    const subject = `New Pilgrimage Enquiry: ${packageTitle} - ${name}`;
+    const body = `Assalamu Alaikum Dayar-E-Habib Team,
+
+You have received a new pilgrimage query from the platform:
+
+--------------------------------------------------
+PACKAGE INTERESTED : ${packageTitle}
+PILGRIM NAME       : ${name}
+CONTACT PHONE      : ${phone}
+EMAIL ADDRESS      : ${email || "Not Provided"}
+--------------------------------------------------
+
+PILGRIM MESSAGE:
+"${message}"
+
+--------------------------------------------------
+This inquiry has been formatted and submitted from the Dayar-E-Habib Platform.`;
+
+    const mailtoUrl = `mailto:${recipient}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
+    
+    // Redirect browser to trigger native mail client submission
+    window.location.href = mailtoUrl;
+
     setSubmitted(true);
   };
 

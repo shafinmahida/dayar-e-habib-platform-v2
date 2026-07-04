@@ -50,7 +50,7 @@ export function JourneyTimeline({ steps }: JourneyTimelineProps) {
           <div className="absolute left-6 lg:left-1/2 top-0 bottom-0 w-[1.5px] bg-accent/25 transform lg:-translate-x-1/2 z-0" />
 
           {/* Timeline steps list */}
-          <div className="relative space-y-16 lg:space-y-24 z-10 w-full">
+          <div className="relative space-y-12 lg:space-y-16 z-10 w-full">
             {steps.map((step, idx) => {
               const isEven = idx % 2 === 1;
 
@@ -65,38 +65,52 @@ export function JourneyTimeline({ steps }: JourneyTimelineProps) {
                   )}
                   style={{ transitionDelay: `${idx * 150}ms` }}
                 >
-                  {/* Step Container (50% Width on Desktop) */}
+                  {/* Timeline Ring Station Indicator - Perfect Centered Alignment */}
+                  <div 
+                    className="absolute left-6 lg:left-1/2 top-10 flex size-5 items-center justify-center rounded-full bg-[#FCFAF5] border border-accent/70 transform -translate-x-1/2 z-20 transition-all duration-500 group-hover:scale-110 group-hover:border-accent"
+                    aria-hidden="true"
+                  >
+                    <span className="size-2 rounded-full bg-accent transition-all duration-500 group-hover:scale-125" />
+                  </div>
+
+                  {/* Step Card Container (50% Width on Desktop) */}
                   <div 
                     className={cn(
-                      "w-full lg:w-[45%] pl-20 lg:pl-0 relative flex flex-col",
+                      "w-full lg:w-[46%] pl-16 lg:pl-0 relative flex flex-col",
                       // Text alignment matches side
                       isEven ? "lg:text-left lg:pl-10" : "lg:text-right lg:pr-10"
                     )}
                   >
-                    {/* Timeline Indicator Box - Serif Luxury Styling */}
+                    {/* Editorial Lift-on-Hover Card */}
                     <div 
                       className={cn(
-                        "absolute top-0.5 flex size-11 items-center justify-center rounded-none border border-accent bg-[#FCFAF5] font-serif text-sm font-bold text-accent transition-all duration-500",
-                        "group-hover:bg-[#8A6A36] group-hover:text-white shadow-[0_4px_16px_rgba(138,106,54,0.03)] select-none z-20",
-                        // Align left on mobile, swap sides on desktop
-                        "left-4 lg:left-auto",
-                        isEven ? "lg:left-[-22px]" : "lg:right-[-22px]"
+                        "relative space-y-3 p-8 bg-[#FCFAF5]/40 border border-border/15 backdrop-blur-sm transition-all duration-700 rounded-sm overflow-hidden",
+                        "group-hover:bg-[#FCFAF5] group-hover:border-accent/40 group-hover:shadow-[0_20px_40px_rgba(138,106,54,0.035)] group-hover:-translate-y-1",
+                        !isEven && "lg:ml-auto"
                       )}
                     >
-                      0{step.stepNumber}
-                    </div>
+                      {/* Serif Watermark Number Background */}
+                      <div 
+                        className={cn(
+                          "absolute text-7xl sm:text-8xl font-serif italic text-accent/[0.03] select-none pointer-events-none transition-all duration-[1000ms] ease-out",
+                          "right-6 bottom-4 group-hover:text-accent/[0.08] group-hover:scale-105",
+                          // Align watermark appropriately based on text layout
+                          !isEven ? "left-6 right-auto" : "right-6"
+                        )}
+                        aria-hidden="true"
+                      >
+                        0{step.stepNumber}
+                      </div>
 
-                    {/* Content text */}
-                    <div className="space-y-3">
-                      <h3 className="font-heading text-lg sm:text-xl font-bold tracking-tight text-foreground transition-colors duration-300 group-hover:text-accent">
-                        {step.title}
-                      </h3>
-                      <p className={cn(
-                        "text-xs sm:text-sm leading-relaxed text-muted-foreground/90 max-w-lg",
-                        !isEven && "lg:ml-auto"
-                      )}>
-                        {step.description}
-                      </p>
+                      {/* Card Content */}
+                      <div className="relative z-10 space-y-2.5">
+                        <h3 className="font-heading text-base sm:text-lg font-bold tracking-tight text-foreground transition-colors duration-300 group-hover:text-accent">
+                          {step.title}
+                        </h3>
+                        <p className="text-xs sm:text-sm leading-relaxed text-muted-foreground/90">
+                          {step.description}
+                        </p>
+                      </div>
                     </div>
                   </div>
                 </div>

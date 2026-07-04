@@ -8,12 +8,6 @@ export function BrandPreloader() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    // Check if preloader has already run in localStorage to protect user UX
-    const hasRun = localStorage.getItem("dh-preloader-run");
-    if (hasRun) {
-      return;
-    }
-
     const mountTimer = setTimeout(() => {
       setMounted(true);
       document.body.style.overflow = "hidden";
@@ -28,7 +22,6 @@ export function BrandPreloader() {
     const hideTimer = setTimeout(() => {
       setMounted(false);
       document.body.style.overflow = "";
-      localStorage.setItem("dh-preloader-run", "true");
     }, 3900); // 1.5s + 2.4s transition window
 
     return () => {
@@ -67,7 +60,7 @@ export function BrandPreloader() {
         >
           <Logo
             variant="full"
-            className="h-28 sm:h-36 md:h-44 lg:h-52 w-auto text-foreground"
+            className="h-28 sm:h-36 md:h-44 lg:h-52 max-w-[85vw] sm:max-w-none w-auto text-foreground"
           />
         </div>
 
