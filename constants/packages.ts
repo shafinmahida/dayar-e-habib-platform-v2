@@ -61,7 +61,9 @@ export const PACKAGES_DATA: Package[] = [
       "Excess baggage charges above standard limits"
     ],
     hotels: [
-      { name: "Accommodation in Star Hotels", location: "Makkah & Madinah", rating: "Standard Quality", distance: "Convenient distances to Holy Places" }
+      { name: "Standard Hotel", location: "Makkah Mukarma", rating: "Haram Courtyard", distance: "Near the courtyard of the Haram Sharif" },
+      { name: "Standard Hotel", location: "Madinah Munawwarah", rating: "Haram Courtyard", distance: "Near the courtyard of the Haram Sharif" },
+      { name: "Shifting Accommodation (Apartment)", location: "Azizia / Kakia", rating: "Standard Apartment", distance: "Shifting Accommodation at 4 to 8 km" }
     ],
     flights: [
       { airline: "Convenient Airlines", route: "Mumbai (BOM) - Saudi Arabia (JED/MED) - Mumbai (BOM)", class: "Economy Class", details: "Inflight meals and baggage included" }
