@@ -117,7 +117,7 @@ export function PackageEnquiry({ packageTitle }: PackageEnquiryProps) {
         </div>
         <a
           href={`tel:${CONTACT_DATA.primaryPhone.replace(/\s/g, "")}`}
-          className="inline-flex items-center gap-2 text-sm font-bold text-accent hover:text-accent/80 transition-colors"
+          className="inline-flex items-center gap-2 text-sm font-bold text-accent hover:text-accent/80 transition-colors whitespace-nowrap"
         >
           <Phone className="size-4" />
           <span>{CONTACT_DATA.primaryPhone}</span>

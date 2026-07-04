@@ -64,14 +64,32 @@ export function Hero() {
               </Link>
             </div>
 
-            {/* Registrations List */}
-            <div className="flex flex-wrap items-center gap-x-6 gap-y-3 pt-8 border-t border-border/40 w-full text-[9px] font-black tracking-[0.2em] text-muted-foreground/80 uppercase">
-              {COMPANY_DATA.registrations.map((reg) => (
-                <div key={reg} className="flex items-center gap-2">
-                  <span className="size-1 rounded-full bg-accent" aria-hidden="true" />
-                  <span>{reg}</span>
-                </div>
-              ))}
+            {/* Accreditations & Memberships Logos */}
+            <div className="pt-8 border-t border-border/40 w-full flex flex-wrap items-center gap-8 opacity-90 select-none">
+              <div className="relative h-11 w-20">
+                <Image
+                  src="/aihutoa-logo.png"
+                  alt="AIHUTOA Member"
+                  fill
+                  className="object-contain filter grayscale contrast-125 brightness-95 hover:grayscale-0 transition-all duration-300"
+                />
+              </div>
+              <div className="relative h-10 w-22">
+                <Image
+                  src="/iata-logo.png"
+                  alt="IATA Certified"
+                  fill
+                  className="object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
+                />
+              </div>
+              <div className="relative h-12 w-28">
+                <Image
+                  src="/minority-affairs-logo.png"
+                  alt="Ministry of Minority Affairs"
+                  fill
+                  className="object-contain filter grayscale contrast-125 brightness-95 hover:grayscale-0 transition-all duration-300"
+                />
+              </div>
             </div>
           </div>
 

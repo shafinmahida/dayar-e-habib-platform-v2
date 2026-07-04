@@ -88,7 +88,7 @@ export function Navbar() {
                   variant="full" 
                   className={cn(
                     "w-auto text-foreground transition-all duration-500",
-                    scrolled ? "h-10 sm:h-12 md:h-13 lg:h-15" : "h-12 sm:h-16 md:h-19 lg:h-23"
+                    scrolled ? "h-12 sm:h-12 md:h-13 lg:h-15" : "h-16 sm:h-16 md:h-19 lg:h-23"
                   )} 
                 />
               </Link>

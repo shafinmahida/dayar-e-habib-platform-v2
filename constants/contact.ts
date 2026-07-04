@@ -15,7 +15,7 @@ export const CONTACT_DATA = {
       phone: "+91 70457 07070",
       email: "dhtinfo@gmail.com",
       mapLink: null,
-      workingHours: "10:00 AM - 7:00 PM (Mon - Sat)",
+      workingHours: "10:00 AM - 9:00 PM (Mon - Sat)",
       active: true,
       displayOrder: 1,
     },

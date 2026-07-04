@@ -89,7 +89,7 @@ export function Trust({ items }: TrustProps) {
                 )}
               >
                 <p className="font-serif italic text-base text-[#FCFAF5]/90 hover:text-accent transition-colors duration-300 cursor-default select-none">
-                  Mohammed Hussain Bumedia
+                  Late Mohammed Hussain Bumedia
                 </p>
                 <p className="text-[9px] font-black tracking-widest text-[#FCFAF5]/50 uppercase mt-1">Founder, Dayar-E-Habib</p>
               </div>

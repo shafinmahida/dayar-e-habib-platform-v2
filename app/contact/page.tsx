@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Mail, MapPin, Phone, Clock, Sparkles } from "lucide-react";
+import Image from "next/image";
 
 import { Container } from "@/components/layout/Container";
 import { CONTACT_DATA } from "@/constants/contact";
-import { COMPANY_DATA } from "@/constants/company";
 import { PackageEnquiry } from "@/components/sections/package/PackageEnquiry";
 
 export const metadata: Metadata = {
@@ -85,8 +85,8 @@ export default function ContactPage() {
                 >
                   <Phone className="size-5 text-accent mt-0.5 shrink-0" />
                   <div className="space-y-1">
-                    <div className="text-xs font-bold text-foreground/80 uppercase">Primary Phone</div>
-                    <p className="text-sm font-bold text-foreground">
+                    <div className="text-xs font-bold text-foreground/80 uppercase">Contact us</div>
+                    <p className="text-sm font-bold text-foreground whitespace-nowrap">
                       {CONTACT_DATA.primaryPhone}
                     </p>
                     <p className="text-xs text-muted-foreground">Call or message via WhatsApp</p>
@@ -117,13 +117,16 @@ export default function ContactPage() {
               <p className="text-sm leading-relaxed text-muted-foreground">
                 Dayar-E-Habib Tours & Travels is fully licensed and recognized by major global aviation and pilgrimage authorities:
               </p>
-              <div className="flex flex-wrap items-center gap-6 text-xs font-semibold tracking-wide text-muted-foreground uppercase pt-2">
-                {COMPANY_DATA.registrations.map((reg) => (
-                  <div key={reg} className="flex items-center gap-2 px-3 py-1.5 bg-secondary/40 border border-border/50 rounded-sm">
-                    <span className="size-1.5 rounded-full bg-accent animate-pulse" />
-                    <span>{reg}</span>
-                  </div>
-                ))}
+              <div className="flex flex-wrap items-center gap-8 pt-2">
+                <div className="relative h-16 w-32 bg-[#FCFAF5] p-2 border border-border/40 hover:border-accent/30 transition-all duration-300">
+                  <Image src="/aihutoa-logo.png" alt="AIHUTOA Member Logo" fill className="object-contain p-1" />
+                </div>
+                <div className="relative h-16 w-32 bg-[#FCFAF5] p-2 border border-border/40 hover:border-accent/30 transition-all duration-300">
+                  <Image src="/iata-logo.png" alt="IATA Certified Logo" fill className="object-contain p-1" />
+                </div>
+                <div className="relative h-16 w-32 bg-[#FCFAF5] p-2 border border-border/40 hover:border-accent/30 transition-all duration-300">
+                  <Image src="/minority-affairs-logo.png" alt="Ministry of Minority Affairs Government of India Logo" fill className="object-contain p-1" />
+                </div>
               </div>
             </div>
 
