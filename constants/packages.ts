@@ -70,7 +70,7 @@ export const PACKAGES_DATA: Package[] = [
     ],
     faqs: [
       { question: "What is the average group size for the Hajj package?", answer: "We maintain a maximum ratio of 25 pilgrims per guide to ensure dedicated support and personal care." },
-      { question: "Are medical advisors present in the group?", answer: "Yes, our team includes licensed medical representatives to support health needs throughout the Hajj days." }
+      { question: "Is scholar guidance provided throughout the journey?", answer: "Yes, our groups are accompanied by religious scholars who guide pilgrims through all Hajj rituals and lectures." }
     ]
   },
   {
@@ -145,7 +145,7 @@ export const PACKAGES_DATA: Package[] = [
     ],
     faqs: [
       { question: "What is the average group size for the Hajj package?", answer: "We maintain a maximum ratio of 25 pilgrims per guide to ensure dedicated support and personal care." },
-      { question: "Are medical advisors present in the group?", answer: "Yes, our team includes licensed medical representatives to support health needs throughout the Hajj days." }
+      { question: "Is scholar guidance provided throughout the journey?", answer: "Yes, our groups are accompanied by religious scholars who guide pilgrims through all Hajj rituals and lectures." }
     ]
   },
   {

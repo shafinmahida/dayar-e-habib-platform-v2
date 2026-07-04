@@ -87,13 +87,9 @@ export function Navbar() {
                 <Logo 
                   variant="full" 
                   className={cn(
-                    "hidden sm:block w-auto text-foreground transition-all duration-500",
-                    scrolled ? "h-12 md:h-13 lg:h-15" : "h-16 md:h-19 lg:h-23"
+                    "w-auto text-foreground transition-all duration-500",
+                    scrolled ? "h-10 sm:h-12 md:h-13 lg:h-15" : "h-12 sm:h-16 md:h-19 lg:h-23"
                   )} 
-                />
-                <Logo 
-                  variant="mark" 
-                  className="block sm:hidden h-12 w-auto text-foreground" 
                 />
               </Link>
             </div>

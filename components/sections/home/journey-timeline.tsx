@@ -68,7 +68,7 @@ export function JourneyTimeline({ steps }: JourneyTimelineProps) {
                   {/* Step Container (50% Width on Desktop) */}
                   <div 
                     className={cn(
-                      "w-full lg:w-[45%] pl-14 lg:pl-0 relative flex flex-col",
+                      "w-full lg:w-[45%] pl-20 lg:pl-0 relative flex flex-col",
                       // Text alignment matches side
                       isEven ? "lg:text-left lg:pl-10" : "lg:text-right lg:pr-10"
                     )}
