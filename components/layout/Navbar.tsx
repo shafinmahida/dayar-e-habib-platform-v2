@@ -19,7 +19,26 @@ export function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
+  const [hasPreloaded, setHasPreloaded] = useState(true);
   const pathname = usePathname();
+
+  useEffect(() => {
+    const run = sessionStorage.getItem("dh-preloader-run");
+    if (!run) {
+      const initTimer = setTimeout(() => {
+        setHasPreloaded(false);
+      }, 0);
+
+      const timer = setTimeout(() => {
+        setHasPreloaded(true);
+      }, 1500);
+
+      return () => {
+        clearTimeout(initTimer);
+        clearTimeout(timer);
+      };
+    }
+  }, []);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -80,7 +99,10 @@ export function Navbar() {
             <div className="flex items-center justify-start shrink-0">
               <Link
                 href={ROUTES.home}
-                className="focus-visible:outline-none shrink-0 block py-2 hover:scale-[1.02] active:scale-[0.98] transition-transform duration-300"
+                className={cn(
+                  "focus-visible:outline-none shrink-0 block py-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-[1000ms]",
+                  hasPreloaded ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
+                )}
                 aria-label="Dayar-E-Habib Home"
               >
                 {/* Visual Anchor Logo scaled up for premium presence */}

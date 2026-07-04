@@ -1,11 +1,8 @@
 import type { Metadata } from "next";
 
-import {
-  AnnouncementBar,
-  Footer,
-  Navbar,
-} from "@/components/layout";
+import { AnnouncementBar, Footer, Navbar } from "@/components/layout";
 import { WhatsAppFloat } from "@/components/layout/WhatsAppFloat";
+import { BrandPreloader } from "@/components/layout/BrandPreloader";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/constants/site";
 import { fontBody, fontHeading, fontSerif } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
@@ -32,6 +29,7 @@ export default function RootLayout({
       )}
     >
       <body className="flex min-h-full flex-col font-sans">
+        <BrandPreloader />
         <AnnouncementBar />
         <Navbar />
         <main className="flex-1">{children}</main>

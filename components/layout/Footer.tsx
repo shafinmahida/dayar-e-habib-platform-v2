@@ -171,7 +171,7 @@ export function Footer() {
                 />
                 <a
                   href={`tel:${CONTACT_DATA.primaryPhone.replace(/\s/g, "")}`}
-                  className="transition-colors hover:text-accent focus-visible:outline-none"
+                  className="transition-colors hover:text-accent focus-visible:outline-none whitespace-nowrap"
                 >
                   {CONTACT_DATA.primaryPhone}
                 </a>
