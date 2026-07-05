@@ -75,13 +75,13 @@ export function PackageCard({ pkg }: PackageCardProps) {
           </div>
           
           <h3 className="font-heading text-xl sm:text-2xl font-extrabold tracking-tight text-foreground leading-tight group-hover:text-accent transition-colors duration-300">
-            {pkg.slug === "classic-ziyarat" ? "Classic Ziyarat Package" : pkg.title}
+            {pkg.title}
           </h3>
           
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[9px] font-bold tracking-widest text-muted-foreground uppercase pt-1">
             <span className="flex items-center gap-1.5">
               <MapPin className="size-3 text-accent" />
-              <span>{pkg.slug === "classic-ziyarat" ? "Baghdad & Karbala" : destinationNames}</span>
+              <span>{destinationNames}</span>
             </span>
             <span className="flex items-center gap-1.5">
               <Calendar className="size-3 text-accent" />

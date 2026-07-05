@@ -5,7 +5,7 @@ export const PACKAGES_DATA: Package[] = [
     slug: "premium-hajj",
     categorySlug: "hajj",
     destinationSlugs: ["makkah", "madinah"],
-    title: "DH Grand Stay ( 34+ Days )",
+    title: "Grand Stay ( 34+ Days )",
     duration: "Tentative",
     highlights: [
       "Tentative Hijri Timeline (4th Dhul Hijjah - 11th Muharram)",
@@ -24,8 +24,8 @@ export const PACKAGES_DATA: Package[] = [
     featured: true,
     displayOrder: 1,
     createdAt: "2026-06-30T12:00:00Z",
-    seoTitle: "DH Grand Stay | Dayar-E-Habib",
-    seoDescription: "Book our DH Grand Stay Hajj full tour package with tentative Hijri timeline. Scholar guidance and standard Makkah/Madinah hotels included.",
+    seoTitle: "Grand Stay | Dayar-E-Habib",
+    seoDescription: "Book our Grand Stay Hajj full tour package with tentative Hijri timeline. Scholar guidance and standard Makkah/Madinah hotels included.",
     itinerary: [
       { dayNumber: 1, title: "4th Dhul Hijjah | Azizya", description: "Arrive in Jeddah, transfer to Makkah, and check-in to Azizya apartment." },
       { dayNumber: 2, title: "5th Dhul Hijjah | Azizya", description: "Perform Umrah under professional scholar guidance and rest." },
@@ -71,7 +71,7 @@ export const PACKAGES_DATA: Package[] = [
       { airline: "Convenient Airlines", route: "All travel originates and terminates in Mumbai", class: "", details: "Any Excess Baggage beyond the Standard Airline Allowance, or Requests to Change Travel Dates and Routes, Will Incur Additional Charges." }
     ],
     faqs: [
-      { question: "What are the required documents for booking Hajj?", answer: "To book your Hajj package, you must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card. Additionally, please submit Biometric Passport Photographs with a high-definition white background (available in both physical prints and digital soft copies)." },
+      { question: "What are the required documents for booking Hajj?", answer: "To book your Hajj package, you must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card. Additionally, please submit Passport Size Photographs with a high-definition white background (available in both physical prints and digital soft copies)." },
       { question: "What is the standard room occupancy?", answer: "Standard accommodation features 4 to 5 pilgrims per room. Double or triple sharing rooms can be arranged upon request at adjusted brochure rates." },
       { question: "What is the Hajj package cancellation policy?", answer: "Once booking confirmation is submitted, Hajj package payments are fully non-refundable under all cancellation circumstances." }
     ]
@@ -80,7 +80,7 @@ export const PACKAGES_DATA: Package[] = [
     slug: "short-hajj",
     categorySlug: "hajj",
     destinationSlugs: ["makkah", "madinah"],
-    title: "DH Express Stay (18+ Days )",
+    title: "Express Stay (18+ Days )",
     duration: "Tentative",
     highlights: [
       "Tentative Hijri Timeline (25th Dhul Qidah - 15th Dhul Hijjah)",
@@ -99,8 +99,8 @@ export const PACKAGES_DATA: Package[] = [
     featured: true,
     displayOrder: 2,
     createdAt: "2026-06-30T12:00:00Z",
-    seoTitle: "DH Express Stay | Dayar-E-Habib",
-    seoDescription: "Book our DH Express Stay Hajj short stay package with tentative Hijri dates. Scholar-led Hajj rituals, Azizya and Madina hotels included.",
+    seoTitle: "Express Stay | Dayar-E-Habib",
+    seoDescription: "Book our Express Stay Hajj short stay package with tentative Hijri dates. Scholar-led Hajj rituals, Azizya and Madina hotels included.",
     itinerary: [
       { dayNumber: 1, title: "25th Dhul Qidah | Madinah", description: "Arrive at Madinah Airport, private coach transfer, and check-in to Madinah hotel." },
       { dayNumber: 2, title: "26th Dhul Qidah to 3rd Dhul Hijjah | Madinah Munawwarah", description: "Spend spiritual days in Madinah at Prophet's Mosque including local historical Ziyarats." },
@@ -142,7 +142,7 @@ export const PACKAGES_DATA: Package[] = [
       { airline: "Convenient Airlines", route: "All travel originates and terminates in Mumbai", class: "", details: "Any Excess Baggage beyond the Standard Airline Allowance, or Requests to Change Travel Dates and Routes, Will Incur Additional Charges." }
     ],
     faqs: [
-      { question: "What are the required documents for booking Hajj?", answer: "To book your Hajj package, you must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card. Additionally, please submit Biometric Passport Photographs with a high-definition white background (available in both physical prints and digital soft copies)." },
+      { question: "What are the required documents for booking Hajj?", answer: "To book your Hajj package, you must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card. Additionally, please submit Passport Size Photographs with a high-definition white background (available in both physical prints and digital soft copies)." },
       { question: "What is the standard room occupancy?", answer: "Standard accommodation features 4 to 5 pilgrims per room. Double or triple sharing rooms can be arranged upon request at adjusted brochure rates." },
       { question: "What is the Hajj package cancellation policy?", answer: "Once booking confirmation is submitted, Hajj package payments are fully non-refundable under all cancellation circumstances." }
     ]
@@ -151,7 +151,7 @@ export const PACKAGES_DATA: Package[] = [
     slug: "deluxe-umrah",
     categorySlug: "umrah",
     destinationSlugs: ["makkah", "madinah"],
-    title: "DH Sacred Umrah ( 14+ Days )",
+    title: "Umrah ( 14+ Days )",
     duration: "15 Days",
     highlights: [
       "Accommodations directly in front of the Haram",
@@ -169,8 +169,8 @@ export const PACKAGES_DATA: Package[] = [
     featured: true,
     displayOrder: 2,
     createdAt: "2026-06-30T12:00:00Z",
-    seoTitle: "DH Sacred Umrah | Dayar-E-Habib",
-    seoDescription: "15 Days group or customized DH Sacred Umrah package with hotel accommodations in front of the Haram.",
+    seoTitle: "Umrah | Dayar-E-Habib",
+    seoDescription: "15 Days group or customized Umrah package with hotel accommodations in front of the Haram.",
     itinerary: [
       { dayNumber: 1, title: "Arrival in Makkah", description: "Transfer from Jeddah Airport to Makkah hotel. Check-in and rest." },
       { dayNumber: 2, title: "Umrah Rituals", description: "Perform Umrah under professional scholar guidance." },
@@ -202,15 +202,15 @@ export const PACKAGES_DATA: Package[] = [
       { airline: "Convenient Airlines", route: "All travel originates and terminates in Mumbai", class: "", details: "Any Excess Baggage beyond the Standard Airline Allowance, or Requests to Change Travel Dates and Routes, Will Incur Additional Charges." }
     ],
     faqs: [
-      { question: "What are the required documents for booking Umrah?", answer: "To book your Hajj package, you must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card. Additionally, please submit Biometric Passport Photographs with a high-definition white background (available in both physical prints and digital soft copies)." },
-      { question: "Is laundry service included?", answer: "Yes, our DH Sacred Umrah packages include complimentary bi-weekly laundry service." }
+      { question: "What are the required documents for booking Umrah?", answer: "To book your Hajj package, you must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card. Additionally, please submit Passport Size Photographs with a high-definition white background (available in both physical prints and digital soft copies)." },
+      { question: "Is laundry service included?", answer: "Yes, our Umrah packages include complimentary bi-weekly laundry service." }
     ]
   },
   {
     slug: "classic-ziyarat",
     categorySlug: "ziyarat",
     destinationSlugs: ["baghdad"],
-    title: "DH Holy Heritage ( 10+ Days )",
+    title: "Holy Heritage ( 10+ Days )",
     duration: "11 Days",
     highlights: [
       "Celebrate 11vi Sharif in Baghdad",
@@ -229,7 +229,7 @@ export const PACKAGES_DATA: Package[] = [
     featured: true,
     displayOrder: 3,
     createdAt: "2026-06-30T12:00:00Z",
-    seoTitle: "DH Holy Heritage | Dayar-E-Habib",
+    seoTitle: "Holy Heritage | Dayar-E-Habib",
     seoDescription: "Join our 11-day Ziyarat group to celebrate 11vi Sharif in Baghdad. Includes 6 nights in Baghdad, 2 nights in Najaf, 2 nights in Karbala, and direct flights.",
     itinerary: [
       { dayNumber: 1, title: "Najaf Stay", description: "Arrive at Najaf Airport. Check-in to your hotel. Perform ziyarat at the sacred Dome of Maula Ali (A.S.), Masjid Kufa, and Wadi-us-Salaam." },
