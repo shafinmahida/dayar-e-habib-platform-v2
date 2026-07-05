@@ -161,7 +161,18 @@ export function Footer() {
                     className="mt-0.5 size-4 shrink-0 text-accent"
                     aria-hidden="true"
                   />
-                  <address className="not-italic leading-relaxed">{primaryOffice.address}</address>
+                  {primaryOffice.mapLink ? (
+                    <a
+                      href={primaryOffice.mapLink}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="transition-colors hover:text-accent focus-visible:outline-none"
+                    >
+                      <address className="not-italic leading-relaxed cursor-pointer">{primaryOffice.address}</address>
+                    </a>
+                  ) : (
+                    <address className="not-italic leading-relaxed">{primaryOffice.address}</address>
+                  )}
                 </li>
               )}
               <li className="flex items-start gap-3.5 text-xs text-[#FCFAF5]/70">

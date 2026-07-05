@@ -4,7 +4,7 @@ export const FAQ_LIST: FaqItem[] = [
   {
     id: "faq-docs",
     question: "What documents are required to apply for Hajj or Umrah visas?",
-    answer: "To book your Hajj package, you must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card. Additionally, please submit Biometric Passport Photographs with a high-definition white background (available in both physical prints and digital soft copies)."
+    answer: "To book your Hajj package, you must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card. Additionally, please submit Passport Size Photographs with a high-definition white background (available in both physical prints and digital soft copies)."
   },
   {
     id: "faq-proximity",

@@ -84,7 +84,20 @@ export default async function PackageDetailPage({ params }: PackageDetailPagePro
                 <span>{pkg.categorySlug} Tour</span>
               </div>
               <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground">
-                {pkg.title}
+                {(() => {
+                  const match = pkg.title.match(/^(.*?)\s*(\(\s*\d+\+?\s*Days\s*\))$/i);
+                  if (match) {
+                    return (
+                      <>
+                        <span className="text-foreground">{match[1]}</span>
+                        <span className="text-accent ml-2 text-[0.65em] font-bold tracking-widest whitespace-nowrap inline-block align-middle font-sans">
+                          {match[2]}
+                        </span>
+                      </>
+                    );
+                  }
+                  return pkg.title;
+                })()}
               </h1>
               
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs sm:text-sm font-semibold tracking-wide text-muted-foreground uppercase pt-2">

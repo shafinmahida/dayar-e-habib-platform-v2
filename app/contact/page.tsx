@@ -53,9 +53,22 @@ export default function ContactPage() {
                     <MapPin className="size-5 text-accent mt-0.5 shrink-0" />
                     <div className="space-y-1">
                       <div className="text-xs font-bold text-foreground/80 uppercase">Address</div>
-                      <address className="text-sm not-italic leading-relaxed text-muted-foreground">
-                        {primaryOffice.address}
-                      </address>
+                      {primaryOffice.mapLink ? (
+                        <a 
+                          href={primaryOffice.mapLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block text-sm not-italic leading-relaxed text-muted-foreground hover:text-accent transition-colors duration-200"
+                        >
+                          <address className="not-italic cursor-pointer">
+                            {primaryOffice.address}
+                          </address>
+                        </a>
+                      ) : (
+                        <address className="text-sm not-italic leading-relaxed text-muted-foreground">
+                          {primaryOffice.address}
+                        </address>
+                      )}
                     </div>
                   </div>
 

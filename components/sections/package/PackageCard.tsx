@@ -75,7 +75,20 @@ export function PackageCard({ pkg }: PackageCardProps) {
           </div>
           
           <h3 className="font-heading text-xl sm:text-2xl font-extrabold tracking-tight text-foreground leading-tight group-hover:text-accent transition-colors duration-300">
-            {pkg.title}
+            {(() => {
+              const match = pkg.title.match(/^(.*?)\s*(\(\s*\d+\+?\s*Days\s*\))$/i);
+              if (match) {
+                return (
+                  <>
+                    <span className="text-foreground">{match[1]}</span>
+                    <span className="text-accent ml-2 text-[0.65em] font-bold tracking-widest whitespace-nowrap inline-block align-middle font-sans">
+                      {match[2]}
+                    </span>
+                  </>
+                );
+              }
+              return pkg.title;
+            })()}
           </h3>
           
           <div className="flex flex-wrap items-center gap-x-5 gap-y-2 text-[9px] font-bold tracking-widest text-muted-foreground uppercase pt-1">
