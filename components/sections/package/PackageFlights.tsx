@@ -27,9 +27,12 @@ export function PackageFlights({ flights }: PackageFlightsProps) {
             <div className="text-xs font-semibold tracking-wide text-accent uppercase">
               Route: {flight.route}
             </div>
-            <p className="text-xs text-muted-foreground">
-              Details: {flight.details}
-            </p>
+            {flight.details && (
+              <div className="mt-3 p-3 bg-accent/5 border-l-2 border-accent text-xs text-muted-foreground italic leading-relaxed text-left">
+                <span className="font-semibold text-accent not-italic block mb-0.5">Important Information:</span>
+                {flight.details}
+              </div>
+            )}
           </div>
         </div>
       ))}

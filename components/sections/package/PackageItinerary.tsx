@@ -8,7 +8,7 @@ export function PackageItinerary({ itinerary }: PackageItineraryProps) {
   if (!itinerary || itinerary.length === 0) return null;
 
   return (
-    <div className="space-y-8 select-none">
+    <div className="space-y-8">
       <div className="relative border-l-2 border-[#CFC4AF]/40 pl-6 ml-4 space-y-10">
         {itinerary.map((item) => (
           <div key={item.dayNumber} className="relative space-y-2 text-left">

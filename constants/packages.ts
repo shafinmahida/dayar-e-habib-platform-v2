@@ -5,7 +5,7 @@ export const PACKAGES_DATA: Package[] = [
     slug: "premium-hajj",
     categorySlug: "hajj",
     destinationSlugs: ["makkah", "madinah"],
-    title: "Premium Hajj Full Package",
+    title: "Al-Safa Premium Hajj Odyssey",
     duration: "Tentative",
     highlights: [
       "Tentative Hijri Timeline (4th Dhul Hijjah - 11th Muharram)",
@@ -24,8 +24,8 @@ export const PACKAGES_DATA: Package[] = [
     featured: true,
     displayOrder: 1,
     createdAt: "2026-06-30T12:00:00Z",
-    seoTitle: "Premium Hajj Full Tour Package | Dayar-E-Habib",
-    seoDescription: "Book our premium Hajj full tour package with tentative Hijri timeline. Scholar guidance and standard Makkah/Madinah hotels included.",
+    seoTitle: "Al-Safa Premium Hajj Odyssey | Dayar-E-Habib",
+    seoDescription: "Book our Al-Safa premium Hajj full tour package with tentative Hijri timeline. Scholar guidance and standard Makkah/Madinah hotels included.",
     itinerary: [
       { dayNumber: 1, title: "4th Dhul Hijjah | Azizya (Day 1)", description: "Arrive in Jeddah, transfer to Makkah, and check-in to Azizya apartment." },
       { dayNumber: 2, title: "5th Dhul Hijjah | Azizya (Day 2)", description: "Perform Umrah under professional scholar guidance and rest." },
@@ -63,12 +63,12 @@ export const PACKAGES_DATA: Package[] = [
       "Excess baggage charges above standard limits"
     ],
     hotels: [
-      { name: "Standard Hotel", location: "Makkah Mukarma", rating: "Haram Courtyard", distance: "Near the courtyard of the Haram Sharif" },
-      { name: "Standard Hotel", location: "Madinah Munawwarah", rating: "Haram Courtyard", distance: "Near the courtyard of the Haram Sharif" },
-      { name: "Shifting Accommodation (Apartment)", location: "Azizia / Kakia", rating: "Standard Apartment", distance: "Shifting Accommodation at 4 to 8 km" }
+      { name: "Makkah Mukarma", location: "Standard Hotel", rating: "", distance: "Near the courtyard of the Haram Sharif" },
+      { name: "Madinah Munawwarah", location: "Standard Hotel", rating: "", distance: "Near the courtyard of the Haram Sharif" },
+      { name: "Azizia / Kakia", location: "Apartment", rating: "", distance: "Shifting Accommodation at 4 to 8 km" }
     ],
     flights: [
-      { airline: "Convenient Airlines", route: "Mumbai (BOM) - Saudi Arabia (JED/MED) - Mumbai (BOM)", class: "Economy Class", details: "Inflight meals and baggage included" }
+      { airline: "Convenient Airlines", route: "All travel originates and terminates in Mumbai", class: "Economy Class", details: "Any Excess Baggage beyond the Standard Airline Allowance, or Requests to Change Travel Dates and Routes, Will Incur Additional Charges." }
     ],
     faqs: [
       { question: "What are the required documents for booking Hajj?", answer: "You must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card." },
@@ -80,7 +80,7 @@ export const PACKAGES_DATA: Package[] = [
     slug: "short-hajj",
     categorySlug: "hajj",
     destinationSlugs: ["makkah", "madinah"],
-    title: "Hajj Short Package",
+    title: "Al-Marwah Hajj Executive Stay",
     duration: "Tentative",
     highlights: [
       "Tentative Hijri Timeline (25th Dhul Qidah - 15th Dhul Hijjah)",
@@ -99,8 +99,8 @@ export const PACKAGES_DATA: Package[] = [
     featured: true,
     displayOrder: 2,
     createdAt: "2026-06-30T12:00:00Z",
-    seoTitle: "Hajj Short Tour Package | Dayar-E-Habib",
-    seoDescription: "Book our Hajj short tour package with tentative Hijri dates. Scholar-led Hajj rituals, Azizya and Madina hotels included.",
+    seoTitle: "Al-Marwah Hajj Executive Stay | Dayar-E-Habib",
+    seoDescription: "Book our Al-Marwah Hajj short stay package with tentative Hijri dates. Scholar-led Hajj rituals, Azizya and Madina hotels included.",
     itinerary: [
       { dayNumber: 1, title: "25th Dhul Qidah | Madinah (Day 1)", description: "Arrive at Madinah Airport, private coach transfer, and check-in to Madinah hotel." },
       { dayNumber: 2, title: "26th Dhul Qidah | Madinah (Day 2)", description: "Salutations at Prophet's Mosque and devotional rest." },
@@ -141,10 +141,11 @@ export const PACKAGES_DATA: Package[] = [
       "Excess baggage charges above standard limits"
     ],
     hotels: [
-      { name: "Accommodation in Star Hotels", location: "Makkah & Madinah", rating: "Standard Quality", distance: "Convenient distances to Holy Places" }
+      { name: "Madinah Munawwarah", location: "Standard Hotel", rating: "", distance: "Near the courtyard of the Haram Sharif" },
+      { name: "Azizia / Kakia", location: "Apartment", rating: "", distance: "Shifting Accommodation at 4 to 8 km" }
     ],
     flights: [
-      { airline: "Convenient Airlines", route: "Mumbai (BOM) - Saudi Arabia (JED/MED) - Mumbai (BOM)", class: "Economy Class", details: "Inflight meals and baggage included" }
+      { airline: "Convenient Airlines", route: "All travel originates and terminates in Mumbai", class: "Economy Class", details: "Any Excess Baggage beyond the Standard Airline Allowance, or Requests to Change Travel Dates and Routes, Will Incur Additional Charges." }
     ],
     faqs: [
       { question: "What are the required documents for booking Hajj?", answer: "You must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card." },
@@ -156,7 +157,7 @@ export const PACKAGES_DATA: Package[] = [
     slug: "deluxe-umrah",
     categorySlug: "umrah",
     destinationSlugs: ["makkah", "madinah"],
-    title: "Deluxe Umrah Program",
+    title: "Raudah Elite Umrah Sanctuary",
     duration: "15 Days",
     highlights: [
       "Accommodations directly in front of the Haram",
@@ -174,8 +175,8 @@ export const PACKAGES_DATA: Package[] = [
     featured: true,
     displayOrder: 2,
     createdAt: "2026-06-30T12:00:00Z",
-    seoTitle: "Deluxe 15 Days Umrah Program | Dayar-E-Habib",
-    seoDescription: "15 Days group or customized Deluxe Umrah tour package with hotel accommodations in front of the Haram.",
+    seoTitle: "Raudah Elite Umrah Sanctuary | Dayar-E-Habib",
+    seoDescription: "15 Days group or customized Raudah Elite Umrah Sanctuary package with hotel accommodations in front of the Haram.",
     itinerary: [
       { dayNumber: 1, title: "Arrival in Makkah", description: "Transfer from Jeddah Airport to Makkah hotel. Check-in and rest." },
       { dayNumber: 2, title: "Umrah Rituals", description: "Perform Umrah under professional scholar guidance." },
@@ -214,7 +215,7 @@ export const PACKAGES_DATA: Package[] = [
     slug: "classic-ziyarat",
     categorySlug: "ziyarat",
     destinationSlugs: ["baghdad"],
-    title: "11vi Sharif in Baghdad - Classic Ziyarat",
+    title: "Al-Kauthar Iraq Ziyarat Chronicle",
     duration: "11 Days",
     highlights: [
       "Celebrate 11vi Sharif in Baghdad",
@@ -233,8 +234,8 @@ export const PACKAGES_DATA: Package[] = [
     featured: true,
     displayOrder: 3,
     createdAt: "2026-06-30T12:00:00Z",
-    seoTitle: "11vi Sharif Baghdad & Holy Ziyarat Package | Dayar-E-Habib",
-    seoDescription: "Join our 11-day confirmed Ziyarat group to celebrate 11vi Sharif in Baghdad. Includes 6 nights in Baghdad, 2 nights in Najaf, 2 nights in Karbala, and direct flights.",
+    seoTitle: "Al-Kauthar Iraq Ziyarat Chronicle | Dayar-E-Habib",
+    seoDescription: "Join our 11-day Ziyarat group to celebrate 11vi Sharif in Baghdad. Includes 6 nights in Baghdad, 2 nights in Najaf, 2 nights in Karbala, and direct flights.",
     itinerary: [
       { dayNumber: 1, title: "Day 1-2 | Najaf Stay (2 Nights)", description: "Arrive at Najaf Airport. Check-in to your hotel. Perform ziyarat at the sacred Dome of Maula Ali (A.S.), Masjid Kufa, and Wadi-us-Salaam." },
       { dayNumber: 3, title: "Day 3-8 | Baghdad - 11vi Sharif (6 Nights)", description: "Transfer to Baghdad. Check-in to Atlas Baghdad Hotel in Sadun (6-night stay). Perform devotions and celebrate 11vi Sharif at the sacred Dome of Ghaus-e-Azam Sheikh Abdul Qadir Jilani." },

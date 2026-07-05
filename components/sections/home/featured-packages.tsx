@@ -88,7 +88,7 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
 
         {/* Carousel Window */}
         <div 
-          className="relative w-full h-[620px] md:h-[500px] flex items-center justify-center select-none"
+          className="relative w-full h-[620px] md:h-[500px] flex items-center justify-center"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}

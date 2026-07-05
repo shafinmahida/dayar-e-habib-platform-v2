@@ -88,7 +88,7 @@ export function Trust({ items }: TrustProps) {
                   isVisible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-6"
                 )}
               >
-                <p className="font-serif italic text-base text-[#FCFAF5]/90 hover:text-accent transition-colors duration-300 cursor-default select-none">
+                <p className="font-serif italic text-base text-[#FCFAF5]/90 hover:text-accent transition-colors duration-300 cursor-default">
                   Late Mohammed Hussain Bumedia
                 </p>
                 <p className="text-[9px] font-black tracking-widest text-[#FCFAF5]/50 uppercase mt-1">Founder, Dayar-E-Habib</p>
