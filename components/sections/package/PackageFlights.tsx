@@ -20,9 +20,6 @@ export function PackageFlights({ flights }: PackageFlightsProps) {
               <h4 className="font-heading text-base font-bold text-foreground">
                 {flight.airline}
               </h4>
-              <span className="inline-flex max-w-max items-center rounded bg-secondary px-2 py-0.5 text-xs font-semibold text-foreground">
-                {flight.class}
-              </span>
             </div>
             <div className="text-xs font-semibold tracking-wide text-accent uppercase">
               Route: {flight.route}

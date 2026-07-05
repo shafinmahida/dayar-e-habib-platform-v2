@@ -5,7 +5,7 @@ export const PACKAGES_DATA: Package[] = [
     slug: "premium-hajj",
     categorySlug: "hajj",
     destinationSlugs: ["makkah", "madinah"],
-    title: "Al-Safa Premium Hajj Odyssey",
+    title: "DH Grand Stay ( 34+ Days )",
     duration: "Tentative",
     highlights: [
       "Tentative Hijri Timeline (4th Dhul Hijjah - 11th Muharram)",
@@ -24,26 +24,26 @@ export const PACKAGES_DATA: Package[] = [
     featured: true,
     displayOrder: 1,
     createdAt: "2026-06-30T12:00:00Z",
-    seoTitle: "Al-Safa Premium Hajj Odyssey | Dayar-E-Habib",
-    seoDescription: "Book our Al-Safa premium Hajj full tour package with tentative Hijri timeline. Scholar guidance and standard Makkah/Madinah hotels included.",
+    seoTitle: "DH Grand Stay | Dayar-E-Habib",
+    seoDescription: "Book our DH Grand Stay Hajj full tour package with tentative Hijri timeline. Scholar guidance and standard Makkah/Madinah hotels included.",
     itinerary: [
-      { dayNumber: 1, title: "4th Dhul Hijjah | Azizya (Day 1)", description: "Arrive in Jeddah, transfer to Makkah, and check-in to Azizya apartment." },
-      { dayNumber: 2, title: "5th Dhul Hijjah | Azizya (Day 2)", description: "Perform Umrah under professional scholar guidance and rest." },
-      { dayNumber: 3, title: "6th Dhul Hijjah | Azizya (Day 3)", description: "Preparatory Hajj briefing and theological lectures." },
-      { dayNumber: 4, title: "7th Dhul Hijjah | Azizya (Day 4)", description: "Final Hajj briefing and preparation for Ihram." },
-      { dayNumber: 5, title: "8th Dhul Hijjah | Mina (Day 5)", description: "Hajj begins: Wear Ihram and transfer to Mina camps." },
-      { dayNumber: 6, title: "9th Dhul Hijjah | Arafat & Muzdalifah (Day 6)", description: "Stay at Arafat (*Wuquf*) and spend the night under the open sky at Muzdalifah." },
-      { dayNumber: 7, title: "10th Dhul Hijjah | Jamarat & Tawaf (Day 7)", description: "Stoning at Jamarat, Qurbani, Halq (shaving head), and perform Tawaf-e-Ziyarah." },
-      { dayNumber: 8, title: "11th Dhul Hijjah | Mina (Day 8)", description: "Stay in Mina for prayers and perform afternoon stoning." },
-      { dayNumber: 9, title: "12th Dhul Hijjah | Mina & Azizya (Day 9)", description: "Stoning at Jamarat and complete Mina rituals. Return to Azizya apartment." },
-      { dayNumber: 10, title: "13th Dhul Hijjah | Azizya (Day 10)", description: "Post-Hajj rest and devotional recovery at Azizya apartment." },
-      { dayNumber: 11, title: "14th Dhul Hijjah | Azizya (Day 11)", description: "Engage in worship and rest." },
-      { dayNumber: 12, title: "15th Dhul Hijjah | Azizya (Day 12)", description: "Engage in worship and rest." },
-      { dayNumber: 13, title: "16th Dhul Hijjah | Azizya (Day 13)", description: "Check out from Azizya and prepare to move to Haram hotel." },
-      { dayNumber: 14, title: "17th to 30th Dhul Hijjah | Haram Hotel (Days 14-27)", description: "Enjoy glorious days of continuous prayer and devotion in hotel close to Haram boundaries." },
-      { dayNumber: 28, title: "1st Muharram | Makkah/Madinah Transition (Day 28)", description: "Check out from Makkah, travel to Madinah Munawwarah, and check in at the hotel in Madinah Munawwarah." },
-      { dayNumber: 29, title: "2nd to 10th Muharram | Madinah Munawwarah (Days 29-37)", description: "Spend spiritual days in Madinah at Prophet's Mosque including local historical Ziyarats." },
-      { dayNumber: 38, title: "11th Muharram | Madinah Departure (Day 38)", description: "Final check out, transfer to airport for return flight." }
+      { dayNumber: 1, title: "4th Dhul Hijjah | Azizya", description: "Arrive in Jeddah, transfer to Makkah, and check-in to Azizya apartment." },
+      { dayNumber: 2, title: "5th Dhul Hijjah | Azizya", description: "Perform Umrah under professional scholar guidance and rest." },
+      { dayNumber: 3, title: "6th Dhul Hijjah | Azizya", description: "Preparatory Hajj briefing and theological lectures." },
+      { dayNumber: 4, title: "7th Dhul Hijjah | Azizya", description: "Final Hajj briefing and preparation for Ihram." },
+      { dayNumber: 5, title: "8th Dhul Hijjah | Mina", description: "Hajj begins: Wear Ihram and transfer to Mina camps." },
+      { dayNumber: 6, title: "9th Dhul Hijjah | Arafat & Muzdalifah", description: "Stay at Arafat (*Wuquf*) and spend the night under the open sky at Muzdalifah." },
+      { dayNumber: 7, title: "10th Dhul Hijjah | Jamarat & Tawaf", description: "Stoning at Jamarat, Qurbani, Halq (shaving head), and perform Tawaf-e-Ziyarah." },
+      { dayNumber: 8, title: "11th Dhul Hijjah | Mina", description: "Stay in Mina for prayers and perform afternoon stoning." },
+      { dayNumber: 9, title: "12th Dhul Hijjah | Mina & Azizya", description: "Stoning at Jamarat and complete Mina rituals. Return to Azizya apartment." },
+      { dayNumber: 10, title: "13th Dhul Hijjah | Azizya", description: "Post-Hajj rest and devotional recovery at Azizya apartment." },
+      { dayNumber: 11, title: "14th Dhul Hijjah | Azizya", description: "Engage in worship and rest." },
+      { dayNumber: 12, title: "15th Dhul Hijjah | Azizya", description: "Engage in worship and rest." },
+      { dayNumber: 13, title: "16th Dhul Hijjah | Azizya", description: "Check out from Azizya and prepare to move to Haram hotel." },
+      { dayNumber: 14, title: "17th to 30th Dhul Hijjah | Haram Hotel", description: "Enjoy glorious days of continuous prayer and devotion in hotel close to Haram boundaries." },
+      { dayNumber: 28, title: "1st Muharram | Makkah/Madinah Transition", description: "Check out from Makkah, travel to Madinah Munawwarah, and check in at the hotel in Madinah Munawwarah." },
+      { dayNumber: 29, title: "2nd to 10th Muharram | Madinah Munawwarah", description: "Spend spiritual days in Madinah at Prophet's Mosque including local historical Ziyarats." },
+      { dayNumber: 38, title: "11th Muharram | Madinah Departure", description: "Final check out, transfer to airport for return flight." }
     ],
     inclusions: [
       "Accommodation in Star Hotels at Both Holy Places",
@@ -68,10 +68,10 @@ export const PACKAGES_DATA: Package[] = [
       { name: "Azizia / Kakia", location: "Apartment", rating: "", distance: "Shifting Accommodation at 4 to 8 km" }
     ],
     flights: [
-      { airline: "Convenient Airlines", route: "All travel originates and terminates in Mumbai", class: "Economy Class", details: "Any Excess Baggage beyond the Standard Airline Allowance, or Requests to Change Travel Dates and Routes, Will Incur Additional Charges." }
+      { airline: "Convenient Airlines", route: "All travel originates and terminates in Mumbai", class: "", details: "Any Excess Baggage beyond the Standard Airline Allowance, or Requests to Change Travel Dates and Routes, Will Incur Additional Charges." }
     ],
     faqs: [
-      { question: "What are the required documents for booking Hajj?", answer: "You must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card." },
+      { question: "What are the required documents for booking Hajj?", answer: "To book your Hajj package, you must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card. Additionally, please submit Biometric Passport Photographs with a high-definition white background (available in both physical prints and digital soft copies)." },
       { question: "What is the standard room occupancy?", answer: "Standard accommodation features 4 to 5 pilgrims per room. Double or triple sharing rooms can be arranged upon request at adjusted brochure rates." },
       { question: "What is the Hajj package cancellation policy?", answer: "Once booking confirmation is submitted, Hajj package payments are fully non-refundable under all cancellation circumstances." }
     ]
@@ -80,7 +80,7 @@ export const PACKAGES_DATA: Package[] = [
     slug: "short-hajj",
     categorySlug: "hajj",
     destinationSlugs: ["makkah", "madinah"],
-    title: "Al-Marwah Hajj Executive Stay",
+    title: "DH Express Stay (18+ Days )",
     duration: "Tentative",
     highlights: [
       "Tentative Hijri Timeline (25th Dhul Qidah - 15th Dhul Hijjah)",
@@ -99,29 +99,23 @@ export const PACKAGES_DATA: Package[] = [
     featured: true,
     displayOrder: 2,
     createdAt: "2026-06-30T12:00:00Z",
-    seoTitle: "Al-Marwah Hajj Executive Stay | Dayar-E-Habib",
-    seoDescription: "Book our Al-Marwah Hajj short stay package with tentative Hijri dates. Scholar-led Hajj rituals, Azizya and Madina hotels included.",
+    seoTitle: "DH Express Stay | Dayar-E-Habib",
+    seoDescription: "Book our DH Express Stay Hajj short stay package with tentative Hijri dates. Scholar-led Hajj rituals, Azizya and Madina hotels included.",
     itinerary: [
-      { dayNumber: 1, title: "25th Dhul Qidah | Madinah (Day 1)", description: "Arrive at Madinah Airport, private coach transfer, and check-in to Madinah hotel." },
-      { dayNumber: 2, title: "26th Dhul Qidah | Madinah (Day 2)", description: "Salutations at Prophet's Mosque and devotional rest." },
-      { dayNumber: 3, title: "27th Dhul Qidah | Madinah (Day 3)", description: "Local historical Ziyarat tours in Madinah Al-Munawwarah." },
-      { dayNumber: 4, title: "28th Dhul Qidah | Madinah (Day 4)", description: "Prophet's Mosque prayers and spiritual lectures." },
-      { dayNumber: 5, title: "29th Dhul Qidah | Madinah (Day 5)", description: "Devotional reflection and reading." },
-      { dayNumber: 6, title: "1st Dhul Hijjah | Madinah (Day 6)", description: "Continuous worship and group meetings." },
-      { dayNumber: 7, title: "2nd Dhul Hijjah | Madinah (Day 7)", description: "Ziyarat at Mount Uhud and Masjid Quba." },
-      { dayNumber: 8, title: "3rd Dhul Hijjah | Madinah (Day 8)", description: "Final preparation for Ihram and travel to Makkah." },
-      { dayNumber: 9, title: "4th Dhul Hijjah | Madinah/Makkah Transition (Day 9)", description: "Travel to Makkah, wear Ihram at Miqat, perform Umrah, and check-in to Azizya hotel." },
-      { dayNumber: 10, title: "5th Dhul Hijjah | Azizya (Day 10)", description: "Check-in Azizya and post-Umrah rest." },
-      { dayNumber: 11, title: "6th Dhul Hijjah | Azizya (Day 11)", description: "Theological lectures on Hajj rituals." },
-      { dayNumber: 12, title: "7th Dhul Hijjah | Azizya (Day 12)", description: "Hajj preparation briefing with religious scholars." },
-      { dayNumber: 13, title: "8th Dhul Hijjah | Mina (Day 13)", description: "Hajj begins: Wear Ihram and transfer to Mina air-conditioned camps." },
-      { dayNumber: 14, title: "9th Dhul Hijjah | Arafat & Muzdalifah (Day 14)", description: "Stay at Arafat (*Wuquf*) and spend the night under the open sky at Muzdalifah." },
-      { dayNumber: 15, title: "10th Dhul Hijjah | Jamarat & Tawaf (Day 15)", description: "Stoning at Jamarat, Qurbani, Halq (shaving head), and perform Tawaf-e-Ziyarah." },
-      { dayNumber: 16, title: "11th Dhul Hijjah | Mina (Day 16)", description: "Stay in Mina, perform afternoon stoning." },
-      { dayNumber: 17, title: "12th Dhul Hijjah | Mina & Azizya (Day 17)", description: "Stoning at Jamarat, conclude Hajj days, transfer to Azizya hotel." },
-      { dayNumber: 18, title: "13th Dhul Hijjah | Azizya (Day 18)", description: "Rest and devotional worship in Azizya." },
-      { dayNumber: 19, title: "14th Dhul Hijjah | Azizya (Day 19)", description: "Farewell briefing and Tawaf preparation." },
-      { dayNumber: 20, title: "15th Dhul Hijjah | Azizya Departure (Day 20)", description: "Farewell Tawaf at Haram, transfer to Jeddah Airport for return flight." }
+      { dayNumber: 1, title: "25th Dhul Qidah | Madinah", description: "Arrive at Madinah Airport, private coach transfer, and check-in to Madinah hotel." },
+      { dayNumber: 2, title: "26th Dhul Qidah to 3rd Dhul Hijjah | Madinah Munawwarah", description: "Spend spiritual days in Madinah at Prophet's Mosque including local historical Ziyarats." },
+      { dayNumber: 9, title: "4th Dhul Hijjah | Madinah/Makkah Transition", description: "Travel to Makkah, wear Ihram at Miqat, perform Umrah, and check-in to Azizya hotel." },
+      { dayNumber: 10, title: "5th Dhul Hijjah | Azizya", description: "Perform Umrah under professional scholar guidance and rest." },
+      { dayNumber: 11, title: "6th Dhul Hijjah | Azizya", description: "Preparatory Hajj briefing and theological lectures." },
+      { dayNumber: 12, title: "7th Dhul Hijjah | Azizya", description: "Final Hajj briefing and preparation for Ihram." },
+      { dayNumber: 13, title: "8th Dhul Hijjah | Mina", description: "Hajj begins: Wear Ihram and transfer to Mina camps." },
+      { dayNumber: 14, title: "9th Dhul Hijjah | Arafat & Muzdalifah", description: "Stay at Arafat (*Wuquf*) and spend the night under the open sky at Muzdalifah." },
+      { dayNumber: 15, title: "10th Dhul Hijjah | Jamarat & Tawaf", description: "Stoning at Jamarat, Qurbani, Halq (shaving head), and perform Tawaf-e-Ziyarah." },
+      { dayNumber: 16, title: "11th Dhul Hijjah | Mina", description: "Stay in Mina for prayers and perform afternoon stoning." },
+      { dayNumber: 17, title: "12th Dhul Hijjah | Mina & Azizya", description: "Stoning at Jamarat and complete Mina rituals. Return to Azizya apartment." },
+      { dayNumber: 18, title: "13th Dhul Hijjah | Azizya", description: "Post-Hajj rest and devotional recovery at Azizya apartment." },
+      { dayNumber: 19, title: "14th Dhul Hijjah | Azizya", description: "Engage in worship and rest." },
+      { dayNumber: 20, title: "15th Dhul Hijjah | Azizya", description: "Engage in worship and rest." }
     ],
     inclusions: [
       "Accommodation in Star Hotels at Both Holy Places",
@@ -145,10 +139,10 @@ export const PACKAGES_DATA: Package[] = [
       { name: "Azizia / Kakia", location: "Apartment", rating: "", distance: "Shifting Accommodation at 4 to 8 km" }
     ],
     flights: [
-      { airline: "Convenient Airlines", route: "All travel originates and terminates in Mumbai", class: "Economy Class", details: "Any Excess Baggage beyond the Standard Airline Allowance, or Requests to Change Travel Dates and Routes, Will Incur Additional Charges." }
+      { airline: "Convenient Airlines", route: "All travel originates and terminates in Mumbai", class: "", details: "Any Excess Baggage beyond the Standard Airline Allowance, or Requests to Change Travel Dates and Routes, Will Incur Additional Charges." }
     ],
     faqs: [
-      { question: "What are the required documents for booking Hajj?", answer: "You must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card." },
+      { question: "What are the required documents for booking Hajj?", answer: "To book your Hajj package, you must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card. Additionally, please submit Biometric Passport Photographs with a high-definition white background (available in both physical prints and digital soft copies)." },
       { question: "What is the standard room occupancy?", answer: "Standard accommodation features 4 to 5 pilgrims per room. Double or triple sharing rooms can be arranged upon request at adjusted brochure rates." },
       { question: "What is the Hajj package cancellation policy?", answer: "Once booking confirmation is submitted, Hajj package payments are fully non-refundable under all cancellation circumstances." }
     ]
@@ -157,7 +151,7 @@ export const PACKAGES_DATA: Package[] = [
     slug: "deluxe-umrah",
     categorySlug: "umrah",
     destinationSlugs: ["makkah", "madinah"],
-    title: "Raudah Elite Umrah Sanctuary",
+    title: "DH Sacred Umrah ( 14+ Days )",
     duration: "15 Days",
     highlights: [
       "Accommodations directly in front of the Haram",
@@ -175,8 +169,8 @@ export const PACKAGES_DATA: Package[] = [
     featured: true,
     displayOrder: 2,
     createdAt: "2026-06-30T12:00:00Z",
-    seoTitle: "Raudah Elite Umrah Sanctuary | Dayar-E-Habib",
-    seoDescription: "15 Days group or customized Raudah Elite Umrah Sanctuary package with hotel accommodations in front of the Haram.",
+    seoTitle: "DH Sacred Umrah | Dayar-E-Habib",
+    seoDescription: "15 Days group or customized DH Sacred Umrah package with hotel accommodations in front of the Haram.",
     itinerary: [
       { dayNumber: 1, title: "Arrival in Makkah", description: "Transfer from Jeddah Airport to Makkah hotel. Check-in and rest." },
       { dayNumber: 2, title: "Umrah Rituals", description: "Perform Umrah under professional scholar guidance." },
@@ -201,21 +195,22 @@ export const PACKAGES_DATA: Package[] = [
       "Any extra personal visa clearances"
     ],
     hotels: [
-      { name: "Al-Haram Front Hotel", location: "Makkah", rating: "5 Star", distance: "Walking distance to outer courtyard" },
-      { name: "Elaf Madinah Oasis", location: "Madinah", rating: "4 Star", distance: "200m from Haram gates" }
+      { name: "Al-Haram Front Hotel", location: "Makkah", rating: "", distance: "Walking distance to outer courtyard" },
+      { name: "Elaf Madinah Oasis", location: "Madinah", rating: "", distance: "200m from Haram gates" }
     ],
     flights: [
-      { airline: "Air India / Gulf Air", route: "Mumbai (BOM) - Jeddah (JED) / Madinah (MED) - Mumbai (BOM)", class: "Economy", details: "Standard check-in allowances" }
+      { airline: "Convenient Airlines", route: "All travel originates and terminates in Mumbai", class: "", details: "Any Excess Baggage beyond the Standard Airline Allowance, or Requests to Change Travel Dates and Routes, Will Incur Additional Charges." }
     ],
     faqs: [
-      { question: "Is laundry service included?", answer: "Yes, our Deluxe Umrah packages include complimentary bi-weekly laundry service." }
+      { question: "What are the required documents for booking Umrah?", answer: "To book your Hajj package, you must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card. Additionally, please submit Biometric Passport Photographs with a high-definition white background (available in both physical prints and digital soft copies)." },
+      { question: "Is laundry service included?", answer: "Yes, our DH Sacred Umrah packages include complimentary bi-weekly laundry service." }
     ]
   },
   {
     slug: "classic-ziyarat",
     categorySlug: "ziyarat",
     destinationSlugs: ["baghdad"],
-    title: "Al-Kauthar Iraq Ziyarat Chronicle",
+    title: "DH Holy Heritage ( 10+ Days )",
     duration: "11 Days",
     highlights: [
       "Celebrate 11vi Sharif in Baghdad",
@@ -234,44 +229,43 @@ export const PACKAGES_DATA: Package[] = [
     featured: true,
     displayOrder: 3,
     createdAt: "2026-06-30T12:00:00Z",
-    seoTitle: "Al-Kauthar Iraq Ziyarat Chronicle | Dayar-E-Habib",
+    seoTitle: "DH Holy Heritage | Dayar-E-Habib",
     seoDescription: "Join our 11-day Ziyarat group to celebrate 11vi Sharif in Baghdad. Includes 6 nights in Baghdad, 2 nights in Najaf, 2 nights in Karbala, and direct flights.",
     itinerary: [
-      { dayNumber: 1, title: "Day 1-2 | Najaf Stay (2 Nights)", description: "Arrive at Najaf Airport. Check-in to your hotel. Perform ziyarat at the sacred Dome of Maula Ali (A.S.), Masjid Kufa, and Wadi-us-Salaam." },
-      { dayNumber: 3, title: "Day 3-8 | Baghdad - 11vi Sharif (6 Nights)", description: "Transfer to Baghdad. Check-in to Atlas Baghdad Hotel in Sadun (6-night stay). Perform devotions and celebrate 11vi Sharif at the sacred Dome of Ghaus-e-Azam Sheikh Abdul Qadir Jilani." },
-      { dayNumber: 9, title: "Day 9-10 | Karbala Al-Mualla (2 Nights)", description: "Transfer to Karbala. Visit the holy shrines of Imam Hussain (A.S.) and Hazrat Abbas (A.S.) with local scholar guidance." },
-      { dayNumber: 11, title: "Day 11 | Return Flight to Mumbai", description: "Transfer to Baghdad Airport. Board your direct flight by Iraqi Airways back to Mumbai." }
+      { dayNumber: 1, title: "Najaf Stay", description: "Arrive at Najaf Airport. Check-in to your hotel. Perform ziyarat at the sacred Dome of Maula Ali (A.S.), Masjid Kufa, and Wadi-us-Salaam." },
+      { dayNumber: 3, title: "Baghdad - 11vi Sharif", description: "Transfer to Baghdad. Check-in to Atlas Baghdad Hotel in Sadun (6-night stay). Perform devotions and celebrate 11vi Sharif at the sacred Dome of Ghaus-e-Azam Sheikh Abdul Qadir Jilani." },
+      { dayNumber: 9, title: "Karbala Al-Mualla", description: "Transfer to Karbala. Visit the holy shrines of Imam Hussain (A.S.) and Hazrat Abbas (A.S.) with local scholar guidance." },
+      { dayNumber: 11, title: "Return Flight to Mumbai", description: "Transfer to Baghdad Airport. Board your direct flight by Iraqi Airways back to Mumbai." }
     ],
     inclusions: [
-      "Direct flight tickets by Iraqi Airways (Mumbai departure)",
+      "Return Air Fare (By Convenient Airlines)",
       "Iraq Electronic Visa processing approval",
       "Mandatory Travel Insurance cover",
       "Hotel stays (6 Nights Baghdad Sadun, 2 Nights Najaf, 2 Nights Karbala)",
       "Full board Indian buffet meals (Breakfast, Lunch & Dinner)",
       "Local group transfers in modern AC buses",
-      "Complimentary Travel Kit",
       "Experienced guide & scholar theological coordination"
+    ],
+    complimentary: [
+      "Travel Kit"
     ],
     exclusions: [
       "Personal expenses, laundry, and local tips",
-      "Any additional excess baggage charges above airline allowance"
+      "Excess baggage charges above standard limits"
     ],
     hotels: [
-      { name: "Atlas Baghdad Hotel", location: "Sadun, Baghdad", rating: "Premium Stay", distance: "6 Nights stay" },
-      { name: "Luxury Najaf Shrines Stay", location: "Najaf", rating: "4 Star", distance: "2 Nights stay" },
-      { name: "Karbala Holy Shrines stay", location: "Karbala", rating: "4 Star", distance: "2 Nights stay" }
+      { name: "Baghdad", location: "Standard Hotel", rating: "", distance: "6 Nights stay" },
+      { name: "Najaf", location: "Standard Hotel", rating: "", distance: "2 Nights stay" },
+      { name: "Karbala", location: "Standard Hotel", rating: "", distance: "2 Nights stay" }
     ],
     flights: [
-      { airline: "Iraqi Airways", route: "Mumbai (BOM) - Baghdad (BGW) - Mumbai (BOM) [Direct Flight]", class: "Economy Class", details: "Confirmed departures: 17th, 18th, and 19th September" }
-    ],
-    faqs: [
-      { question: "What airlines are used for the Ziyarat package?", answer: "We use direct flights operated by Iraqi Airways from Mumbai to Baghdad." },
-      { question: "Is visa processing included in the package cost?", answer: "Yes, the package cost of 1,35,000 INR includes the Iraq visa approval processing, travel insurance, and all board meals." }
+      { airline: "Convenient Airlines", route: "All travel originates and terminates in Mumbai", class: "", details: "Any Excess Baggage beyond the Standard Airline Allowance, or Requests to Change Travel Dates and Routes, Will Incur Additional Charges." }
     ]
   }
 ];
+
 export const CATEGORY_PACKAGES: Record<string, Package[]> = {
-  hajj: [PACKAGES_DATA[0]],
-  umrah: [PACKAGES_DATA[1]],
-  ziyarat: [PACKAGES_DATA[2]],
+  hajj: [PACKAGES_DATA[0], PACKAGES_DATA[1]],
+  umrah: [PACKAGES_DATA[2]],
+  ziyarat: [PACKAGES_DATA[3]],
 };

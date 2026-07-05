@@ -155,7 +155,7 @@ export function Navbar() {
                     Umrah Packages
                   </Link>
                   <Link 
-                    href={ROUTES.tours} 
+                    href={ROUTES.ziyarat} 
                     className="block px-4 py-2.5 text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground hover:text-accent hover:bg-[#F2EBDB]/40 transition-all duration-200"
                   >
                     Ziyarat Packages
