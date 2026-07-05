@@ -76,13 +76,13 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
         {/* Header */}
         <header className="mx-auto mb-16 max-w-3xl text-center md:mb-24">
           <div className="text-[9px] font-black tracking-[0.35em] text-accent uppercase mb-3">
-            Confirmed Schedules
+            Estimated Timelines
           </div>
           <h2 className="font-heading text-3xl font-extrabold tracking-tight text-foreground sm:text-4xl lg:text-5xl">
             Featured Packages
           </h2>
           <p className="mt-5 text-xs sm:text-sm md:text-base leading-relaxed text-muted-foreground/90 max-w-2xl mx-auto">
-            Select custom itineraries curated for your spiritual devotion and absolute comfort. Browse through our confirmed 2027 routes.
+            Select custom itineraries curated for your spiritual devotion and absolute comfort. Browse through our estimated Hajj and Umrah programs.
           </p>
         </header>
 

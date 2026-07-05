@@ -52,6 +52,7 @@ export interface Package {
   // Dynamic Package Detail fields (added for Sprint 5)
   itinerary?: ItineraryItem[];
   inclusions?: string[];
+  complimentary?: string[];
   exclusions?: string[];
   hotels?: HotelInfo[];
   flights?: FlightInfo[];

@@ -63,15 +63,6 @@ export function BrandPreloader() {
             className="h-28 sm:h-36 md:h-44 lg:h-52 max-w-[85vw] sm:max-w-none w-auto text-foreground"
           />
         </div>
-
-        {/* Subtitle brand registration info */}
-        <div
-          className={`text-[9px] font-black uppercase tracking-[0.3em] text-accent/80 transition-all duration-500 delay-100 ${
-            visible ? "opacity-0 translate-y-4" : "opacity-100 animate-in fade-in slide-in-from-bottom-2 duration-1000"
-          }`}
-        >
-          Established 1986 — Mumbai, India
-        </div>
       </div>
     </div>
   );

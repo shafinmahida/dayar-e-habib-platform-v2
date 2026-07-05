@@ -106,7 +106,7 @@ export function PackageEnquiry({ packageTitle }: PackageEnquiryProps) {
               value={name}
               onChange={(e) => setName(e.target.value)}
               className="w-full h-10 px-3 text-sm rounded-md border border-border bg-background outline-none focus:border-accent focus:ring-1 focus:ring-accent transition-all duration-200 disabled:opacity-50"
-              placeholder="e.g. Shafin Mahida"
+              placeholder="e.g. Abdullah Khan"
             />
           </div>
 
