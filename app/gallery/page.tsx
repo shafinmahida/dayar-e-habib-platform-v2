@@ -50,7 +50,7 @@ const GALLERY_MEDIA: MediaItem[] = [
     id: "med-5",
     title: "Premium Hospitality Dining & Buffet",
     type: "video",
-    src: "/gallery/Breakfast .mov",
+    src: "/gallery/Breakfast.mov",
     category: "Hospitality",
     description: "Standard morning breakfast and delicious buffet service arranged for our groups."
   },
