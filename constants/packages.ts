@@ -154,10 +154,10 @@ export const PACKAGES_DATA: Package[] = [
     title: "Umrah (14+Days)",
     duration: "15 Days",
     highlights: [
-      "Accommodations directly in front of the Haram",
-      "Comprehensive visa processing and health clearance assistance",
-      "Educational seminars and daily guidance sessions",
-      "Flexible flight booking options with premium carriers"
+      "Convenient accommodation within walking distance of the Haram",
+      "Visa processing",
+      "Representatives available to provide information during the journey",
+      "Flexible flight booking options with premium airlines"
     ],
     availability: "Open",
     priceMin: null,
