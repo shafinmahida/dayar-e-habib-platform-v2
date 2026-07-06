@@ -234,7 +234,7 @@ export default function GalleryPage() {
                     <>
                       {/* Video element plays muted on hover */}
                       <video
-                        src={item.src}
+                        src={`${item.src}#t=0.1`}
                         preload="metadata"
                         className="object-cover w-full h-full transition-transform duration-[1200ms] group-hover:scale-103"
                         muted

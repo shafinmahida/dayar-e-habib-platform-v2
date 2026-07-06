@@ -53,8 +53,8 @@ export const PACKAGES_DATA: Package[] = [
       "Moulim Fees"
     ],
     complimentary: [
+      "5 Liters Zam Zam",
       "Laundry Service",
-      "5 Liters ZAM ZAM Can",
       "Travel Kit"
     ],
     exclusions: [
@@ -125,8 +125,8 @@ export const PACKAGES_DATA: Package[] = [
       "Moulim Fees"
     ],
     complimentary: [
+      "5 Liters Zam Zam",
       "Laundry Service",
-      "5 Liters ZAM ZAM Can",
       "Travel Kit"
     ],
     exclusions: [
@@ -192,8 +192,8 @@ export const PACKAGES_DATA: Package[] = [
       "Ziyarat tours in both holy cities"
     ],
     complimentary: [
+      "5 Liters Zam Zam",
       "Laundry Service",
-      "5 Liters ZAM ZAM Can",
       "Travel Kit"
     ],
     exclusions: [],
