@@ -5,7 +5,7 @@ export const PACKAGES_DATA: Package[] = [
     slug: "premium-hajj",
     categorySlug: "hajj",
     destinationSlugs: ["makkah", "madinah"],
-    title: "Grand Stay ( 34+ Days )",
+    title: "Grand Stay (34+Days)",
     duration: "Tentative",
     highlights: [
       "Tentative Hijri Timeline (4th Dhul Hijjah - 11th Muharram)",
@@ -80,7 +80,7 @@ export const PACKAGES_DATA: Package[] = [
     slug: "short-hajj",
     categorySlug: "hajj",
     destinationSlugs: ["makkah", "madinah"],
-    title: "Express Stay (18+ Days )",
+    title: "Express Stay (18+Days)",
     duration: "Tentative",
     highlights: [
       "Tentative Hijri Timeline (25th Dhul Qidah - 15th Dhul Hijjah)",
@@ -151,7 +151,7 @@ export const PACKAGES_DATA: Package[] = [
     slug: "deluxe-umrah",
     categorySlug: "umrah",
     destinationSlugs: ["makkah", "madinah"],
-    title: "Umrah ( 14+ Days )",
+    title: "Umrah (14+Days)",
     duration: "15 Days",
     highlights: [
       "Accommodations directly in front of the Haram",
@@ -202,15 +202,15 @@ export const PACKAGES_DATA: Package[] = [
       { airline: "Convenient Airlines", route: "All travel originates and terminates in Mumbai", class: "", details: "Any Excess Baggage beyond the Standard Airline Allowance, or Requests to Change Travel Dates and Routes, Will Incur Additional Charges." }
     ],
     faqs: [
-      { question: "What are the required documents for booking Umrah?", answer: "To book your Hajj package, you must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card. Additionally, please submit Passport Size Photographs with a high-definition white background (available in both physical prints and digital soft copies)." },
-      { question: "Is laundry service included?", answer: "Yes, our Umrah packages include complimentary bi-weekly laundry service." }
+      { question: "What are the required documents for booking Umrah?", answer: "To book your Umrah package, you must provide an international passport valid for at least 6 months from the travel date, along with mandatory copies of your Aadhaar Card and PAN Card. Additionally, please submit Passport Size Photographs with a high-definition white background (available in both physical prints and digital soft copies)." },
+      { question: "Is laundry service included?", answer: "Yes, our Umrah packages include complimentary laundry service." }
     ]
   },
   {
     slug: "classic-ziyarat",
     categorySlug: "ziyarat",
     destinationSlugs: ["baghdad"],
-    title: "Holy Heritage ( 10+ Days )",
+    title: "Holy Heritage (10+Days)",
     duration: "11 Days",
     highlights: [
       "Celebrate 11vi Sharif in Baghdad",

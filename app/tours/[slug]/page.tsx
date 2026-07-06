@@ -87,11 +87,12 @@ export default async function PackageDetailPage({ params }: PackageDetailPagePro
                 {(() => {
                   const match = pkg.title.match(/^(.*?)\s*(\(\s*\d+\+?\s*Days\s*\))$/i);
                   if (match) {
+                    const daysText = match[2].replace(/\s+/g, "");
                     return (
                       <>
                         <span className="text-foreground">{match[1]}</span>
-                        <span className="text-accent ml-2 text-[0.65em] font-bold tracking-widest whitespace-nowrap inline-block align-middle font-sans">
-                          {match[2]}
+                        <span className="text-[#D4AF37] ml-1.5 text-[0.55em] font-extrabold tracking-wide whitespace-nowrap inline-block align-middle font-sans uppercase">
+                          {daysText}
                         </span>
                       </>
                     );

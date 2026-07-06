@@ -14,7 +14,7 @@ export const CONTACT_DATA = {
       address: "265 S.V.P. Road, Karim Mansion, Shop 1, Opp. Khoja Kabarastan, Mumbai - 400009, India",
       phone: "+91 7045 707070",
       email: "dhtinfo@gmail.com",
-      mapLink: "https://maps.google.com/?q=265+S.V.P.+Road,+Karim+Mansion,+Shop+1,+Opp.+Khoja+Kabarastan,+Mumbai+-+400009,+India",
+      mapLink: "https://maps.app.goo.gl/pLcuirFdtzeatrdz5",
       workingHours: "10:00 AM - 9:00 PM (Mon - Sat)",
       active: true,
       displayOrder: 1,

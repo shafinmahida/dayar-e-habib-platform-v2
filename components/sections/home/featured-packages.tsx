@@ -60,7 +60,7 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
   const handleTouchEnd = () => {
     if (!touchStart || !touchEnd) return;
     const distance = touchStart - touchEnd;
-    const isSwipeThreshold = distance > 50 || distance < -50;
+    const isSwipeThreshold = distance > 30 || distance < -30;
     if (isSwipeThreshold) {
       if (distance > 0) handleNext();
       else handlePrev();
@@ -118,7 +118,7 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
                 <div
                   key={pkg.slug}
                   className={cn(
-                    "absolute w-full max-w-[960px] h-[580px] md:h-[440px] transition-all duration-[800ms] cubic-bezier(0.25, 1, 0.5, 1) flex flex-col md:flex-row bg-[#FCFAF5] border border-border/45 shadow-[0_20px_50px_rgba(0,0,0,0.02)] overflow-hidden",
+                    "absolute w-full max-w-[960px] h-[580px] md:h-[440px] transition-all duration-[600ms] cubic-bezier(0.16, 1, 0.3, 1) flex flex-col md:flex-row bg-[#FCFAF5] border border-border/45 shadow-[0_20px_50px_rgba(0,0,0,0.02)] overflow-hidden rounded-3xl",
                     isActive && "opacity-100 scale-100 z-30 pointer-events-auto blur-0 translate-x-0 shadow-[0_30px_70px_rgba(138,106,54,0.06)] ring-1 ring-accent/15",
                     isPrev && "opacity-35 scale-[0.78] -translate-x-[75%] md:-translate-x-[60%] lg:-translate-x-[50%] z-10 pointer-events-none blur-[3px] select-none",
                     isNext && "opacity-35 scale-[0.78] translate-x-[75%] md:translate-x-[60%] lg:translate-x-[50%] z-10 pointer-events-none blur-[3px] select-none",
@@ -126,7 +126,7 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
                   )}
                 >
                   {/* Left Column: Visual Photo slideshow Portal (60% width on Desktop) */}
-                  <div className="relative w-full h-[220px] md:h-full md:w-3/5 overflow-hidden border-b md:border-b-0 md:border-r border-border/20 bg-muted shrink-0">
+                  <div className="relative w-full h-[220px] md:h-full md:w-3/5 overflow-hidden border-b md:border-b-0 md:border-r border-border/20 bg-muted shrink-0 rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none">
                     <div className="absolute inset-0 bg-[#8A6A36]/3 mix-blend-color z-10 pointer-events-none" />
                     
                     {/* Slideshow inside card */}
@@ -150,11 +150,12 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
                         {(() => {
                           const match = pkg.title.match(/^(.*?)\s*(\(\s*\d+\+?\s*Days\s*\))$/i);
                           if (match) {
+                            const daysText = match[2].replace(/\s+/g, "");
                             return (
                               <>
                                 <span className="text-foreground">{match[1]}</span>
-                                <span className="text-accent ml-2 text-[0.65em] font-bold tracking-widest whitespace-nowrap inline-block align-middle font-sans">
-                                  {match[2]}
+                                <span className="text-[#D4AF37] ml-1.5 text-[0.55em] font-extrabold tracking-wide whitespace-nowrap inline-block align-middle font-sans uppercase">
+                                  {daysText}
                                 </span>
                               </>
                             );

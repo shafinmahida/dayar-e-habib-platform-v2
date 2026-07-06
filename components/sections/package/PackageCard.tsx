@@ -37,10 +37,10 @@ export function PackageCard({ pkg }: PackageCardProps) {
   }, [slides.length]);
 
   return (
-    <div className="flex flex-col rounded-none border border-border bg-card p-4 transition-all duration-500 hover:shadow-[0_24px_60px_rgba(0,0,0,0.025)] group">
+    <div className="flex flex-col rounded-3xl border border-border bg-card p-4 transition-all duration-500 hover:shadow-[0_24px_60px_rgba(0,0,0,0.025)] group">
       {/* Luxury Rectangular Gallery Window with Double Borders */}
-      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-none border border-border bg-card p-2.5 transition-all duration-500 hover:border-accent/40">
-        <div className="relative w-full h-full overflow-hidden border border-border/30 rounded-none bg-muted">
+      <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-border bg-card p-2.5 transition-all duration-500 hover:border-accent/40">
+        <div className="relative w-full h-full overflow-hidden border border-border/30 rounded-xl bg-muted">
           {/* Color filter tint */}
           <div className="absolute inset-0 bg-[#8A6A36]/3 mix-blend-color z-10 pointer-events-none" />
           
@@ -78,11 +78,12 @@ export function PackageCard({ pkg }: PackageCardProps) {
             {(() => {
               const match = pkg.title.match(/^(.*?)\s*(\(\s*\d+\+?\s*Days\s*\))$/i);
               if (match) {
+                const daysText = match[2].replace(/\s+/g, "");
                 return (
                   <>
                     <span className="text-foreground">{match[1]}</span>
-                    <span className="text-accent ml-2 text-[0.65em] font-bold tracking-widest whitespace-nowrap inline-block align-middle font-sans">
-                      {match[2]}
+                    <span className="text-[#D4AF37] ml-1.5 text-[0.55em] font-extrabold tracking-wide whitespace-nowrap inline-block align-middle font-sans uppercase">
+                      {daysText}
                     </span>
                   </>
                 );
