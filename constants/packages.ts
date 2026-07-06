@@ -198,8 +198,8 @@ export const PACKAGES_DATA: Package[] = [
     ],
     exclusions: [],
     hotels: [
-      { name: "Al-Haram Front Hotel", location: "Makkah", rating: "", distance: "Walking distance to outer courtyard" },
-      { name: "Elaf Madinah Oasis", location: "Madinah", rating: "", distance: "200m from Haram gates" }
+      { name: "Makkah Mukarma", location: "Standard Hotel", rating: "", distance: "Near the courtyard of the Haram Sharif" },
+      { name: "Madinah Munawwarah", location: "Standard Hotel", rating: "", distance: "Near the courtyard of the Haram Sharif" }
     ],
     flights: [
       { airline: "Convenient Airlines", route: "All travel originates and terminates in Mumbai", class: "", details: "Any Excess Baggage beyond the Standard Airline Allowance, or Requests to Change Travel Dates and Routes, Will Incur Additional Charges." }

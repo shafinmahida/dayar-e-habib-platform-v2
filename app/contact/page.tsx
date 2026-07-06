@@ -132,8 +132,8 @@ export default function ContactPage() {
               </p>
               <div className="grid gap-4 sm:grid-cols-3 pt-2">
                 {/* Ministry of Minority Affairs (India) */}
-                <div className="flex items-center gap-3.5 bg-card border border-border p-4 hover:border-accent/40 transition-all duration-300">
-                  <div className="relative h-14 w-16 shrink-0">
+                <div className="flex items-center gap-3.5 bg-card border border-border p-4 rounded-xl hover:border-accent/40 transition-all duration-300">
+                  <div className="relative h-12 w-12 shrink-0">
                     <Image
                       src="/minority-affairs-logo.png"
                       alt="Ministry of Minority Affairs Government of India Logo"
@@ -149,8 +149,8 @@ export default function ContactPage() {
                 </div>
 
                 {/* IATA Certified */}
-                <div className="flex items-center gap-3.5 bg-card border border-border p-4 hover:border-accent/40 transition-all duration-300">
-                  <div className="relative h-14 w-12 shrink-0">
+                <div className="flex items-center gap-3.5 bg-card border border-border p-4 rounded-xl hover:border-accent/40 transition-all duration-300">
+                  <div className="relative h-12 w-12 shrink-0">
                     <Image
                       src="/iata-logo.png"
                       alt="IATA Certified Logo"
@@ -166,8 +166,8 @@ export default function ContactPage() {
                 </div>
 
                 {/* AIHUTOA Member */}
-                <div className="flex items-center gap-3.5 bg-card border border-border p-4 hover:border-accent/40 transition-all duration-300">
-                  <div className="relative h-14 w-12 shrink-0">
+                <div className="flex items-center gap-3.5 bg-card border border-border p-4 rounded-xl hover:border-accent/40 transition-all duration-300">
+                  <div className="relative h-12 w-12 shrink-0">
                     <Image
                       src="/aihutoa-logo.png"
                       alt="AIHUTOA Member Logo"

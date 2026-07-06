@@ -69,10 +69,10 @@ export function Hero() {
               <h4 className="text-[9px] font-black tracking-widest text-muted-foreground/60 uppercase select-none">
                 Accreditations & Memberships
               </h4>
-              <div className="flex flex-wrap items-stretch gap-3 select-none">
+              <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 w-full select-none">
                 {/* Ministry of Minority Affairs (India) */}
-                <div className="flex items-center gap-3 bg-card/15 border border-border/25 px-4 py-2.5 transition-all duration-300 hover:border-accent/35">
-                  <div className="relative h-12 w-14 shrink-0">
+                <div className="flex items-center gap-3 bg-card/15 border border-border/25 px-4 py-2.5 rounded-xl transition-all duration-300 hover:border-accent/35">
+                  <div className="relative h-12 w-12 shrink-0">
                     <Image
                       src="/minority-affairs-logo.png"
                       alt="Ministry of Minority Affairs Logo"
@@ -88,7 +88,7 @@ export function Hero() {
                 </div>
 
                 {/* IATA Certified */}
-                <div className="flex items-center gap-3 bg-card/15 border border-border/25 px-4 py-2.5 transition-all duration-300 hover:border-accent/35">
+                <div className="flex items-center gap-3 bg-card/15 border border-border/25 px-4 py-2.5 rounded-xl transition-all duration-300 hover:border-accent/35">
                   <div className="relative h-12 w-12 shrink-0">
                     <Image
                       src="/iata-logo.png"
@@ -105,7 +105,7 @@ export function Hero() {
                 </div>
 
                 {/* AIHUTOA Member */}
-                <div className="flex items-center gap-3 bg-card/15 border border-border/25 px-4 py-2.5 transition-all duration-300 hover:border-accent/35">
+                <div className="flex items-center gap-3 bg-card/15 border border-border/25 px-4 py-2.5 rounded-xl transition-all duration-300 hover:border-accent/35">
                   <div className="relative h-12 w-12 shrink-0">
                     <Image
                       src="/aihutoa-logo.png"
