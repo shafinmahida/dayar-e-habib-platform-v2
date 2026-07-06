@@ -173,6 +173,24 @@ export default async function PackageDetailPage({ params }: PackageDetailPagePro
               </div>
             )}
 
+            {/* Personalize Your Pilgrimage Callout */}
+            {(pkg.categorySlug === "hajj" || pkg.categorySlug === "umrah") && (
+              <div className="space-y-4 pt-8 border-t border-border/60">
+                <div className="rounded-2xl border border-accent/25 bg-[#FCFAF5] p-6 sm:p-8 shadow-xs relative overflow-hidden">
+                  <div className="absolute -right-12 -bottom-12 size-40 rounded-full border border-accent/5 pointer-events-none" />
+                  <div className="absolute -right-6 -bottom-6 size-24 rounded-full border border-accent/5 pointer-events-none" />
+                  
+                  <h4 className="font-heading text-lg font-bold text-accent uppercase tracking-wider flex items-center gap-2">
+                    <span className="size-1.5 rounded-full bg-accent" />
+                    Personalize Your Pilgrimage
+                  </h4>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground/90 max-w-3xl">
+                    Your pilgrimage should be as comfortable as it is meaningful. Beyond our carefully curated standard package, guests may choose from a selection of premium enhancements—including private transportation, upgraded accommodations, and bespoke travel arrangements—to create a more personalized experience. These optional services are available upon request at an additional cost.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Inclusions / Exclusions */}
             {(pkg.inclusions || pkg.complimentary || pkg.exclusions) && (
               <div className="pt-8 border-t border-border/60">

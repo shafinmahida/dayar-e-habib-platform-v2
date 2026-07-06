@@ -206,12 +206,12 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
             })}
           </div>
 
-          {/* Navigation Arrows (Positioned centered beside active card) */}
+          {/* Navigation Arrows (Positioned centered beside active card - hidden on mobile/tablet) */}
           <button
             type="button"
             onClick={handlePrev}
             aria-label="Previous Package"
-            className="absolute left-2 md:left-4 z-40 flex size-12 items-center justify-center border border-border bg-[#FCFAF5]/90 text-foreground hover:bg-accent hover:text-white hover:border-accent active:scale-95 transition-all duration-300 rounded-none shadow-md backdrop-blur-xs focus-visible:outline-none"
+            className="hidden md:flex absolute left-4 z-40 size-12 items-center justify-center border border-border bg-[#FCFAF5]/90 text-foreground hover:bg-accent hover:text-white hover:border-accent active:scale-95 transition-all duration-300 rounded-full shadow-md backdrop-blur-xs focus-visible:outline-none"
           >
             <ChevronLeft className="size-5" />
           </button>
@@ -219,7 +219,7 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
             type="button"
             onClick={handleNext}
             aria-label="Next Package"
-            className="absolute right-2 md:right-4 z-40 flex size-12 items-center justify-center border border-border bg-[#FCFAF5]/90 text-foreground hover:bg-accent hover:text-white hover:border-accent active:scale-95 transition-all duration-300 rounded-none shadow-md backdrop-blur-xs focus-visible:outline-none"
+            className="hidden md:flex absolute right-4 z-40 size-12 items-center justify-center border border-border bg-[#FCFAF5]/90 text-foreground hover:bg-accent hover:text-white hover:border-accent active:scale-95 transition-all duration-300 rounded-full shadow-md backdrop-blur-xs focus-visible:outline-none"
           >
             <ChevronRight className="size-5" />
           </button>

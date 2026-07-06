@@ -181,19 +181,22 @@ export const PACKAGES_DATA: Package[] = [
       { dayNumber: 15, title: "Departure", description: "Transfer to Madinah airport for return flight to Mumbai." }
     ],
     inclusions: [
-      "Electronic Umrah Visa processing",
-      "BOM-JED / MED-BOM air ticket options",
+      "Umrah Visa",
+      "Accommodation in Star Hotels at Both Holy Places",
+      "Buffet Breakfast, Lunch and Dinner",
+      "Return Air Fare (By Convenient Airlines)",
+      "Air Conditioned Road Transportation in Saudi Arabia",
       "7 Nights accommodation in Makkah",
       "7 Nights accommodation in Madinah",
-      "Buffet breakfast and dinner",
       "Scholar guidance throughout the journey",
       "Ziyarat tours in both holy cities"
     ],
-    exclusions: [
-      "Lunch meals (unless requested)",
-      "Wheelchair assistance fees (charged locally)",
-      "Any extra personal visa clearances"
+    complimentary: [
+      "Laundry Service",
+      "5 Liters ZAM ZAM Can",
+      "Travel Kit"
     ],
+    exclusions: [],
     hotels: [
       { name: "Al-Haram Front Hotel", location: "Makkah", rating: "", distance: "Walking distance to outer courtyard" },
       { name: "Elaf Madinah Oasis", location: "Madinah", rating: "", distance: "200m from Haram gates" }
