@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { Lock, Mail, ShieldAlert, ArrowRight } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 export default function AdminLoginPage() {
   const router = useRouter();
@@ -11,22 +12,30 @@ export default function AdminLoginPage() {
   const [isLoading, setIsLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
 
-  const handleLogin = (e: React.FormEvent) => {
+  const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsLoading(true);
     setErrorMsg("");
 
-    // Simulate mock login delay
-    setTimeout(() => {
-      if (email.trim() === "" || password.trim() === "") {
-        setErrorMsg("Please enter both email and password.");
-        setIsLoading(false);
-        return;
-      }
-      
-      // Simple mock authentication success redirect to dashboard
+    if (email.trim() === "" || password.trim() === "") {
+      setErrorMsg("Please enter both email and password.");
+      setIsLoading(false);
+      return;
+    }
+    
+    const supabase = createClient();
+    const { error } = await supabase.auth.signInWithPassword({
+      email,
+      password,
+    });
+
+    if (error) {
+      setErrorMsg(error.message);
+      setIsLoading(false);
+    } else {
       router.push("/admin");
-    }, 850);
+      router.refresh();
+    }
   };
 
   return (
