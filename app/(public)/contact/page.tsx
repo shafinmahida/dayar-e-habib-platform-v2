@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Mail, MapPin, Phone, Clock, Sparkles } from "lucide-react";
+import Image from "next/image";
 
 import { Container } from "@/components/layout/Container";
 import { CONTACT_DATA } from "@/constants/contact";
-import { COMPANY_DATA } from "@/constants/company";
 import { PackageEnquiry } from "@/components/sections/package/PackageEnquiry";
 
 export const metadata: Metadata = {
@@ -53,9 +53,22 @@ export default function ContactPage() {
                     <MapPin className="size-5 text-accent mt-0.5 shrink-0" />
                     <div className="space-y-1">
                       <div className="text-xs font-bold text-foreground/80 uppercase">Address</div>
-                      <address className="text-sm not-italic leading-relaxed text-muted-foreground">
-                        {primaryOffice.address}
-                      </address>
+                      {primaryOffice.mapLink ? (
+                        <a 
+                          href={primaryOffice.mapLink}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="block text-sm not-italic leading-relaxed text-muted-foreground hover:text-accent transition-colors duration-200"
+                        >
+                          <address className="not-italic cursor-pointer">
+                            {primaryOffice.address}
+                          </address>
+                        </a>
+                      ) : (
+                        <address className="text-sm not-italic leading-relaxed text-muted-foreground">
+                          {primaryOffice.address}
+                        </address>
+                      )}
                     </div>
                   </div>
 
@@ -85,8 +98,8 @@ export default function ContactPage() {
                 >
                   <Phone className="size-5 text-accent mt-0.5 shrink-0" />
                   <div className="space-y-1">
-                    <div className="text-xs font-bold text-foreground/80 uppercase">Primary Phone</div>
-                    <p className="text-sm font-bold text-foreground">
+                    <div className="text-xs font-bold text-foreground/80 uppercase">Contact us</div>
+                    <p className="text-sm font-bold text-foreground whitespace-nowrap">
                       {CONTACT_DATA.primaryPhone}
                     </p>
                     <p className="text-xs text-muted-foreground">Call or message via WhatsApp</p>
@@ -117,13 +130,57 @@ export default function ContactPage() {
               <p className="text-sm leading-relaxed text-muted-foreground">
                 Dayar-E-Habib Tours & Travels is fully licensed and recognized by major global aviation and pilgrimage authorities:
               </p>
-              <div className="flex flex-wrap items-center gap-6 text-xs font-semibold tracking-wide text-muted-foreground uppercase pt-2">
-                {COMPANY_DATA.registrations.map((reg) => (
-                  <div key={reg} className="flex items-center gap-2 px-3 py-1.5 bg-secondary/40 border border-border/50 rounded-sm">
-                    <span className="size-1.5 rounded-full bg-accent animate-pulse" />
-                    <span>{reg}</span>
+              <div className="grid gap-4 sm:grid-cols-3 pt-2">
+                {/* Ministry of Minority Affairs (India) */}
+                <div className="flex items-center gap-3.5 bg-card border border-border p-4 rounded-xl hover:border-accent/40 transition-all duration-300">
+                  <div className="relative h-12 w-12 shrink-0">
+                    <Image
+                      src="/minority-affairs-logo.png"
+                      alt="Ministry of Minority Affairs Government of India Logo"
+                      fill
+                      className="object-contain"
+                    />
                   </div>
-                ))}
+                  <div className="space-y-0.5">
+                    <div className="text-[7.5px] font-black tracking-widest text-accent uppercase leading-none">Government of India</div>
+                    <div className="text-[10px] font-extrabold text-foreground uppercase leading-tight">Ministry of Minority Affairs</div>
+                    <div className="text-[7.5px] font-bold text-muted-foreground/80 uppercase leading-none">Hajj Organiser License</div>
+                  </div>
+                </div>
+
+                {/* IATA Certified */}
+                <div className="flex items-center gap-3.5 bg-card border border-border p-4 rounded-xl hover:border-accent/40 transition-all duration-300">
+                  <div className="relative h-12 w-12 shrink-0">
+                    <Image
+                      src="/iata-logo.png"
+                      alt="IATA Certified Logo"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="text-[7.5px] font-black tracking-widest text-accent uppercase leading-none">Accredited Agency</div>
+                    <div className="text-[10px] font-extrabold text-foreground uppercase leading-tight">IATA Certified</div>
+                    <div className="text-[7.5px] font-bold text-muted-foreground/80 uppercase leading-none">Global Aviation Standard</div>
+                  </div>
+                </div>
+
+                {/* AIHUTOA Member */}
+                <div className="flex items-center gap-3.5 bg-card border border-border p-4 rounded-xl hover:border-accent/40 transition-all duration-300">
+                  <div className="relative h-12 w-12 shrink-0">
+                    <Image
+                      src="/aihutoa-logo.png"
+                      alt="AIHUTOA Member Logo"
+                      fill
+                      className="object-contain"
+                    />
+                  </div>
+                  <div className="space-y-0.5">
+                    <div className="text-[7.5px] font-black tracking-widest text-accent uppercase leading-none">Registered Association</div>
+                    <div className="text-[10px] font-extrabold text-foreground uppercase leading-tight">AIHUTOA Member</div>
+                    <div className="text-[7.5px] font-bold text-muted-foreground/80 uppercase leading-none">National Pilgrimage Body</div>
+                  </div>
+                </div>
               </div>
             </div>
 

@@ -1,10 +1,5 @@
 import type { Metadata } from "next";
 
-import {
-  AnnouncementBar,
-  Footer,
-  Navbar,
-} from "@/components/layout";
 import { SITE_DESCRIPTION, SITE_NAME } from "@/constants/site";
 import { fontBody, fontHeading, fontSerif } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
@@ -30,11 +25,8 @@ export default function RootLayout({
         fontSerif.variable,
       )}
     >
-      <body className="flex min-h-full flex-col font-sans">
-        <AnnouncementBar />
-        <Navbar />
-        <main className="flex-1">{children}</main>
-        <Footer />
+      <body className="flex min-h-full flex-col font-sans bg-[#F2EBDB]">
+        {children}
       </body>
     </html>
   );

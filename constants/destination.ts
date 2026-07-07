@@ -25,7 +25,7 @@ export const DESTINATIONS_DATA: Destination[] = [
   },
   {
     slug: "baghdad",
-    name: "Baghdad Ziyarat",
+    name: "Baghdad, Najaf & Karbala",
     country: "Iraq",
     description: "Historical tours to the shrines of Sheikh Abdul Qadir Jilani (Ghaus-e-Azam) and Imam Abu Hanifa.",
     imageUrl: null,

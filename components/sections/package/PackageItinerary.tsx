@@ -9,11 +9,11 @@ export function PackageItinerary({ itinerary }: PackageItineraryProps) {
 
   return (
     <div className="space-y-8">
-      <div className="border-l-2 border-border/80 pl-6 ml-4 space-y-10 relative">
+      <div className="relative border-l-2 border-[#CFC4AF]/40 pl-6 ml-4 space-y-10">
         {itinerary.map((item) => (
-          <div key={item.dayNumber} className="relative space-y-2">
+          <div key={item.dayNumber} className="relative space-y-2 text-left">
             {/* Dot Indicator */}
-            <div className="absolute -left-[33px] top-1.5 flex size-4 items-center justify-center rounded-full bg-background border border-accent">
+            <div className="absolute -left-[33px] top-1.5 flex size-4 items-center justify-center rounded-full bg-[#FCFAF5] border border-accent">
               <span className="size-1.5 rounded-full bg-accent" />
             </div>
 

@@ -84,7 +84,21 @@ export default async function PackageDetailPage({ params }: PackageDetailPagePro
                 <span>{pkg.categorySlug} Tour</span>
               </div>
               <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground">
-                {pkg.title}
+                {(() => {
+                  const match = pkg.title.match(/^(.*?)\s*(\(\s*\d+\+?\s*Days\s*\))$/i);
+                  if (match) {
+                    const daysText = match[2].replace(/\s+/g, "");
+                    return (
+                      <>
+                        <span className="text-foreground">{match[1]}</span>
+                        <span className="text-[#D4AF37] ml-1.5 text-[0.55em] font-extrabold tracking-wide whitespace-nowrap inline-block align-middle font-sans uppercase">
+                          {daysText}
+                        </span>
+                      </>
+                    );
+                  }
+                  return pkg.title;
+                })()}
               </h1>
               
               <div className="flex flex-wrap items-center gap-x-6 gap-y-2 text-xs sm:text-sm font-semibold tracking-wide text-muted-foreground uppercase pt-2">
@@ -127,9 +141,14 @@ export default async function PackageDetailPage({ params }: PackageDetailPagePro
             {/* Itinerary */}
             {pkg.itinerary && (
               <div className="space-y-6 pt-8 border-t border-border/60">
-                <h3 className="font-heading text-xl font-bold tracking-tight text-foreground">
-                  Planned Itinerary
-                </h3>
+                <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2.5">
+                  <h3 className="font-heading text-xl font-bold tracking-tight text-foreground">
+                    Tentative Itinerary
+                  </h3>
+                  <span className="inline-flex items-center text-[9px] font-black tracking-widest text-accent bg-accent/5 border border-accent/20 px-3 py-1 uppercase rounded-none select-none">
+                    * Details and timelines are tentative
+                  </span>
+                </div>
                 <PackageItinerary itinerary={pkg.itinerary} />
               </div>
             )}
@@ -154,10 +173,32 @@ export default async function PackageDetailPage({ params }: PackageDetailPagePro
               </div>
             )}
 
+            {/* Personalize Your Pilgrimage Callout */}
+            {(pkg.categorySlug === "hajj" || pkg.categorySlug === "umrah") && (
+              <div className="space-y-4 pt-8 border-t border-border/60">
+                <div className="rounded-2xl border border-accent/25 bg-[#FCFAF5] p-6 sm:p-8 shadow-xs relative overflow-hidden">
+                  <div className="absolute -right-12 -bottom-12 size-40 rounded-full border border-accent/5 pointer-events-none" />
+                  <div className="absolute -right-6 -bottom-6 size-24 rounded-full border border-accent/5 pointer-events-none" />
+                  
+                  <h4 className="font-heading text-lg font-bold text-accent uppercase tracking-wider flex items-center gap-2">
+                    <span className="size-1.5 rounded-full bg-accent" />
+                    Personalize Your Pilgrimage
+                  </h4>
+                  <p className="mt-3 text-sm leading-relaxed text-muted-foreground/90 max-w-3xl">
+                    Your pilgrimage should be as comfortable as it is meaningful. Beyond our carefully curated standard package, guests may choose from a selection of premium enhancements—including private transportation, upgraded accommodations, and bespoke travel arrangements—to create a more personalized experience. These optional services are available upon request at an additional cost.
+                  </p>
+                </div>
+              </div>
+            )}
+
             {/* Inclusions / Exclusions */}
-            {(pkg.inclusions || pkg.exclusions) && (
+            {(pkg.inclusions || pkg.complimentary || pkg.exclusions) && (
               <div className="pt-8 border-t border-border/60">
-                <PackageInclusions inclusions={pkg.inclusions} exclusions={pkg.exclusions} />
+                <PackageInclusions 
+                  inclusions={pkg.inclusions} 
+                  complimentary={pkg.complimentary} 
+                  exclusions={pkg.exclusions} 
+                />
               </div>
             )}
 

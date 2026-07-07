@@ -3,8 +3,8 @@ import {
   Trust,
   FeaturedPackages,
   JourneyTimeline,
-  Services,
-  WhyChooseUs,
+  Destinations,
+  Gallery,
   Testimonials,
   Faq,
   Cta,
@@ -13,7 +13,6 @@ import {
 import { TRUST_PROPS } from "@/constants/home";
 import { PACKAGES_DATA } from "@/constants/packages";
 import { TIMELINE_STEPS } from "@/constants/timeline";
-import { SERVICES_DATA } from "@/constants/services";
 import { TESTIMONIALS_LIST } from "@/constants/testimonials";
 import { FAQ_LIST } from "@/constants/faq";
 
@@ -24,8 +23,8 @@ export default function HomePage() {
       <Trust items={TRUST_PROPS} />
       <FeaturedPackages packages={PACKAGES_DATA} />
       <JourneyTimeline steps={TIMELINE_STEPS} />
-      <Services items={SERVICES_DATA} />
-      <WhyChooseUs items={TRUST_PROPS} />
+      <Destinations />
+      <Gallery />
       <Testimonials testimonials={TESTIMONIALS_LIST} />
       <Faq items={FAQ_LIST} />
       <Cta />
