@@ -47,6 +47,15 @@
   --radius-2xl: calc(var(--radius) * 1.8);
   --radius-3xl: calc(var(--radius) * 2.2);
   --radius-4xl: calc(var(--radius) * 2.6);
+
+  /* Admin Dashboard Theme mapping */
+  --color-admin-bg: var(--admin-bg);
+  --color-admin-surface: var(--admin-surface);
+  --color-admin-muted: var(--admin-muted);
+  --color-admin-elevated: var(--admin-elevated);
+  --color-admin-text: var(--admin-text);
+  --color-admin-primary: var(--admin-primary);
+  --color-admin-accent: var(--admin-accent);
 }
 
 h1,
@@ -90,6 +99,14 @@ h6 {
   --sidebar-accent-foreground: #1E1A16;
   --sidebar-border: #CFC4AF;
   --sidebar-ring: #8A6A36;
+
+  /* Admin Light Theme Hex variables */
+  --admin-bg: #FCFAF5;
+  --admin-surface: #FFFDF6;
+  --admin-muted: #F3EFE6;
+  --admin-text: #1B191F;
+  --admin-primary: #D4AF37;
+  --admin-accent: #F59E0B;
 }
 
 .dark {
@@ -120,6 +137,14 @@ h6 {
   --sidebar-accent-foreground: #FCFAF5;
   --sidebar-border: #3A322C;
   --sidebar-ring: #8A6A36;
+
+  /* Admin Dark Theme Hex variables */
+  --admin-bg: #0E0F11;
+  --admin-surface: #17181C;
+  --admin-elevated: #1E2126;
+  --admin-text: #E3E7EB;
+  --admin-primary: #D4AF37;
+  --admin-accent: #F59E0B;
 }
 
 @layer base {
