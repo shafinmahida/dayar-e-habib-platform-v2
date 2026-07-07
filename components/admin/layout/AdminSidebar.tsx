@@ -1,8 +1,9 @@
 "use client";
 
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useState } from "react";
+import { createClient } from "@/lib/supabase/client";
 import {
   Compass,
   LayoutGrid,
@@ -28,8 +29,16 @@ interface MenuItem {
 
 export function AdminSidebar() {
   const pathname = usePathname();
+  const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+
+  const handleLogout = async () => {
+    const supabase = createClient();
+    await supabase.auth.signOut();
+    router.push("/admin/login");
+    router.refresh();
+  };
 
   const menuItems: MenuItem[] = [
     { name: "Dashboard", href: "/admin", icon: Compass },
@@ -141,13 +150,13 @@ export function AdminSidebar() {
               )}
             </div>
             {!isCollapsed && (
-              <Link
-                href="/admin/login"
+              <button
+                onClick={handleLogout}
                 className="p-1.5 rounded hover:bg-stone-100 dark:hover:bg-stone-900 text-stone-400 hover:text-red-500 transition-colors"
                 aria-label="Logout"
               >
                 <LogOut className="h-4 w-4" />
-              </Link>
+              </button>
             )}
           </div>
         </div>
