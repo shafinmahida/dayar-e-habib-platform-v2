@@ -5,8 +5,7 @@ import { ArrowLeft, Clock, MapPin, Sparkles } from "lucide-react";
 
 import { Container } from "@/components/layout/Container";
 import { buttonVariants } from "@/components/ui/button";
-import { PACKAGES_DATA } from "@/constants/packages";
-import { DESTINATIONS_DATA } from "@/constants/destination";
+import { createClient } from "@/lib/supabase/server";
 import { cn } from "@/lib/utils";
 
 // Import reusable package components
@@ -24,40 +23,56 @@ interface PackageDetailPageProps {
   }>;
 }
 
-// Generate static routes for the Next.js compiler
-export async function generateStaticParams() {
-  return PACKAGES_DATA.map((pkg) => ({
-    slug: pkg.slug,
-  }));
-}
+// Generate static routes for the Next.js compiler is removed because it conflicts with SSR cookies.
+// The pages will be dynamically rendered on demand.
 
 // Dynamic SEO metadata generation
 export async function generateMetadata({
   params,
 }: PackageDetailPageProps): Promise<Metadata> {
   const { slug } = await params;
-  const pkg = PACKAGES_DATA.find((p) => p.slug === slug);
+  const supabase = await createClient();
+  const { data: pkg } = await supabase.from('packages').select('*').eq('slug', slug).single();
+  
   if (!pkg) return {};
 
   return {
-    title: pkg.seoTitle || `${pkg.title} | Dayar-E-Habib`,
+    title: pkg.seo_title || `${pkg.title} | Dayar-E-Habib`,
     description:
-      pkg.seoDescription ||
+      pkg.seo_description ||
       `Book the ${pkg.title}. Professional guides, comfortable accommodations, and transparent pricing.`,
   };
 }
 
 export default async function PackageDetailPage({ params }: PackageDetailPageProps) {
   const { slug } = await params;
-  const pkg = PACKAGES_DATA.find((p) => p.slug === slug && p.active);
+  const supabase = await createClient();
+  
+  const { data: pkg } = await supabase
+    .from('packages')
+    .select(`
+      *,
+      package_categories(slug)
+    `)
+    .eq('slug', slug)
+    .eq('status', 'published')
+    .single();
 
   if (!pkg) {
     notFound();
   }
 
-  const destinationNames = pkg.destinationSlugs
-    .map((slug) => DESTINATIONS_DATA.find((d) => d.slug === slug)?.name || slug)
-    .join(" & ");
+  // Fetch destination names based on destination_ids array
+  let destinationNames = "";
+  if (pkg.destination_ids && pkg.destination_ids.length > 0) {
+    const { data: destinations } = await supabase
+      .from('destinations')
+      .select('name')
+      .in('id', pkg.destination_ids);
+    if (destinations) {
+      destinationNames = destinations.map(d => d.name).join(" & ");
+    }
+  }
 
   return (
     <div className="bg-background min-h-screen">
@@ -129,7 +144,7 @@ export default async function PackageDetailPage({ params }: PackageDetailPagePro
                 Journey Highlights
               </h3>
               <ul className="grid gap-3.5 sm:grid-cols-2 text-sm text-muted-foreground" role="list">
-                {pkg.highlights.map((highlight, index) => (
+                {pkg.highlights && pkg.highlights.map((highlight: string, index: number) => (
                   <li key={index} className="flex items-start gap-2.5">
                     <span className="mt-2 size-1.5 shrink-0 rounded-full bg-accent/60" aria-hidden="true" />
                     <span className="leading-relaxed">{highlight}</span>

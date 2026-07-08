@@ -1,14 +1,18 @@
 import type { Metadata } from "next";
 
-import { SITE_DESCRIPTION, SITE_NAME } from "@/constants/site";
+import { createClient } from "@/lib/supabase/server";
 import { fontBody, fontHeading, fontSerif } from "@/lib/fonts";
 import { cn } from "@/lib/utils";
 import "./globals.css";
 
-export const metadata: Metadata = {
-  title: SITE_NAME,
-  description: SITE_DESCRIPTION,
-};
+export async function generateMetadata(): Promise<Metadata> {
+  const supabase = await createClient();
+  const { data } = await supabase.from('site_settings').select('site_name, site_description').single();
+  return {
+    title: data?.site_name || "Dayar-E-Habib Tours",
+    description: data?.site_description || "Premium Hajj & Umrah Packages",
+  };
+}
 
 export default function RootLayout({
   children,

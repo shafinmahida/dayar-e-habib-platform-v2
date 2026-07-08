@@ -56,14 +56,11 @@ export function AdminSidebar() {
 
   const menuItems: MenuItem[] = [
     { name: "Dashboard", href: "/admin", icon: Compass },
-    { name: "Website Builder", href: "/admin/website-builder", icon: LayoutGrid },
     { name: "Packages", href: "/admin/packages", icon: Layers },
-    { name: "Gallery", href: "/admin/gallery", icon: Image },
-    { name: "SEO", href: "/admin/seo", icon: Globe },
-    { name: "Contact", href: "/admin/contact", icon: Contact2 },
-    { name: "Enquiries", href: "/admin/enquiries", icon: Mail },
-    { name: "Settings", href: "/admin/settings", icon: Sliders },
-    { name: "Users", href: "/admin/users", icon: Users2 }
+    { name: "Website Builder", href: "/admin/website-builder", icon: LayoutGrid },
+    { name: "Global Content", href: "/admin/content", icon: Globe },
+    { name: "Media Library", href: "/admin/media", icon: Image },
+    { name: "Settings", href: "/admin/settings", icon: Sliders }
   ];
 
   return (

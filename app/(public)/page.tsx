@@ -10,23 +10,58 @@ import {
   Cta,
 } from "@/components/sections/home";
 
-import { TRUST_PROPS } from "@/constants/home";
-import { PACKAGES_DATA } from "@/constants/packages";
-import { TIMELINE_STEPS } from "@/constants/timeline";
-import { TESTIMONIALS_LIST } from "@/constants/testimonials";
-import { FAQ_LIST } from "@/constants/faq";
+import { createClient } from "@/lib/supabase/server";
 
-export default function HomePage() {
+export default async function HomePage() {
+  const supabase = await createClient();
+
+  // Fetch page sections
+  const { data: homePage } = await supabase.from('pages').select('id').eq('slug', 'home').single();
+  let sections: any[] = [];
+  if (homePage) {
+    const { data } = await supabase.from('page_sections').select('*').eq('page_id', homePage.id).order('sort_order');
+    if (data) sections = data;
+  }
+
+  // Extract section contents based on type
+  const trustProps = sections.find(s => s.section_type === 'trust')?.content?.props || [];
+  const timelineSteps = sections.find(s => s.section_type === 'timeline')?.content?.steps || [];
+
+  // Fetch active featured packages
+  const { data: featuredPackages } = await supabase
+    .from('packages')
+    .select(`
+      *,
+      package_categories(name)
+    `)
+    .eq('status', 'published')
+    .eq('featured', true)
+    .order('display_order', { ascending: true });
+
+  // Fetch Testimonials
+  const { data: testimonials } = await supabase
+    .from('testimonials')
+    .select('*')
+    .eq('active', true)
+    .order('display_order', { ascending: true });
+
+  // Fetch FAQs
+  const { data: faqs } = await supabase
+    .from('faqs')
+    .select('*')
+    .eq('active', true)
+    .order('display_order', { ascending: true });
+
   return (
     <>
       <Hero />
-      <Trust items={TRUST_PROPS} />
-      <FeaturedPackages packages={PACKAGES_DATA} />
-      <JourneyTimeline steps={TIMELINE_STEPS} />
+      {trustProps.length > 0 && <Trust items={trustProps} />}
+      {featuredPackages && featuredPackages.length > 0 && <FeaturedPackages packages={featuredPackages} />}
+      {timelineSteps.length > 0 && <JourneyTimeline steps={timelineSteps} />}
       <Destinations />
       <Gallery />
-      <Testimonials testimonials={TESTIMONIALS_LIST} />
-      <Faq items={FAQ_LIST} />
+      {testimonials && testimonials.length > 0 && <Testimonials testimonials={testimonials} />}
+      {faqs && faqs.length > 0 && <Faq items={faqs} />}
       <Cta />
     </>
   );
