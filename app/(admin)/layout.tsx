@@ -2,13 +2,15 @@ import { AdminSidebar } from "@/components/admin/layout/AdminSidebar";
 import { AdminHeader } from "@/components/admin/layout/AdminHeader";
 import { CommandPalette } from "@/components/admin/layout/CommandPalette";
 
+export const dynamic = 'force-dynamic';
+
 export default function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
   return (
-    <div className="flex min-h-screen bg-stone-50 dark:bg-stone-900/10 text-stone-900 dark:text-stone-100">
+    <div className="flex min-h-screen bg-background text-foreground selection:bg-primary/20">
       {/* Responsive navigation sidebar */}
       <AdminSidebar />
 

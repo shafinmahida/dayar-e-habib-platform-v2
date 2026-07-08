@@ -110,39 +110,39 @@ h6 {
 }
 
 .dark {
-  --background: #1E1A16;
-  --foreground: #FCFAF5;
-  --logo-primary: #FCFAF5;
-  --card: #2B2520;
-  --card-foreground: #FCFAF5;
-  --popover: #2B2520;
-  --popover-foreground: #FCFAF5;
-  --primary: #FCFAF5;
-  --primary-foreground: #1E1A16;
-  --secondary: #3A322C;
-  --secondary-foreground: #FCFAF5;
-  --muted: #3A322C;
-  --muted-foreground: #CFC4AF;
-  --accent: #8A6A36;
-  --accent-foreground: #FCFAF5;
+  --background: #0A0A0C;
+  --foreground: #FDFBF7;
+  --logo-primary: #FDFBF7;
+  --card: #121214;
+  --card-foreground: #FDFBF7;
+  --popover: #121214;
+  --popover-foreground: #FDFBF7;
+  --primary: #D4AF37;
+  --primary-foreground: #0A0A0C;
+  --secondary: #1F1F22;
+  --secondary-foreground: #FDFBF7;
+  --muted: #1F1F22;
+  --muted-foreground: #A1A1AA;
+  --accent: #D4AF37;
+  --accent-foreground: #0A0A0C;
   --destructive: #EF4444;
-  --border: #3A322C;
-  --input: #3A322C;
-  --ring: #8A6A36;
-  --sidebar: #2B2520;
-  --sidebar-foreground: #FCFAF5;
-  --sidebar-primary: #FCFAF5;
-  --sidebar-primary-foreground: #1E1A16;
-  --sidebar-accent: #3A322C;
-  --sidebar-accent-foreground: #FCFAF5;
-  --sidebar-border: #3A322C;
-  --sidebar-ring: #8A6A36;
+  --border: #27272A;
+  --input: #27272A;
+  --ring: #D4AF37;
+  --sidebar: #0A0A0C;
+  --sidebar-foreground: #FDFBF7;
+  --sidebar-primary: #D4AF37;
+  --sidebar-primary-foreground: #0A0A0C;
+  --sidebar-accent: #1F1F22;
+  --sidebar-accent-foreground: #FDFBF7;
+  --sidebar-border: #27272A;
+  --sidebar-ring: #D4AF37;
 
   /* Admin Dark Theme Hex variables */
-  --admin-bg: #0E0F11;
-  --admin-surface: #17181C;
-  --admin-elevated: #1E2126;
-  --admin-text: #E3E7EB;
+  --admin-bg: #0A0A0C;
+  --admin-surface: #121214;
+  --admin-elevated: #1F1F22;
+  --admin-text: #FDFBF7;
   --admin-primary: #D4AF37;
   --admin-accent: #F59E0B;
 }

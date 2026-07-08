@@ -2,7 +2,7 @@
 
 import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
-import { Search, Compass, Eye, Tag, FileText, Settings, ShieldAlert, Sparkles } from "lucide-react";
+import { Search, Compass, Eye, Tag, FileText, Settings, ShieldAlert, LayoutTemplate, Image as ImageIcon, Box } from "lucide-react";
 
 interface CommandItem {
   icon: React.ComponentType<{ className?: string }>;
@@ -56,14 +56,26 @@ export function CommandPalette() {
       action: () => { router.push("/admin/settings"); setIsOpen(false); }
     },
     {
-      icon: Sparkles,
-      name: "Search Hero Section Editor",
-      category: "Quick Action",
+      icon: LayoutTemplate,
+      name: "Edit Hero Section",
+      category: "Website Builder",
       action: () => { router.push("/admin/website-builder?section=hero"); setIsOpen(false); }
     },
     {
+      icon: ImageIcon,
+      name: "Edit Gallery Section",
+      category: "Website Builder",
+      action: () => { router.push("/admin/website-builder?section=gallery"); setIsOpen(false); }
+    },
+    {
+      icon: Box,
+      name: "Edit Packages Section",
+      category: "Website Builder",
+      action: () => { router.push("/admin/website-builder?section=packages"); setIsOpen(false); }
+    },
+    {
       icon: ShieldAlert,
-      name: "Inspect System Logs & Errors",
+      name: "Inspect System Logs",
       category: "System",
       action: () => { alert("Diagnostics log overview is empty."); setIsOpen(false); }
     }
@@ -120,14 +132,14 @@ export function CommandPalette() {
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4 bg-stone-900/40 backdrop-blur-[2px]">
+    <div className="fixed inset-0 z-50 flex items-start justify-center pt-[15vh] px-4 bg-background/80 backdrop-blur-sm">
       <div
         ref={modalRef}
-        className="w-full max-w-xl bg-white dark:bg-stone-950 border border-stone-200 dark:border-stone-800 rounded-xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-150"
+        className="w-full max-w-xl bg-card border border-border rounded-2xl shadow-2xl overflow-hidden animate-in fade-in zoom-in-95 duration-200"
       >
         {/* Search Input */}
-        <div className="flex items-center px-4 border-b border-stone-200 dark:border-stone-800">
-          <Search className="h-4 w-4 text-stone-400 dark:text-stone-600 mr-3" />
+        <div className="flex items-center px-5 border-b border-border">
+          <Search className="h-5 w-5 text-muted-foreground mr-3" />
           <input
             type="text"
             placeholder="Type a command or search..."
@@ -136,18 +148,18 @@ export function CommandPalette() {
               setSearch(e.target.value);
               setSelectedIndex(0);
             }}
-            className="w-full py-3.5 text-sm bg-transparent border-0 focus:outline-none focus:ring-0 text-stone-900 dark:text-stone-100 placeholder-stone-400"
+            className="w-full py-4 text-sm font-medium bg-transparent border-0 focus:outline-none focus:ring-0 text-foreground placeholder-muted-foreground/70"
             autoFocus
           />
-          <kbd className="hidden sm:inline-block px-1.5 py-0.5 text-[10px] text-stone-400 bg-stone-100 dark:bg-stone-900 border border-stone-200 dark:border-stone-800 rounded">
+          <kbd className="hidden sm:inline-flex items-center px-2 py-1 text-[10px] font-bold text-muted-foreground bg-muted/50 border border-border rounded-md uppercase tracking-widest">
             ESC
           </kbd>
         </div>
 
         {/* Results List */}
-        <div className="max-h-[320px] overflow-y-auto p-2">
+        <div className="max-h-[360px] overflow-y-auto p-3 no-scrollbar">
           {filtered.length === 0 ? (
-            <div className="py-8 text-center text-sm text-stone-400">
+            <div className="py-10 text-center text-sm font-medium text-muted-foreground">
               No results found for &ldquo;{search}&rdquo;
             </div>
           ) : (
@@ -159,22 +171,22 @@ export function CommandPalette() {
                   <button
                     key={cmd.name}
                     onClick={cmd.action}
-                    className={`w-full flex items-center justify-between px-3 py-2.5 text-left text-sm rounded-lg transition-colors duration-100 ${
+                    className={`w-full flex items-center justify-between px-4 py-3 text-left text-sm rounded-xl transition-all duration-150 ${
                       isSelected
-                        ? "bg-stone-100 dark:bg-stone-900 text-stone-900 dark:text-stone-100"
-                        : "text-stone-600 dark:text-stone-400 hover:bg-stone-50 dark:hover:bg-stone-900/50"
+                        ? "bg-foreground text-background shadow-md"
+                        : "text-muted-foreground hover:bg-muted/30 hover:text-foreground"
                     }`}
                   >
-                    <div className="flex items-center space-x-3">
-                      <Icon className={`h-4 w-4 ${isSelected ? "text-stone-900 dark:text-stone-100" : "text-stone-400"}`} />
-                      <span>{cmd.name}</span>
+                    <div className="flex items-center space-x-4">
+                      <Icon className={`h-4.5 w-4.5 ${isSelected ? "text-background" : "text-muted-foreground"}`} />
+                      <span className="font-bold tracking-wide">{cmd.name}</span>
                     </div>
-                    <div className="flex items-center space-x-2">
-                      <span className="text-[10px] uppercase font-semibold tracking-wider text-stone-400">
+                    <div className="flex items-center space-x-3">
+                      <span className={`text-[10px] uppercase font-extrabold tracking-widest ${isSelected ? "text-background/70" : "text-muted-foreground/60"}`}>
                         {cmd.category}
                       </span>
                       {cmd.shortcut && (
-                        <kbd className="px-1.5 py-0.5 text-[9px] bg-stone-200/50 dark:bg-stone-800 border border-stone-300/30 dark:border-stone-700 rounded text-stone-500">
+                        <kbd className={`px-2 py-1 text-[9px] font-bold tracking-widest rounded uppercase ${isSelected ? "bg-background/20 text-background border-transparent" : "bg-muted/50 text-muted-foreground border border-border"}`}>
                           {cmd.shortcut}
                         </kbd>
                       )}
@@ -187,12 +199,12 @@ export function CommandPalette() {
         </div>
 
         {/* Footer */}
-        <div className="flex items-center justify-between px-4 py-2 bg-stone-50 dark:bg-stone-900/30 border-t border-stone-200 dark:border-stone-800 text-[10px] text-stone-400">
-          <div className="flex items-center space-x-4">
+        <div className="flex items-center justify-between px-5 py-3 bg-muted/20 border-t border-border text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
+          <div className="flex items-center space-x-5">
             <span>↑↓ to navigate</span>
             <span>↵ to select</span>
           </div>
-          <span>Dayar-E-Habib Control Center</span>
+          <span>Dayar-E-Habib OS</span>
         </div>
       </div>
     </div>

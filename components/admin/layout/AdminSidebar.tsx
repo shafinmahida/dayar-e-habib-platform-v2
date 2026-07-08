@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
   Compass,
@@ -32,6 +32,20 @@ export function AdminSidebar() {
   const router = useRouter();
   const [isCollapsed, setIsCollapsed] = useState(false);
   const [isMobileOpen, setIsMobileOpen] = useState(false);
+  const [userName, setUserName] = useState("Admin");
+  const [userRole, setUserRole] = useState("User");
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      const supabase = createClient();
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.user_metadata) {
+        if (user.user_metadata.full_name) setUserName(user.user_metadata.full_name);
+        if (user.user_metadata.role) setUserRole(user.user_metadata.role);
+      }
+    };
+    fetchUser();
+  }, []);
 
   const handleLogout = async () => {
     const supabase = createClient();
@@ -55,18 +69,18 @@ export function AdminSidebar() {
   return (
     <>
       {/* Mobile Toggle Bar */}
-      <div className="lg:hidden flex items-center justify-between px-4 py-3 bg-[#FCFAF5] dark:bg-stone-950 border-b border-stone-200 dark:border-stone-850">
+      <div className="lg:hidden flex items-center justify-between px-5 py-4 bg-card border-b border-border shadow-sm">
         <div className="flex flex-col">
-          <span className="text-xs font-bold tracking-widest text-stone-900 dark:text-stone-100 uppercase">
+          <span className="text-xs font-black tracking-widest text-foreground uppercase">
             DAYARE E HABIB
           </span>
-          <span className="text-[9px] font-semibold text-stone-400 uppercase tracking-widest">
+          <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">
             Control Center
           </span>
         </div>
         <button
           onClick={() => setIsMobileOpen(prev => !prev)}
-          className="p-1.5 rounded hover:bg-stone-100 dark:hover:bg-stone-900 text-stone-600 dark:text-stone-400"
+          className="p-2 rounded-lg hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
           aria-label="Toggle menu"
         >
           <Menu className="h-5 w-5" />
@@ -75,25 +89,25 @@ export function AdminSidebar() {
 
       {/* Sidebar Shell */}
       <aside
-        className={`fixed inset-y-0 left-0 z-40 lg:sticky flex flex-col justify-between h-screen bg-[#FCFAF5] dark:bg-stone-950 border-r border-stone-200/80 dark:border-stone-900/60 transition-all duration-300 ${
-          isCollapsed ? "w-20" : "w-64"
-        } ${isMobileOpen ? "translate-x-0" : "-translate-x-full lg:translate-x-0"}`}
+        className={`fixed inset-y-0 left-0 z-40 lg:sticky flex flex-col justify-between h-screen bg-card border-r border-border transition-all duration-300 ease-in-out ${
+          isCollapsed ? "w-[88px]" : "w-72"
+        } ${isMobileOpen ? "translate-x-0 shadow-2xl" : "-translate-x-full lg:translate-x-0"}`}
       >
         {/* Top Section */}
-        <div>
+        <div className="flex flex-col h-full overflow-y-auto overflow-x-hidden no-scrollbar">
           {/* Logo / Header */}
-          <div className="flex items-center justify-between px-5 py-6 border-b border-stone-100 dark:border-stone-900">
+          <div className="flex items-center justify-between px-6 py-8 border-b border-border/50">
             {!isCollapsed ? (
-              <div className="flex flex-col">
-                <span className="text-xs font-extrabold tracking-[0.2em] text-stone-900 dark:text-stone-100 uppercase">
+              <div className="flex flex-col space-y-1">
+                <span className="text-xs font-black tracking-[0.25em] text-foreground uppercase">
                   DAYARE E HABIB
                 </span>
-                <span className="text-[9px] font-semibold text-stone-400 uppercase tracking-[0.15em] mt-0.5">
+                <span className="text-[10px] font-bold text-primary uppercase tracking-[0.2em]">
                   Control Center
                 </span>
               </div>
             ) : (
-              <div className="mx-auto text-xs font-black text-stone-800 dark:text-stone-200">
+              <div className="mx-auto text-sm font-black text-foreground tracking-widest">
                 DH
               </div>
             )}
@@ -101,30 +115,30 @@ export function AdminSidebar() {
             {/* Collapse Trigger (hidden on mobile) */}
             <button
               onClick={() => setIsCollapsed(!isCollapsed)}
-              className="hidden lg:flex p-1 rounded hover:bg-stone-100 dark:hover:bg-stone-900 text-stone-400 hover:text-stone-600 transition-colors"
+              className="hidden lg:flex p-1.5 rounded-lg hover:bg-muted/50 text-muted-foreground hover:text-foreground transition-colors"
             >
               {isCollapsed ? <ChevronRight className="h-4 w-4" /> : <ChevronLeft className="h-4 w-4" />}
             </button>
           </div>
 
           {/* Navigation Directory */}
-          <nav className="p-3.5 space-y-1" aria-label="Sidebar Navigation">
+          <nav className="flex-1 p-4 space-y-1.5" aria-label="Sidebar Navigation">
             {menuItems.map((item) => {
               const Icon = item.icon;
-              const isActive = pathname === item.href;
+              const isActive = pathname === item.href || (pathname.startsWith(item.href) && item.href !== "/admin");
               return (
                 <Link
                   key={item.name}
                   href={item.href}
-                  className={`flex items-center space-x-3.5 px-3 py-2.5 rounded-lg text-xs font-semibold transition-all duration-150 ${
+                  className={`flex items-center px-4 py-3 rounded-xl text-sm font-bold transition-all duration-200 group ${
                     isActive
-                      ? "bg-stone-900 text-white dark:bg-stone-100 dark:text-stone-950 shadow-sm"
-                      : "text-stone-600 hover:text-stone-900 dark:text-stone-400 dark:hover:text-stone-100 hover:bg-stone-50 dark:hover:bg-stone-900/30"
+                      ? "bg-foreground text-background shadow-md shadow-foreground/5"
+                      : "text-muted-foreground hover:text-foreground hover:bg-muted/40"
                   }`}
                   onClick={() => setIsMobileOpen(false)}
                 >
-                  <Icon className="h-4 w-4 flex-shrink-0" />
-                  {!isCollapsed && <span>{item.name}</span>}
+                  <Icon className={`h-4.5 w-4.5 flex-shrink-0 ${isActive ? "text-background" : "text-muted-foreground group-hover:text-foreground"}`} />
+                  {!isCollapsed && <span className="ml-4 tracking-wide">{item.name}</span>}
                 </Link>
               );
             })}
@@ -132,19 +146,19 @@ export function AdminSidebar() {
         </div>
 
         {/* User Footer Panel */}
-        <div className="p-4 border-t border-stone-100 dark:border-stone-900 bg-stone-50/50 dark:bg-stone-900/10">
+        <div className="p-5 border-t border-border bg-muted/10">
           <div className="flex items-center justify-between">
-            <div className="flex items-center space-x-3 min-w-0">
-              <div className="flex items-center justify-center h-8 w-8 rounded-full bg-stone-200 dark:bg-stone-800 text-stone-700 dark:text-stone-300">
-                <User className="h-4 w-4" />
+            <div className="flex items-center space-x-3.5 min-w-0">
+              <div className="flex items-center justify-center h-10 w-10 rounded-full bg-muted border border-border text-foreground shadow-sm">
+                <User className="h-4.5 w-4.5" />
               </div>
               {!isCollapsed && (
                 <div className="flex flex-col min-w-0">
-                  <span className="text-xs font-bold text-stone-800 dark:text-stone-200 truncate">
-                    Shafin Mahida
+                  <span className="text-sm font-extrabold tracking-tight text-foreground truncate">
+                    {userName}
                   </span>
-                  <span className="text-[10px] text-stone-400 truncate">
-                    Owner
+                  <span className="text-[11px] font-bold text-muted-foreground uppercase tracking-widest truncate mt-0.5">
+                    {userRole}
                   </span>
                 </div>
               )}
@@ -152,10 +166,10 @@ export function AdminSidebar() {
             {!isCollapsed && (
               <button
                 onClick={handleLogout}
-                className="p-1.5 rounded hover:bg-stone-100 dark:hover:bg-stone-900 text-stone-400 hover:text-red-500 transition-colors"
+                className="p-2 rounded-lg hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors"
                 aria-label="Logout"
               >
-                <LogOut className="h-4 w-4" />
+                <LogOut className="h-4.5 w-4.5" />
               </button>
             )}
           </div>
@@ -166,7 +180,7 @@ export function AdminSidebar() {
       {isMobileOpen && (
         <div
           onClick={() => setIsMobileOpen(false)}
-          className="fixed inset-0 z-30 lg:hidden bg-stone-900/30 backdrop-blur-[1px]"
+          className="fixed inset-0 z-30 lg:hidden bg-background/80 backdrop-blur-sm transition-opacity"
         />
       )}
     </>

@@ -10,7 +10,7 @@ export function AdminHeader() {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
 
   return (
-    <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-[#FCFAF5]/85 dark:bg-stone-950/85 backdrop-blur-[4px] border-b border-stone-200/80 dark:border-stone-900/60">
+    <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-background/85 backdrop-blur-[4px] border-b border-border/60">
       {/* Left side: Breadcrumb path tracking */}
       <Breadcrumbs />
 
