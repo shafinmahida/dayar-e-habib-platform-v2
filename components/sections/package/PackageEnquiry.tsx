@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { Send, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { CONTACT_DATA } from "@/constants/contact";
+import { createClient } from "@/lib/supabase/client";
 
 interface PackageEnquiryProps {
   packageTitle: string;
@@ -13,6 +14,7 @@ export function PackageEnquiry({ packageTitle }: PackageEnquiryProps) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const supabase = createClient();
 
   const [name, setName] = useState("");
   const [phone, setPhone] = useState("");
@@ -27,37 +29,24 @@ export function PackageEnquiry({ packageTitle }: PackageEnquiryProps) {
     setError(null);
 
     try {
-      const response = await fetch("https://api.web3forms.com/submit", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Accept: "application/json",
-        },
-        body: JSON.stringify({
-          access_key: "50d01b1a-7b5e-46dc-8ee5-49af3bb10833",
-          name: name,
-          phone: phone,
-          email: email || "Not Provided",
-          message: message,
-          package: packageTitle,
-          subject: `New Pilgrimage Enquiry: ${packageTitle} - ${name}`,
-          from_name: "Dayar-E-Habib Platform",
-        }),
+      const { error: insertError } = await supabase.from('enquiries').insert({
+        name,
+        phone,
+        email: email || null,
+        message,
+        package_title: packageTitle,
+        status: 'new'
       });
 
-      const result = await response.json();
+      if (insertError) throw insertError;
 
-      if (result.success) {
-        setSubmitted(true);
-        // Clear all form inputs
-        setName("");
-        setPhone("");
-        setEmail("");
-        setMessage(`Hello, I am interested in booking or receiving details for the ${packageTitle}. Please contact me.`);
-      } else {
-        setError(result.message || "Failed to submit request. Please try again.");
-      }
-    } catch {
+      setSubmitted(true);
+      setName("");
+      setPhone("");
+      setEmail("");
+      setMessage(`Hello, I am interested in booking or receiving details for the ${packageTitle}. Please contact me.`);
+    } catch (err: any) {
+      console.error('Enquiry submission error:', err);
       setError("Unable to submit. Please check your internet connection and try again.");
     } finally {
       setLoading(false);

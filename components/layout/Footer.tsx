@@ -1,12 +1,9 @@
 import Link from "next/link";
 import { Mail, MapPin, Phone, Clock } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
 
 import { Container } from "@/components/layout/Container";
 import { Logo } from "@/components/layout/Logo";
-import { CONTACT_DATA } from "@/constants/contact";
-import { SITE_NAME } from "@/constants/site";
-import { SOCIALS_DATA } from "@/constants/social";
-import { SERVICES_DATA } from "@/constants/services";
 
 function FacebookIcon(props: React.ComponentProps<"svg">) {
   return (
@@ -49,26 +46,33 @@ const FOOTER_SOCIAL_ICONS: Record<string, React.ComponentType<React.ComponentPro
   whatsapp: WhatsAppIcon,
 };
 
-export function Footer() {
+export async function Footer() {
+  const supabase = await createClient();
   const currentYear = new Date().getFullYear();
-  const primaryOffice = CONTACT_DATA.offices.find(o => o.active) || CONTACT_DATA.offices[0];
+
+  // Fetch dynamic data
+  const { data: offices } = await supabase.from('contact_offices').select('*').eq('active', true).order('display_order');
+  const { data: socials } = await supabase.from('social_links').select('*').eq('active', true).order('display_order');
+  const { data: profile } = await supabase.from('company_profile').select('*').single();
+  const { data: settings } = await supabase.from('site_settings').select('*').single();
+
+  const primaryOffice = offices?.[0];
 
   return (
     <footer className="bg-[#1E1A16] text-[#FCFAF5] border-t border-white/5">
       <Container className="py-20 lg:py-24">
         <div className="grid gap-12 sm:grid-cols-2 lg:grid-cols-12 lg:gap-12">
           
-          {/* Column 1: Logo & Branding (Expanded to col-span-4 to fit wide logo without overlap) */}
+          {/* Column 1: Logo & Branding */}
           <div className="space-y-6 sm:col-span-2 lg:col-span-4">
             <Link href="/" className="inline-block hover:scale-[1.02] transition-transform duration-300">
-              {/* Force white/light-ivory color custom property for logo in dark footer */}
               <Logo className="[--logo-primary:#FCFAF5] h-18 lg:h-22 w-auto text-[#FCFAF5]" />
             </Link>
             <p className="max-w-xs text-xs sm:text-sm leading-relaxed text-[#FCFAF5]/70">
-              Serving pilgrims since 1986 with trust, transparency, and dedicated personal care. Guided by years of experience and theological excellence.
+              {profile?.description || "Serving pilgrims since 1986 with trust, transparency, and dedicated personal care. Guided by years of experience and theological excellence."}
             </p>
             <div className="flex items-center gap-2.5">
-              {SOCIALS_DATA.filter(s => s.active).map(({ label, url, platform }) => {
+              {socials?.map(({ label, url, platform }) => {
                 const Icon = FOOTER_SOCIAL_ICONS[platform];
                 if (!Icon) return null;
 
@@ -86,25 +90,8 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Column 2: Navigation & Services Stack (Sized to col-span-2) */}
+          {/* Column 2: Quick Links */}
           <div className="lg:col-span-2 space-y-8">
-            <div className="space-y-4">
-              <h3 className="font-heading text-[9px] font-black tracking-widest text-[#FCFAF5]/50 uppercase">
-                Our Services
-              </h3>
-              <ul role="list" className="space-y-2.5">
-                {SERVICES_DATA.filter(s => s.active).map((service) => (
-                  <li key={service.slug}>
-                    <Link
-                      href={`/tours/${service.slug === 'ziyarat' ? 'classic-ziyarat' : service.slug === 'hajj' ? 'premium-hajj' : 'deluxe-umrah'}`}
-                      className="text-xs text-[#FCFAF5]/85 transition-colors hover:text-accent focus-visible:outline-none"
-                    >
-                      {service.title === "Holy Places Ziyarat" ? "Ziyarat Tours" : service.title}
-                    </Link>
-                  </li>
-                ))}
-              </ul>
-            </div>
             <div className="space-y-4">
               <h3 className="font-heading text-[9px] font-black tracking-widest text-[#FCFAF5]/50 uppercase">
                 Quick Links
@@ -129,28 +116,8 @@ export function Footer() {
             </div>
           </div>
 
-          {/* Column 3: Dedicated Coordinator Specialists (col-span-3) */}
-          <div className="lg:col-span-3 space-y-5">
-            <h3 className="font-heading text-[9px] font-black tracking-widest text-[#FCFAF5]/50 uppercase">
-              Dedicated Inquiries
-            </h3>
-            <div className="space-y-4 text-xs leading-relaxed text-[#FCFAF5]/70">
-              <div>
-                <span className="font-extrabold text-[#FCFAF5]/90 block text-[10px] tracking-wide text-accent uppercase">Hajj, Umrah & Ziyarat</span>
-                <div className="space-y-1 mt-1">
-                  <a href="tel:+919819399555" className="hover:text-accent transition-colors font-medium block">+91 98193 99555</a>
-                  <a href="tel:+919892734480" className="hover:text-accent transition-colors font-medium block">+91 98927 34480</a>
-                </div>
-              </div>
-              <div className="pt-3 border-t border-white/5">
-                <span className="font-extrabold text-[#FCFAF5]/90 block text-[10px] tracking-wide text-accent uppercase">Flight Booking & Visa</span>
-                <a href="tel:+916230142301" className="hover:text-accent transition-colors font-medium block mt-1">+91 62301 42301</a>
-              </div>
-            </div>
-          </div>
-
-          {/* Column 4: Contact Us */}
-          <div className="lg:col-span-3 space-y-5">
+          {/* Column 3: Contact Us */}
+          <div className="lg:col-span-6 space-y-5">
             <h3 className="font-heading text-[9px] font-black tracking-widest text-[#FCFAF5]/50 uppercase">
               Contact Us
             </h3>
@@ -161,9 +128,9 @@ export function Footer() {
                     className="mt-0.5 size-4 shrink-0 text-accent"
                     aria-hidden="true"
                   />
-                  {primaryOffice.mapLink ? (
+                  {primaryOffice.map_link ? (
                     <a
-                      href={primaryOffice.mapLink}
+                      href={primaryOffice.map_link}
                       target="_blank"
                       rel="noopener noreferrer"
                       className="transition-colors hover:text-accent focus-visible:outline-none"
@@ -175,37 +142,41 @@ export function Footer() {
                   )}
                 </li>
               )}
-              <li className="flex items-start gap-3.5 text-xs text-[#FCFAF5]/70">
-                <Phone
-                  className="mt-0.5 size-4 shrink-0 text-accent"
-                  aria-hidden="true"
-                />
-                <a
-                  href={`tel:${CONTACT_DATA.primaryPhone.replace(/\s/g, "")}`}
-                  className="transition-colors hover:text-accent focus-visible:outline-none whitespace-nowrap"
-                >
-                  {CONTACT_DATA.primaryPhone}
-                </a>
-              </li>
-              <li className="flex items-start gap-3.5 text-xs text-[#FCFAF5]/70">
-                <Mail
-                  className="mt-0.5 size-4 shrink-0 text-accent"
-                  aria-hidden="true"
-                />
-                <a
-                  href={`mailto:${CONTACT_DATA.primaryEmail}`}
-                  className="transition-colors hover:text-accent focus-visible:outline-none"
-                >
-                  {CONTACT_DATA.primaryEmail}
-                </a>
-              </li>
-              {primaryOffice?.workingHours && (
+              {primaryOffice?.phone && (
+                <li className="flex items-start gap-3.5 text-xs text-[#FCFAF5]/70">
+                  <Phone
+                    className="mt-0.5 size-4 shrink-0 text-accent"
+                    aria-hidden="true"
+                  />
+                  <a
+                    href={`tel:${primaryOffice.phone.replace(/\s/g, "")}`}
+                    className="transition-colors hover:text-accent focus-visible:outline-none whitespace-nowrap"
+                  >
+                    {primaryOffice.phone}
+                  </a>
+                </li>
+              )}
+              {primaryOffice?.email && (
+                <li className="flex items-start gap-3.5 text-xs text-[#FCFAF5]/70">
+                  <Mail
+                    className="mt-0.5 size-4 shrink-0 text-accent"
+                    aria-hidden="true"
+                  />
+                  <a
+                    href={`mailto:${primaryOffice.email}`}
+                    className="transition-colors hover:text-accent focus-visible:outline-none"
+                  >
+                    {primaryOffice.email}
+                  </a>
+                </li>
+              )}
+              {primaryOffice?.working_hours && (
                 <li className="flex items-start gap-3.5 text-xs text-[#FCFAF5]/70">
                   <Clock
                     className="mt-0.5 size-4 shrink-0 text-accent"
                     aria-hidden="true"
                   />
-                  <span>{primaryOffice.workingHours}</span>
+                  <span>{primaryOffice.working_hours}</span>
                 </li>
               )}
             </ul>
@@ -218,7 +189,7 @@ export function Footer() {
       <div className="border-t border-white/5 bg-[#1E1A16]/40 py-8">
         <Container className="flex flex-col items-center justify-between gap-4 sm:flex-row">
           <p className="text-xs text-[#FCFAF5]/40">
-            © {currentYear} {SITE_NAME}. All Rights Reserved.
+            © {currentYear} {settings?.site_name || "Dayar-E-Habib"}. All Rights Reserved.
           </p>
           <div className="flex gap-4 text-xs text-[#FCFAF5]/40">
             <Link href="/contact" className="hover:text-accent transition-colors">Privacy Policy</Link>

@@ -13,7 +13,7 @@ interface FeaturedPackagesProps {
 }
 
 export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
-  const activePackages = packages.filter((pkg) => pkg.active && pkg.featured);
+  const activePackages = packages.filter((pkg) => pkg.featured !== false && pkg.active !== false);
   const [activeIndex, setActiveIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
   const [touchEnd, setTouchEnd] = useState<number | null>(null);
@@ -108,8 +108,8 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
               const isHidden = !isActive && !isPrev && !isNext;
 
               // Map destination names
-              const destinationNames = pkg.destinationSlugs
-                .map(slug => DESTINATIONS_DATA.find(d => d.slug === slug)?.name || slug)
+              const destinationNames = (pkg.destinationSlugs || [])
+                .map((slug: string) => DESTINATIONS_DATA.find(d => d.slug === slug)?.name || slug)
                 .join(" & ");
 
               const cardSlides = slideshowMap[pkg.slug] || [pkg.imageUrl || "/kaaba-sunset.png"];
@@ -179,7 +179,7 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
 
                       {/* Highlights */}
                       <ul className="space-y-2.5 text-xs text-muted-foreground/95" role="list">
-                        {pkg.highlights.slice(0, 4).map((highlight, index) => (
+                        {(pkg.highlights || []).slice(0, 4).map((highlight: string, index: number) => (
                           <li key={index} className="flex items-start gap-2.5">
                             <span className="mt-1.5 size-1 rounded-full bg-accent/60 shrink-0" aria-hidden="true" />
                             <span className="leading-relaxed">{highlight}</span>

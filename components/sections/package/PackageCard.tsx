@@ -14,8 +14,8 @@ interface PackageCardProps {
 }
 
 export function PackageCard({ pkg }: PackageCardProps) {
-  const destinationNames = pkg.destinationSlugs
-    .map(slug => DESTINATIONS_DATA.find(d => d.slug === slug)?.name || slug)
+  const destinationNames = (pkg.destinationSlugs || [])
+    .map((slug: string) => DESTINATIONS_DATA.find(d => d.slug === slug)?.name || slug)
     .join(" & ");
 
   // Custom visual slides arrays for luxury rotation
@@ -108,7 +108,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
 
         {/* Highlights List */}
         <ul className="flex-1 space-y-3.5 text-xs sm:text-sm text-muted-foreground/90 mb-6" role="list">
-          {pkg.highlights.slice(0, 4).map((highlight, index) => (
+          {(pkg.highlights || []).slice(0, 4).map((highlight: string, index: number) => (
             <li key={index} className="flex items-start gap-3">
               <span className="mt-2 size-1.5 rounded-full bg-accent/60 shrink-0" aria-hidden="true" />
               <span className="leading-relaxed">{highlight}</span>

@@ -6,14 +6,13 @@ import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
 import {
   Compass,
-  LayoutGrid,
-  Layers,
-  Image,
+  LayoutDashboard,
   Globe,
-  Contact2,
-  Mail,
-  Sliders,
-  Users2,
+  Layers,
+  ImageIcon,
+  Inbox,
+  Activity,
+  Settings,
   Menu,
   ChevronLeft,
   ChevronRight,
@@ -57,10 +56,12 @@ export function AdminSidebar() {
   const menuItems: MenuItem[] = [
     { name: "Dashboard", href: "/admin", icon: Compass },
     { name: "Packages", href: "/admin/packages", icon: Layers },
-    { name: "Website Builder", href: "/admin/website-builder", icon: LayoutGrid },
+    { name: "Website Builder", href: "/admin/website-builder", icon: LayoutDashboard },
     { name: "Global Content", href: "/admin/content", icon: Globe },
-    { name: "Media Library", href: "/admin/media", icon: Image },
-    { name: "Settings", href: "/admin/settings", icon: Sliders }
+    { name: "Inbox & Leads", href: "/admin/enquiries", icon: Inbox },
+    { name: "Media Library", href: "/admin/media", icon: ImageIcon },
+    { name: "Audit Logs", href: "/admin/audit", icon: Activity },
+    { name: "Settings", href: "/admin/settings", icon: Settings },
   ];
 
   return (

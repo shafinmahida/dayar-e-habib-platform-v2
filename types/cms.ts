@@ -28,6 +28,7 @@ export interface TestimonialItem {
   name: string;
   location: string;
   packageType: string;
+  package_type?: string;
   content: string;
 }
 

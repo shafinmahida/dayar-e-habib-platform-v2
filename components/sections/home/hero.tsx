@@ -1,13 +1,16 @@
 import Link from "next/link";
 import Image from "next/image";
 import { ArrowRight } from "lucide-react";
+import { createClient } from "@/lib/supabase/server";
 
 import { Container } from "@/components/layout/Container";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { COMPANY_DATA } from "@/constants/company";
 
-export function Hero() {
+export async function Hero() {
+  const supabase = await createClient();
+  const { data: profile } = await supabase.from('company_profile').select('*').single();
+
   return (
     <section className="relative overflow-hidden bg-background flex items-center border-b border-border/20 py-16 lg:py-24">
       {/* Soft atmospheric gradient */}
@@ -24,7 +27,7 @@ export function Hero() {
                 <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
                 <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent"></span>
               </span>
-              <span>Serving Pilgrims Since 1986</span>
+              <span>Serving Pilgrims Since {profile?.established_year || "1986"}</span>
             </div>
 
             {/* Headline */}
@@ -35,7 +38,7 @@ export function Hero() {
                 <span className="text-muted-foreground/80 font-normal italic font-serif">Guided by Faith.</span>
               </h1>
               <p className="max-w-md text-xs sm:text-sm leading-relaxed text-muted-foreground/90 font-medium">
-                Established in {COMPANY_DATA.establishedYear}, Dayar-E-Habib orchestrates premium, scholar-led Hajj, Umrah, and Ziyarat experiences, focusing on deep personal devotion and comfort.
+                {profile?.description || `Established in ${profile?.established_year || "1986"}, Dayar-E-Habib orchestrates premium, scholar-led Hajj, Umrah, and Ziyarat experiences, focusing on deep personal devotion and comfort.`}
               </p>
             </div>
 

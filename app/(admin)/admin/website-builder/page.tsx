@@ -1,225 +1,191 @@
 "use client";
 
-import { useState } from "react";
-import { Layout, FileText, ChevronRight, Image as ImageIcon, Box, Sliders, Type, Hash, Maximize2, Monitor, Smartphone, RotateCcw } from "lucide-react";
+import { useEffect, useState } from "react";
+import { createClient } from "@/lib/supabase/client";
+import { LayoutDashboard, Building2, MapPin, Navigation, Type, Save, Loader2, Check } from "lucide-react";
+import { Button } from "@/components/ui/button";
 
-type Viewport = "desktop" | "mobile";
+type Tab = 'business_profile' | 'locations' | 'navigation' | 'pages';
 
 export default function WebsiteBuilderPage() {
-  const [selectedPage, setSelectedPage] = useState("home");
-  const [selectedSection, setSelectedSection] = useState<string | null>("hero");
-  const [viewport, setViewport] = useState<Viewport>("desktop");
+  const supabase = createClient();
+  const [activeTab, setActiveTab] = useState<Tab>('business_profile');
+  
+  // Business Profile State
+  const [businessProfile, setBusinessProfile] = useState<any>(null);
+  const [saving, setSaving] = useState(false);
+  const [saved, setSaved] = useState(false);
 
-  const pages = [
-    {
-      id: "home",
-      name: "Homepage Index",
-      sections: [
-        { id: "hero", name: "Hero Slide", icon: Layout },
-        { id: "timeline", name: "Pilgrimage Chronicle", icon: Hash },
-        { id: "packages", name: "Curated Packages", icon: Box },
-        { id: "gallery", name: "Media Gallery", icon: ImageIcon },
-        { id: "testimonials", name: "Testimonials", icon: Type }
-      ]
-    },
-    {
-      id: "about",
-      name: "About Heritage",
-      sections: [
-        { id: "story", name: "Brand History", icon: FileText },
-        { id: "values", name: "Core Values", icon: Layout }
-      ]
+  useEffect(() => {
+    fetchData();
+  }, [activeTab]);
+
+  const fetchData = async () => {
+    if (activeTab === 'business_profile') {
+      const { data } = await supabase.from('company_profile').select('*').limit(1).single();
+      if (data) setBusinessProfile(data);
     }
-  ];
+    // Fetch other tabs' data as needed...
+  };
 
-  const activePage = pages.find(p => p.id === selectedPage);
-  const activeSectionName = activePage?.sections.find(s => s.id === selectedSection)?.name || "Hero Slide";
+  const handleSaveBusinessProfile = async () => {
+    if (!businessProfile) return;
+    setSaving(true);
+    
+    if (businessProfile.id) {
+      await supabase.from('company_profile').update(businessProfile).eq('id', businessProfile.id);
+    } else {
+      await supabase.from('company_profile').insert(businessProfile);
+    }
+    
+    setSaving(false);
+    setSaved(true);
+    setTimeout(() => setSaved(false), 3000);
+  };
+
+  const renderTabIcon = (tab: Tab) => {
+    switch (tab) {
+      case 'business_profile': return <Building2 className="size-4" />;
+      case 'locations': return <MapPin className="size-4" />;
+      case 'navigation': return <Navigation className="size-4" />;
+      case 'pages': return <Type className="size-4" />;
+    }
+  };
+
+  const renderTabLabel = (tab: Tab) => {
+    switch (tab) {
+      case 'business_profile': return 'Business Profile';
+      case 'locations': return 'Locations & Contact';
+      case 'navigation': return 'Navigation & Footer';
+      case 'pages': return 'Page Structure';
+    }
+  };
 
   return (
-    <div className="-m-6 lg:-m-8 h-[calc(100vh-73px)] flex flex-col overflow-hidden bg-background text-foreground animate-in fade-in duration-300">
-      
-      {/* Top Toolbar */}
-      <div className="h-14 border-b border-border bg-card flex items-center justify-between px-4 flex-shrink-0">
-        <div className="flex items-center space-x-4">
-          <span className="text-xs font-bold tracking-widest uppercase text-muted-foreground">Workspace</span>
-          <div className="h-4 w-px bg-border"></div>
-          <div className="flex items-center space-x-2 text-sm font-semibold">
-            <span className="text-foreground">{activePage?.name}</span>
-            <ChevronRight className="h-4 w-4 text-muted-foreground" />
-            <span className="text-primary">{activeSectionName}</span>
-          </div>
-        </div>
-
-        <div className="flex items-center space-x-6">
-          <div className="flex items-center space-x-1 bg-muted/40 p-1 rounded-lg border border-border">
-            <button
-              onClick={() => setViewport("desktop")}
-              className={`p-1.5 rounded-md transition-colors ${viewport === "desktop" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              <Monitor className="h-4 w-4" />
-            </button>
-            <button
-              onClick={() => setViewport("mobile")}
-              className={`p-1.5 rounded-md transition-colors ${viewport === "mobile" ? "bg-background shadow-sm text-foreground" : "text-muted-foreground hover:text-foreground"}`}
-            >
-              <Smartphone className="h-4 w-4" />
-            </button>
-          </div>
-
-          <div className="flex items-center space-x-2">
-            <button className="flex items-center space-x-2 px-3 py-1.5 text-xs font-bold text-muted-foreground hover:text-foreground transition-colors">
-              <RotateCcw className="h-3.5 w-3.5" />
-              <span>Discard Changes</span>
-            </button>
-            <button className="flex items-center space-x-2 px-4 py-2 bg-foreground text-background text-xs font-extrabold tracking-wide rounded-lg hover:opacity-90 transition-opacity shadow-sm">
-              <Maximize2 className="h-3.5 w-3.5" />
-              <span>Publish Site</span>
-            </button>
-          </div>
+    <div className="p-8 max-w-7xl mx-auto space-y-8 h-[calc(100vh-2rem)] flex flex-col">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
+        <div className="space-y-1">
+          <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
+            <LayoutDashboard className="size-8 text-accent" />
+            Website Builder
+          </h1>
+          <p className="text-muted-foreground">Manage the structure and core identity of your website.</p>
         </div>
       </div>
 
-      {/* 3-Pane Workspace */}
-      <div className="flex-1 flex overflow-hidden">
-        
-        {/* LEFT PANE: Hierarchy Navigator */}
-        <div className="w-64 border-r border-border bg-card flex flex-col flex-shrink-0">
-          <div className="p-4 border-b border-border/50">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Navigator</h3>
-          </div>
-          <div className="flex-1 overflow-y-auto p-3 space-y-4 no-scrollbar">
-            {pages.map((page) => (
-              <div key={page.id} className="space-y-1">
-                <button
-                  onClick={() => { setSelectedPage(page.id); setSelectedSection(page.sections[0]?.id || null); }}
-                  className={`w-full flex items-center justify-between px-3 py-2 text-xs font-bold rounded-lg transition-colors ${
-                    selectedPage === page.id ? "text-foreground bg-muted/50" : "text-muted-foreground hover:bg-muted/30 hover:text-foreground"
-                  }`}
-                >
-                  <span>{page.name}</span>
-                </button>
-                
-                {selectedPage === page.id && (
-                  <div className="pl-4 space-y-0.5 border-l border-border/50 ml-3 mt-1">
-                    {page.sections.map((section) => {
-                      const Icon = section.icon;
-                      const isSelected = selectedSection === section.id;
-                      return (
-                        <button
-                          key={section.id}
-                          onClick={() => setSelectedSection(section.id)}
-                          className={`w-full flex items-center space-x-2.5 px-3 py-2 text-xs font-semibold rounded-lg transition-all ${
-                            isSelected ? "text-primary bg-primary/5" : "text-muted-foreground hover:text-foreground hover:bg-muted/30"
-                          }`}
-                        >
-                          <Icon className="h-3.5 w-3.5" />
-                          <span>{section.name}</span>
-                        </button>
-                      );
-                    })}
-                  </div>
-                )}
-              </div>
-            ))}
-          </div>
+      <div className="flex flex-col lg:flex-row gap-8 flex-1 min-h-0">
+        {/* Left Nav */}
+        <div className="w-full lg:w-64 space-y-2 shrink-0">
+          {(['business_profile', 'locations', 'navigation', 'pages'] as Tab[]).map((tab) => (
+            <button
+              key={tab}
+              onClick={() => setActiveTab(tab)}
+              className={`w-full flex items-center gap-3 px-4 py-3 rounded-lg text-sm font-bold transition-colors ${
+                activeTab === tab 
+                  ? 'bg-foreground text-background shadow-md' 
+                  : 'text-muted-foreground hover:bg-muted/50 hover:text-foreground'
+              }`}
+            >
+              {renderTabIcon(tab)}
+              {renderTabLabel(tab)}
+            </button>
+          ))}
         </div>
 
-        {/* CENTER PANE: Canvas/Live Preview */}
-        <div className="flex-1 bg-[#EBEBEB] dark:bg-[#050505] overflow-y-auto p-8 flex justify-center custom-scrollbar shadow-inner relative">
-          <div className="absolute top-4 left-4 flex items-center space-x-2">
-            <span className="relative flex h-2.5 w-2.5">
-              <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-emerald-400 opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-2.5 w-2.5 bg-emerald-500"></span>
-            </span>
-            <span className="text-[10px] font-bold text-muted-foreground uppercase tracking-widest">Live Sync Enabled</span>
-          </div>
-
-          <div 
-            className={`bg-white dark:bg-[#0E0F11] border border-stone-200 dark:border-stone-800 shadow-2xl rounded-xl overflow-hidden transition-all duration-500 ease-in-out ${
-              viewport === "desktop" ? "w-full max-w-5xl" : "w-[375px]"
-            }`}
-          >
-            {/* Wireframe Placeholder for Live Editing Preview */}
-            <div className="h-full min-h-[600px] flex flex-col relative opacity-80 group">
-              <div className="h-16 border-b border-stone-100 dark:border-stone-800/50 flex items-center px-8 justify-between">
-                <div className="h-6 w-24 bg-stone-200 dark:bg-stone-800 rounded"></div>
-                <div className="flex space-x-4">
-                  <div className="h-4 w-12 bg-stone-100 dark:bg-stone-900 rounded"></div>
-                  <div className="h-4 w-12 bg-stone-100 dark:bg-stone-900 rounded"></div>
-                </div>
-              </div>
-              <div className="flex-1 bg-stone-50 dark:bg-[#121214] flex flex-col items-center justify-center space-y-6 relative overflow-hidden p-8 text-center">
-                
-                {/* Active editing boundary overlay indicator */}
-                <div className="absolute inset-4 border-2 border-primary/40 border-dashed rounded-xl pointer-events-none opacity-0 group-hover:opacity-100 transition-opacity">
-                  <div className="absolute -top-3 left-4 bg-primary text-primary-foreground text-[9px] font-bold px-2 py-0.5 rounded tracking-widest uppercase">
-                    Editing: {activeSectionName}
-                  </div>
-                </div>
-
-                <div className="h-12 w-3/4 max-w-lg bg-stone-200 dark:bg-stone-800 rounded-lg"></div>
-                <div className="h-4 w-1/2 max-w-md bg-stone-200 dark:bg-stone-800 rounded-md"></div>
-                <div className="h-4 w-2/5 max-w-sm bg-stone-200 dark:bg-stone-800 rounded-md"></div>
-                <div className="h-10 w-32 bg-stone-300 dark:bg-stone-700 rounded-lg mt-4"></div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        {/* RIGHT PANE: Properties Inspector */}
-        <div className="w-80 border-l border-border bg-card flex flex-col flex-shrink-0">
-          <div className="p-4 border-b border-border/50 flex items-center justify-between">
-            <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Properties</h3>
-            <Sliders className="h-4 w-4 text-muted-foreground" />
+        {/* Right Content */}
+        <div className="flex-1 bg-card border border-border rounded-xl shadow-sm flex flex-col min-h-0 overflow-hidden">
+          
+          <div className="p-4 border-b border-border bg-muted/20 flex justify-between items-center">
+            <h2 className="font-bold">{renderTabLabel(activeTab)}</h2>
+            {activeTab === 'business_profile' && (
+               <Button onClick={handleSaveBusinessProfile} disabled={saving} size="sm" className="bg-primary text-primary-foreground">
+                 {saving ? <Loader2 className="size-4 mr-2 animate-spin" /> : saved ? <Check className="size-4 mr-2" /> : <Save className="size-4 mr-2" />}
+                 {saved ? "Saved" : "Save Changes"}
+               </Button>
+            )}
           </div>
           
-          <div className="flex-1 overflow-y-auto p-5 space-y-8 no-scrollbar">
-            {/* Contextual Properties Mock */}
-            <div className="space-y-4">
-              <h4 className="text-xs font-extrabold text-foreground border-b border-border/50 pb-2">Layout Settings</h4>
-              <div className="space-y-3">
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Section Padding</label>
-                  <select className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-xs font-semibold text-foreground focus:outline-none focus:border-primary transition-colors">
-                    <option>Large (120px)</option>
-                    <option>Medium (80px)</option>
-                    <option>Small (40px)</option>
-                    <option>None (0px)</option>
-                  </select>
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Background Color</label>
-                  <div className="flex items-center space-x-2">
-                    <div className="h-6 w-6 rounded border border-border bg-[#FDFBF7]"></div>
-                    <input type="text" value="#FDFBF7" readOnly className="flex-1 bg-muted/30 border border-border rounded-md px-3 py-1.5 text-xs font-semibold text-foreground focus:outline-none" />
+          <div className="flex-1 overflow-y-auto p-6">
+            {activeTab === 'business_profile' ? (
+              <div className="max-w-2xl space-y-6">
+                {!businessProfile ? (
+                  <div className="animate-pulse flex items-center gap-2 text-muted-foreground">
+                    <Loader2 className="size-4 animate-spin" /> Loading profile...
                   </div>
-                </div>
-              </div>
-            </div>
+                ) : (
+                  <>
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-foreground">Brand Name</label>
+                      <input 
+                        type="text" 
+                        value={businessProfile.name || ''}
+                        onChange={(e) => setBusinessProfile({...businessProfile, name: e.target.value})}
+                        className="w-full p-3 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      />
+                    </div>
+                    
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-foreground">Legal Name</label>
+                      <input 
+                        type="text" 
+                        value={businessProfile.legal_name || ''}
+                        onChange={(e) => setBusinessProfile({...businessProfile, legal_name: e.target.value})}
+                        className="w-full p-3 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      />
+                    </div>
 
-            <div className="space-y-4">
-              <h4 className="text-xs font-extrabold text-foreground border-b border-border/50 pb-2">Content</h4>
-              <div className="space-y-3">
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Primary Heading</label>
-                  <textarea rows={2} defaultValue="Premium Heritage Hajj & Umrah" className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-xs font-semibold text-foreground focus:outline-none focus:border-primary transition-colors resize-none" />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-[10px] font-bold uppercase tracking-wider text-muted-foreground">Description Text</label>
-                  <textarea rows={4} defaultValue="Curated Islamic travel experiences from first principles." className="w-full bg-muted/30 border border-border rounded-md px-3 py-2 text-xs font-semibold text-foreground focus:outline-none focus:border-primary transition-colors resize-none" />
-                </div>
-              </div>
-            </div>
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-bold text-foreground">Established Year</label>
+                        <input 
+                          type="text" 
+                          value={businessProfile.established_year || ''}
+                          onChange={(e) => setBusinessProfile({...businessProfile, established_year: e.target.value})}
+                          className="w-full p-3 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        />
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-bold text-foreground">License Number</label>
+                        <input 
+                          type="text" 
+                          value={businessProfile.license_number || ''}
+                          onChange={(e) => setBusinessProfile({...businessProfile, license_number: e.target.value})}
+                          className="w-full p-3 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                        />
+                      </div>
+                    </div>
 
-            <div className="space-y-4 opacity-50 pointer-events-none">
-              <h4 className="text-xs font-extrabold text-foreground border-b border-border/50 pb-2">Advanced Schema</h4>
-              <div className="p-3 bg-muted/30 border border-border rounded-md text-center">
-                <span className="text-[10px] font-bold text-muted-foreground">Data binding locked in Sprint 2.</span>
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-foreground">Slogan / Tagline</label>
+                      <input 
+                        type="text" 
+                        value={businessProfile.slogan || ''}
+                        onChange={(e) => setBusinessProfile({...businessProfile, slogan: e.target.value})}
+                        className="w-full p-3 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      />
+                    </div>
+
+                    <div className="space-y-2">
+                      <label className="text-sm font-bold text-foreground">Company Description</label>
+                      <textarea 
+                        rows={4}
+                        value={businessProfile.description || ''}
+                        onChange={(e) => setBusinessProfile({...businessProfile, description: e.target.value})}
+                        className="w-full p-3 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
+                      />
+                    </div>
+                  </>
+                )}
               </div>
-            </div>
+            ) : (
+              <div className="flex flex-col items-center justify-center h-full text-muted-foreground py-12">
+                <LayoutDashboard className="size-12 opacity-20 mb-4" />
+                <p>Select an item from the list to edit its structure.</p>
+                <p className="text-xs opacity-60 mt-2">(Advanced Layout Editor Coming Soon)</p>
+              </div>
+            )}
           </div>
         </div>
-
       </div>
     </div>
   );

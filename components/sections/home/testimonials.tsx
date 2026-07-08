@@ -53,7 +53,7 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                   <div className="text-[9px] font-sans font-black tracking-widest text-muted-foreground uppercase pt-2">
                     <span>{test.location}</span>
                     <span className="mx-2 text-accent/60" aria-hidden="true">&bull;</span>
-                    <span className="text-accent">{test.packageType}</span>
+                    <span className="text-accent">{test.package_type || test.packageType}</span>
                   </div>
                 </div>
               </div>

@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 import { Mail, MapPin, Phone, Clock, Sparkles } from "lucide-react";
 import Image from "next/image";
+import { createClient } from "@/lib/supabase/server";
 
 import { Container } from "@/components/layout/Container";
-import { CONTACT_DATA } from "@/constants/contact";
 import { PackageEnquiry } from "@/components/sections/package/PackageEnquiry";
 
 export const metadata: Metadata = {
@@ -11,8 +11,10 @@ export const metadata: Metadata = {
   description: "Get in touch with our travel advisors to book a package, ask questions, or customize your pilgrimage itinerary.",
 };
 
-export default function ContactPage() {
-  const primaryOffice = CONTACT_DATA.offices.find((o) => o.active) || CONTACT_DATA.offices[0];
+export default async function ContactPage() {
+  const supabase = await createClient();
+  const { data: offices } = await supabase.from('contact_offices').select('*').eq('active', true).order('display_order');
+  const primaryOffice = offices?.[0];
 
   return (
     <div className="bg-background min-h-screen">
@@ -53,9 +55,9 @@ export default function ContactPage() {
                     <MapPin className="size-5 text-accent mt-0.5 shrink-0" />
                     <div className="space-y-1">
                       <div className="text-xs font-bold text-foreground/80 uppercase">Address</div>
-                      {primaryOffice.mapLink ? (
+                      {primaryOffice.map_link ? (
                         <a 
-                          href={primaryOffice.mapLink}
+                          href={primaryOffice.map_link}
                           target="_blank"
                           rel="noopener noreferrer"
                           className="block text-sm not-italic leading-relaxed text-muted-foreground hover:text-accent transition-colors duration-200"
@@ -77,7 +79,7 @@ export default function ContactPage() {
                     <div className="space-y-1">
                       <div className="text-xs font-bold text-foreground/80 uppercase">Office Hours</div>
                       <p className="text-sm leading-relaxed text-muted-foreground">
-                        {primaryOffice.workingHours}
+                        {primaryOffice.working_hours}
                       </p>
                     </div>
                   </div>
@@ -93,28 +95,28 @@ export default function ContactPage() {
               
               <div className="grid gap-6 sm:grid-cols-2">
                 <a
-                  href={`tel:${CONTACT_DATA.primaryPhone.replace(/\s/g, "")}`}
+                  href={`tel:${(primaryOffice?.phone || "").replace(/\s/g, "")}`}
                   className="flex gap-4 p-6 bg-card border border-border rounded-md hover:border-accent/40 transition-colors duration-200"
                 >
                   <Phone className="size-5 text-accent mt-0.5 shrink-0" />
                   <div className="space-y-1">
                     <div className="text-xs font-bold text-foreground/80 uppercase">Contact us</div>
                     <p className="text-sm font-bold text-foreground whitespace-nowrap">
-                      {CONTACT_DATA.primaryPhone}
+                      {primaryOffice?.phone}
                     </p>
                     <p className="text-xs text-muted-foreground">Call or message via WhatsApp</p>
                   </div>
                 </a>
 
                 <a
-                  href={`mailto:${CONTACT_DATA.primaryEmail}`}
+                  href={`mailto:${primaryOffice?.email}`}
                   className="flex gap-4 p-6 bg-card border border-border rounded-md hover:border-accent/40 transition-colors duration-200"
                 >
                   <Mail className="size-5 text-accent mt-0.5 shrink-0" />
                   <div className="space-y-1">
                     <div className="text-xs font-bold text-foreground/80 uppercase">Email Address</div>
                     <p className="text-sm font-bold text-foreground">
-                      {CONTACT_DATA.primaryEmail}
+                      {primaryOffice?.email}
                     </p>
                     <p className="text-xs text-muted-foreground">For bookings, quotes & enquiries</p>
                   </div>

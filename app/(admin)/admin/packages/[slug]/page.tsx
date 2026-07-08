@@ -51,11 +51,13 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
       setSaving(false);
       return;
     }
-    
+    // Remove auto-generated columns that cannot be explicitly inserted
+    const { search_vector, created_at, ...saveData } = pkg;
+
     const { error } = await supabase
       .from('packages')
       .upsert({
-        ...pkg,
+        ...saveData,
         updated_at: new Date().toISOString()
       }, { onConflict: 'slug' });
       
