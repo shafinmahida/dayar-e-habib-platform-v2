@@ -2,13 +2,22 @@ import { AdminSidebar } from "@/components/admin/layout/AdminSidebar";
 import { AdminHeader } from "@/components/admin/layout/AdminHeader";
 import { CommandPalette } from "@/components/admin/layout/CommandPalette";
 
+import { redirect } from "next/navigation";
+import { createClient } from "@/lib/supabase/server";
+
 export const dynamic = 'force-dynamic';
 
-export default function AdminLayout({
+export default async function AdminLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+  const supabase = await createClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    redirect('/admin/login');
+  }
   return (
     <div className="flex min-h-screen bg-background text-foreground selection:bg-primary/20">
       {/* Responsive navigation sidebar */}
