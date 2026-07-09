@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Package } from "@/types/package";
-import { DESTINATIONS_DATA } from "@/constants/destination";
+import { DESTINATIONS_DATA } from "@/lib/data/destinations";
 import { cn } from "@/lib/utils";
 
 interface FeaturedPackagesProps {

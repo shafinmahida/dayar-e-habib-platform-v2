@@ -49,11 +49,14 @@ export async function updateSession(request: NextRequest) {
     data: { user },
   } = await supabase.auth.getUser()
 
+  // Normalize pathname to prevent bypasses via case changes or double-slashes
+  const normalizedPath = request.nextUrl.pathname.toLowerCase().replace(/\/+/g, '/');
+
   // Protect /admin routes, but not /admin/login
   if (
     !user &&
-    request.nextUrl.pathname.startsWith('/admin') &&
-    !request.nextUrl.pathname.startsWith('/admin/login')
+    normalizedPath.startsWith('/admin') &&
+    !normalizedPath.startsWith('/admin/login')
   ) {
     const url = request.nextUrl.clone()
     url.pathname = '/admin/login'
@@ -63,7 +66,7 @@ export async function updateSession(request: NextRequest) {
   // Redirect authenticated users away from login page
   if (
     user &&
-    request.nextUrl.pathname.startsWith('/admin/login')
+    normalizedPath.startsWith('/admin/login')
   ) {
     const url = request.nextUrl.clone()
     url.pathname = '/admin'

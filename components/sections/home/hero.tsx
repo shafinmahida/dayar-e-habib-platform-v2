@@ -80,6 +80,7 @@ export async function Hero() {
                       src="/minority-affairs-logo.png"
                       alt="Ministry of Minority Affairs Logo"
                       fill
+                      sizes="48px"
                       className="object-contain filter grayscale contrast-125 brightness-95 hover:grayscale-0 transition-all duration-300"
                     />
                   </div>
@@ -97,6 +98,7 @@ export async function Hero() {
                       src="/iata-logo.png"
                       alt="IATA Certified Logo"
                       fill
+                      sizes="48px"
                       className="object-contain filter grayscale hover:grayscale-0 transition-all duration-300"
                     />
                   </div>
@@ -114,6 +116,7 @@ export async function Hero() {
                       src="/aihutoa-logo.png"
                       alt="AIHUTOA Member Logo"
                       fill
+                      sizes="48px"
                       className="object-contain filter grayscale contrast-125 brightness-95 hover:grayscale-0 transition-all duration-300"
                     />
                   </div>

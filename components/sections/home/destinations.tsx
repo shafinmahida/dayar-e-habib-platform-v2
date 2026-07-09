@@ -1,7 +1,7 @@
 import Image from "next/image";
 import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
-import { DESTINATIONS_DATA } from "@/constants/destination";
+import { DESTINATIONS_DATA } from "@/lib/data/destinations";
 
 export function Destinations() {
   // Map destination slugs to generated luxury photos

@@ -3,14 +3,14 @@
 import React, { useState } from "react";
 import { Send, Phone } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { CONTACT_DATA } from "@/constants/contact";
 import { createClient } from "@/lib/supabase/client";
 
 interface PackageEnquiryProps {
   packageTitle: string;
+  defaultPhone?: string;
 }
 
-export function PackageEnquiry({ packageTitle }: PackageEnquiryProps) {
+export function PackageEnquiry({ packageTitle, defaultPhone = "+91 91722 22718" }: PackageEnquiryProps) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -167,11 +167,11 @@ export function PackageEnquiry({ packageTitle }: PackageEnquiryProps) {
           Or speak directly to an advisor:
         </div>
         <a
-          href={`tel:${CONTACT_DATA.primaryPhone.replace(/\s/g, "")}`}
+          href={`tel:${defaultPhone.replace(/\s/g, "")}`}
           className="inline-flex items-center gap-2 text-sm font-bold text-accent hover:text-accent/80 transition-colors whitespace-nowrap"
         >
           <Phone className="size-4" />
-          <span>{CONTACT_DATA.primaryPhone}</span>
+          <span>{defaultPhone}</span>
         </a>
       </div>
     </div>

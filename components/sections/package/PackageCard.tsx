@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ArrowRight, Calendar, MapPin } from "lucide-react";
 import type { Package } from "@/types/package";
-import { DESTINATIONS_DATA } from "@/constants/destination";
+import { DESTINATIONS_DATA } from "@/lib/data/destinations";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 

@@ -17,16 +17,16 @@ export default function WebsiteBuilderPage() {
   const [saved, setSaved] = useState(false);
 
   useEffect(() => {
+    const fetchData = async () => {
+      if (activeTab === 'business_profile') {
+        const { data } = await supabase.from('company_profile').select('*').limit(1).single();
+        if (data) setBusinessProfile(data);
+      }
+      // Fetch other tabs' data as needed...
+    };
+
     fetchData();
   }, [activeTab]);
-
-  const fetchData = async () => {
-    if (activeTab === 'business_profile') {
-      const { data } = await supabase.from('company_profile').select('*').limit(1).single();
-      if (data) setBusinessProfile(data);
-    }
-    // Fetch other tabs' data as needed...
-  };
 
   const handleSaveBusinessProfile = async () => {
     if (!businessProfile) return;

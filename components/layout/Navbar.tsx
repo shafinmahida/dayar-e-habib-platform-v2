@@ -8,7 +8,7 @@ import { usePathname } from "next/navigation";
 import { Container } from "@/components/layout/Container";
 import { Logo } from "@/components/layout/Logo";
 import { MobileNav } from "@/components/layout/MobileNav";
-import { ROUTES } from "@/constants/navigation";
+import { ROUTES } from "@/lib/config/ui";
 import { isActiveRoute } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
@@ -51,9 +51,9 @@ export function Navbar() {
   }, []);
 
   const rightLinks = [
-    { label: "Gallery", href: ROUTES.gallery },
-    { label: "About", href: ROUTES.about },
-    { label: "Contact", href: ROUTES.contact },
+    { label: "Gallery", href: ROUTES.GALLERY },
+    { label: "About", href: ROUTES.ABOUT },
+    { label: "Contact", href: ROUTES.CONTACT },
   ];
 
   const renderLink = (link: { label: string; href: string }) => {
@@ -95,7 +95,7 @@ export function Navbar() {
             {/* Left Side: Brand Logo (Appears strong and prominent on the leftmost margin) */}
             <div className="flex items-center justify-start shrink-0">
               <Link
-                href={ROUTES.home}
+                href={ROUTES.HOME}
                 className={cn(
                   "focus-visible:outline-none shrink-0 block py-2 hover:scale-[1.02] active:scale-[0.98] transition-all duration-[1000ms]",
                   hasPreloaded ? "opacity-100 scale-100" : "opacity-0 scale-95 pointer-events-none"
@@ -143,20 +143,20 @@ export function Navbar() {
                   )}
                 >
                   <Link 
-                    href={ROUTES.hajj}
-                    className="block px-4 py-2.5 text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground hover:text-accent hover:bg-[#F2EBDB]/40 transition-all duration-200"
+                    href={ROUTES.HAJJ}
+                    className="block px-4 py-2.5 text-[9px] font-black uppercase tracking-[0.25em] text-foreground hover:bg-secondary/40 hover:text-accent transition-colors duration-200"
                   >
                     Hajj Packages
                   </Link>
                   <Link 
-                    href={ROUTES.umrah} 
-                    className="block px-4 py-2.5 text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground hover:text-accent hover:bg-[#F2EBDB]/40 transition-all duration-200"
+                    href={ROUTES.UMRAH} 
+                    className="block px-4 py-2.5 text-[9px] font-black uppercase tracking-[0.25em] text-foreground hover:bg-secondary/40 hover:text-accent transition-colors duration-200"
                   >
                     Umrah Packages
                   </Link>
                   <Link 
-                    href={ROUTES.ziyarat} 
-                    className="block px-4 py-2.5 text-[9px] font-black uppercase tracking-[0.25em] text-muted-foreground hover:text-accent hover:bg-[#F2EBDB]/40 transition-all duration-200"
+                    href={ROUTES.ZIYARAT} 
+                    className="block px-4 py-2.5 text-[9px] font-black uppercase tracking-[0.25em] text-foreground hover:bg-secondary/40 hover:text-accent transition-colors duration-200"
                   >
                     Ziyarat Packages
                   </Link>

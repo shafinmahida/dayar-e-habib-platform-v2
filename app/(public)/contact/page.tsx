@@ -140,6 +140,7 @@ export default async function ContactPage() {
                       src="/minority-affairs-logo.png"
                       alt="Ministry of Minority Affairs Government of India Logo"
                       fill
+                      sizes="48px"
                       className="object-contain"
                     />
                   </div>
@@ -157,6 +158,7 @@ export default async function ContactPage() {
                       src="/iata-logo.png"
                       alt="IATA Certified Logo"
                       fill
+                      sizes="48px"
                       className="object-contain"
                     />
                   </div>
@@ -174,6 +176,7 @@ export default async function ContactPage() {
                       src="/aihutoa-logo.png"
                       alt="AIHUTOA Member Logo"
                       fill
+                      sizes="48px"
                       className="object-contain"
                     />
                   </div>

@@ -1,4 +1,4 @@
-import { BRAND_NAME } from "@/constants/site";
+import { BRAND_NAME } from "@/lib/config/ui";
 import { cn } from "@/lib/utils";
 import type { LogoProps } from "@/types/components";
 

@@ -5,9 +5,13 @@ import { Container } from "@/components/layout/Container";
 import { Section } from "@/components/layout/Section";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { CONTACT_DATA } from "@/constants/contact";
+import { createClient } from "@/lib/supabase/server";
 
-export function Cta() {
+export async function Cta() {
+  const supabase = await createClient();
+  const { data } = await supabase.from('contact_offices').select('phone').limit(1).single();
+  const phone = data?.phone || "+91 91722 22718";
+
   return (
     <Section className="bg-[#FCFAF5] border-t border-border py-32" id="cta-consultation">
       <Container className="-mt-4">
@@ -32,7 +36,7 @@ export function Cta() {
               Request Details
             </Link>
             <a
-              href={`tel:${CONTACT_DATA.primaryPhone.replace(/\s/g, "")}`}
+              href={`tel:${phone.replace(/\s/g, "")}`}
               className={cn(
                 buttonVariants({ variant: "outline", size: "lg" }),
                 "h-14 px-9 font-black tracking-[0.25em] uppercase text-[9px] gap-2.5 group border-border bg-transparent hover:bg-card/85 text-foreground transition-all duration-300 rounded-none"

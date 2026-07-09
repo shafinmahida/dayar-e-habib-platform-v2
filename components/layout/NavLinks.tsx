@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 
-import { NAV_LINKS } from "@/constants/navigation";
+import { NAV_LINKS } from "@/lib/config/ui";
 import { isActiveRoute } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 import type { NavLinksProps } from "@/types/navigation";

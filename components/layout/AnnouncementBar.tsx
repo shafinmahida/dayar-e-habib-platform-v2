@@ -5,7 +5,7 @@ import { X } from "lucide-react";
 
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
-import { SITE_SETTINGS } from "@/constants/settings";
+import { SITE_SETTINGS } from "@/lib/config/ui";
 
 export function AnnouncementBar() {
   const [visible, setVisible] = useState(SITE_SETTINGS.announcementEnabled);

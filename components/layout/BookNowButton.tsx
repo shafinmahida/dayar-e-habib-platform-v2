@@ -4,7 +4,7 @@ import Link from "next/link";
 import { Phone } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
-import { CTA_BOOK_NOW } from "@/constants/navigation";
+import { CTA_BOOK_NOW } from "@/lib/config/ui";
 import { cn } from "@/lib/utils";
 import type { BookNowButtonProps } from "@/types/navigation";
 
