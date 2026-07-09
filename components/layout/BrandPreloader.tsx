@@ -5,13 +5,11 @@ import { Logo } from "@/components/layout/Logo";
 
 export function BrandPreloader() {
   const [visible, setVisible] = useState(false);
-  const [mounted, setMounted] = useState(false);
+  const [unmounted, setUnmounted] = useState(false);
 
   useEffect(() => {
-    const mountTimer = setTimeout(() => {
-      setMounted(true);
-      document.body.style.overflow = "hidden";
-    }, 0);
+    // Lock scroll immediately on mount just in case
+    document.body.style.overflow = "hidden";
 
     // Start transition-out animation after 1.5 seconds of presentation
     const fadeTimer = setTimeout(() => {
@@ -20,19 +18,18 @@ export function BrandPreloader() {
 
     // Unmount preloader from DOM and restore page flow after animation completes
     const hideTimer = setTimeout(() => {
-      setMounted(false);
+      setUnmounted(true);
       document.body.style.overflow = "";
     }, 3900); // 1.5s + 2.4s transition window
 
     return () => {
-      clearTimeout(mountTimer);
       clearTimeout(fadeTimer);
       clearTimeout(hideTimer);
       document.body.style.overflow = "";
     };
   }, []);
 
-  if (!mounted) return null;
+  if (unmounted) return null;
 
   return (
     <div

@@ -222,7 +222,11 @@ export default async function PackageDetailPage({ params }: PackageDetailPagePro
               <h3 className="font-heading text-xl font-bold tracking-tight text-foreground">
                 Gallery
               </h3>
-              <PackageGallery galleryUrls={pkg.galleryUrls} mainImageUrl={pkg.imageUrl} title={pkg.title} />
+              <PackageGallery 
+                galleryUrls={pkg.image_url ? pkg.image_url.split(',').filter(Boolean) : []} 
+                mainImageUrl={pkg.image_url ? pkg.image_url.split(',').filter(Boolean)[0] : null} 
+                title={pkg.title} 
+              />
             </div>
 
             {/* FAQs */}

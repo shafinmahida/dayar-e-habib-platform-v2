@@ -3,10 +3,11 @@
 import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Save, ArrowLeft, Image as ImageIcon, Video, FileText, Tag, MapPin } from "lucide-react";
+import { Save, ArrowLeft, Image as ImageIcon, Video, FileText, Tag, MapPin, AlignLeft, Info, Calendar, Search } from "lucide-react";
 import Link from "next/link";
 import { StringArrayEditor } from "@/components/admin/shared/StringArrayEditor";
 import { ObjectArrayEditor, ObjectFieldSchema } from "@/components/admin/shared/ObjectArrayEditor";
+import { cn } from "@/lib/utils";
 
 const ITINERARY_SCHEMA: ObjectFieldSchema[] = [
   { key: "dayNumber", label: "Day Number", type: "number", required: true },
@@ -33,18 +34,25 @@ const FAQ_SCHEMA: ObjectFieldSchema[] = [
   { key: "answer", label: "Answer", type: "textarea", required: true }
 ];
 
+type TabId = 'general' | 'details' | 'itinerary' | 'transport' | 'media';
+
 export default function PackageEditorPage({ params }: { params: Promise<{ slug: string }> }) {
   const unwrappedParams = use(params);
-  const slug = unwrappedParams.slug;
-  const isNew = slug === 'new';
+  const originalSlug = unwrappedParams.slug;
+  const isNew = originalSlug === 'new';
   const router = useRouter();
   const supabase = createClient();
   
   const [loading, setLoading] = useState(!isNew);
   const [saving, setSaving] = useState(false);
+  const [activeTab, setActiveTab] = useState<TabId>('general');
   const [categories, setCategories] = useState<any[]>([]);
   const [allDestinations, setAllDestinations] = useState<any[]>([]);
   
+  // Media Arrays (Temporary state for UI)
+  const [imageUrls, setImageUrls] = useState<string[]>([]);
+  const [videoUrls, setVideoUrls] = useState<string[]>([]);
+
   const [pkg, setPkg] = useState<any>({
     title: "",
     slug: "",
@@ -54,7 +62,7 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
     status: "draft",
     is_template: false,
     price_min: "",
-    price_currency: "USD",
+    price_currency: "INR",
     image_url: "",
     video_url: "",
     seo_title: "",
@@ -73,7 +81,7 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
   useEffect(() => {
     fetchMetadata();
     if (!isNew) fetchPackage();
-  }, [slug]);
+  }, [originalSlug]);
 
   const fetchMetadata = async () => {
     const [cats, dests] = await Promise.all([
@@ -88,7 +96,7 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
     const { data, error } = await supabase
       .from('packages')
       .select('*')
-      .eq('slug', slug)
+      .eq('slug', originalSlug)
       .single();
       
     if (data) {
@@ -103,16 +111,33 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
         flights: data.flights || [],
         faqs: data.faqs || [],
         destination_ids: data.destination_ids || [],
-        price_min: data.price_min || ""
+        price_min: data.price_min || "",
+        price_currency: data.price_currency || "INR"
       });
+      // Parse comma-separated strings back into arrays
+      setImageUrls(data.image_url ? data.image_url.split(',').filter(Boolean) : []);
+      setVideoUrls(data.video_url ? data.video_url.split(',').filter(Boolean) : []);
     }
     setLoading(false);
+  };
+
+  const handleTitleChange = (newTitle: string) => {
+    if (isNew) {
+      const autoSlug = newTitle
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, '-')
+        .replace(/(^-|-$)+/g, '');
+      setPkg({ ...pkg, title: newTitle, slug: autoSlug });
+    } else {
+      setPkg({ ...pkg, title: newTitle });
+    }
   };
 
   const handleSave = async () => {
     setSaving(true);
     if (!pkg.title || !pkg.slug) {
       alert("Title and Slug are required.");
+      setActiveTab('general');
       setSaving(false);
       return;
     }
@@ -121,6 +146,10 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
 
     // Convert price_min to numeric or null
     saveData.price_min = saveData.price_min ? parseFloat(saveData.price_min) : null;
+    
+    // Join arrays into comma-separated strings for database persistence
+    saveData.image_url = imageUrls.join(',');
+    saveData.video_url = videoUrls.join(',');
 
     const { error } = await supabase
       .from('packages')
@@ -136,7 +165,13 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
       if (isNew) {
         router.push(`/admin/packages/${pkg.slug}`);
       } else {
-        alert("Saved successfully!");
+        // Show temporary success feedback
+        const btn = document.getElementById("save-btn-text");
+        if(btn) {
+          const orig = btn.innerText;
+          btn.innerText = "Saved!";
+          setTimeout(() => btn.innerText = orig, 2000);
+        }
       }
     }
   };
@@ -150,19 +185,27 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
     }
   };
 
-  if (loading) return <div className="p-8 text-sm text-stone-500 flex items-center justify-center min-h-[50vh]">Loading editor...</div>;
+  if (loading) return <div className="p-8 text-sm text-stone-500 flex items-center justify-center min-h-[50vh] animate-pulse">Initializing cockpit...</div>;
+
+  const TABS: { id: TabId; label: string; icon: React.ReactNode }[] = [
+    { id: 'general', label: 'General', icon: <Info className="size-4" /> },
+    { id: 'details', label: 'Details', icon: <AlignLeft className="size-4" /> },
+    { id: 'itinerary', label: 'Itinerary', icon: <Calendar className="size-4" /> },
+    { id: 'transport', label: 'Transport & Stay', icon: <MapPin className="size-4" /> },
+    { id: 'media', label: 'Media & SEO', icon: <ImageIcon className="size-4" /> },
+  ];
 
   return (
-    <div className="max-w-6xl mx-auto space-y-8 animate-in fade-in duration-200 pb-24">
-      {/* Top Action Bar */}
-      <div className="flex items-center justify-between sticky top-0 z-20 bg-background/80 backdrop-blur-md py-4 border-b border-border/50">
+    <div className="max-w-6xl mx-auto space-y-6 animate-in fade-in duration-300 pb-24">
+      {/* Floating Action Bar */}
+      <div className="flex items-center justify-between sticky top-4 z-50 bg-background/70 backdrop-blur-xl py-3 px-4 border border-border/50 rounded-2xl shadow-lg">
         <div className="flex items-center space-x-4">
-          <Link href="/admin/packages" className="p-2 -ml-2 rounded-lg hover:bg-muted text-muted-foreground transition-colors">
-            <ArrowLeft className="h-4 w-4" />
+          <Link href="/admin/packages" className="p-2 -ml-1 rounded-xl bg-muted/50 hover:bg-muted text-muted-foreground transition-colors">
+            <ArrowLeft className="size-4" />
           </Link>
           <div className="flex flex-col">
-            <h1 className="text-xl font-bold tracking-tight text-foreground">
-              {isNew ? "Create New Package" : "Edit Package"}
+            <h1 className="text-lg font-black tracking-tight text-foreground leading-tight">
+              {isNew ? "Create Package" : "Edit Package"}
             </h1>
             <span className="text-[10px] uppercase tracking-widest text-muted-foreground font-bold">
               {pkg.slug || "new-package"}
@@ -174,186 +217,281 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
           <select 
             value={pkg.status}
             onChange={e => setPkg({...pkg, status: e.target.value})}
-            className="text-xs font-semibold bg-muted text-foreground border border-border rounded-lg focus:ring-1 focus:ring-primary h-9 px-3 outline-none"
+            className="text-xs font-bold bg-background text-foreground border border-border rounded-xl focus:ring-2 focus:ring-primary h-10 px-4 outline-none shadow-sm cursor-pointer"
           >
-            <option value="draft">Draft</option>
-            <option value="published">Published</option>
+            <option value="draft">Draft Status</option>
+            <option value="published">Published Live</option>
             <option value="archived">Archived</option>
           </select>
           
           <button
             onClick={handleSave}
             disabled={saving}
-            className="flex items-center space-x-1.5 px-5 h-9 bg-foreground text-background text-xs font-bold rounded-lg hover:opacity-90 transition-opacity disabled:opacity-50"
+            className="flex items-center space-x-2 px-6 h-10 bg-foreground text-background text-xs font-black uppercase tracking-wider rounded-xl hover:scale-[1.02] active:scale-[0.98] transition-all disabled:opacity-50 disabled:pointer-events-none shadow-md"
           >
-            <Save className="h-3.5 w-3.5" />
-            <span>{saving ? "Saving..." : "Save Changes"}</span>
+            <Save className="size-4" />
+            <span id="save-btn-text">{saving ? "Saving..." : "Save Config"}</span>
           </button>
         </div>
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
-        {/* Main Content Area */}
-        <div className="lg:col-span-2 space-y-8">
+      <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+        
+        {/* Navigation Sidebar */}
+        <div className="lg:col-span-1 space-y-2">
+          {TABS.map(tab => (
+            <button
+              key={tab.id}
+              onClick={() => setActiveTab(tab.id)}
+              className={cn(
+                "w-full flex items-center space-x-3 px-4 py-3 text-sm font-bold rounded-xl transition-all duration-300",
+                activeTab === tab.id 
+                  ? "bg-foreground text-background shadow-md translate-x-1" 
+                  : "bg-transparent text-muted-foreground hover:bg-muted/50 hover:text-foreground hover:translate-x-0.5"
+              )}
+            >
+              {tab.icon}
+              <span>{tab.label}</span>
+            </button>
+          ))}
+
+          {/* Quick Properties Card */}
+          <div className="mt-8 p-5 bg-card border border-border rounded-2xl shadow-sm space-y-4">
+            <h3 className="text-[10px] font-black uppercase tracking-widest text-muted-foreground">Quick Config</h3>
+            
+            <div className="space-y-3">
+              <label className="flex items-center space-x-3 cursor-pointer p-2 hover:bg-muted/50 rounded-lg transition-colors">
+                <input 
+                  type="checkbox"
+                  checked={pkg.is_template}
+                  onChange={e => setPkg({...pkg, is_template: e.target.checked})}
+                  className="rounded border-input text-foreground focus:ring-foreground size-4"
+                />
+                <span className="text-xs font-bold text-foreground">Template Preset</span>
+              </label>
+
+              <label className="flex items-center space-x-3 cursor-pointer p-2 hover:bg-muted/50 rounded-lg transition-colors">
+                <input 
+                  type="checkbox"
+                  checked={pkg.featured}
+                  onChange={e => setPkg({...pkg, featured: e.target.checked})}
+                  className="rounded border-input text-foreground focus:ring-foreground size-4"
+                />
+                <span className="text-xs font-bold text-foreground">Featured (Homepage)</span>
+              </label>
+            </div>
+          </div>
+        </div>
+
+        {/* Tab Content Area */}
+        <div className="lg:col-span-3 min-h-[600px] bg-card border border-border rounded-3xl p-6 md:p-8 shadow-sm relative overflow-hidden">
           
-          {/* Basic Info */}
-          <section className="space-y-4">
-            <h2 className="text-sm font-black uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-              <FileText className="size-4" /> Core Information
-            </h2>
-            <div className="p-6 bg-card border border-border rounded-2xl shadow-sm space-y-5">
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground">Package Title *</label>
+          {/* GENERAL TAB */}
+          <div className={cn("space-y-8 transition-all duration-500 absolute inset-0 p-6 md:p-8 overflow-y-auto custom-scrollbar", activeTab === 'general' ? "opacity-100 translate-x-0 relative" : "opacity-0 translate-x-8 pointer-events-none")}>
+            <div className="space-y-1">
+              <h2 className="text-lg font-black text-foreground">General Configuration</h2>
+              <p className="text-xs text-muted-foreground">Core package details and pricing</p>
+            </div>
+            
+            <div className="space-y-6">
+              <div className="space-y-2">
+                <label className="text-xs font-bold text-foreground">Package Title <span className="text-destructive">*</span></label>
                 <input 
                   type="text" 
                   value={pkg.title}
-                  onChange={e => setPkg({...pkg, title: e.target.value})}
-                  className="w-full text-sm bg-background border border-input rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                  onChange={e => handleTitleChange(e.target.value)}
+                  className="w-full text-sm bg-background border border-input rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                   placeholder="e.g. Grand Stay (34+Days)"
                 />
               </div>
               
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-foreground">URL Slug *</label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-foreground">URL Slug <span className="text-destructive">*</span></label>
                   <input 
                     type="text" 
                     value={pkg.slug}
                     onChange={e => setPkg({...pkg, slug: e.target.value})}
                     disabled={!isNew}
-                    className="w-full text-sm bg-muted/50 border border-input rounded-xl px-4 py-2.5 outline-none"
+                    className="w-full text-sm bg-muted/50 border border-input rounded-xl px-4 py-3 outline-none"
                     placeholder="premium-hajj"
                   />
-                  {!isNew && <p className="text-[10px] text-muted-foreground">Slug cannot be changed after creation.</p>}
+                  {!isNew && <p className="text-[10px] text-muted-foreground font-medium">Slug locked after creation.</p>}
                 </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-foreground">Duration Label *</label>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-foreground">Duration Label <span className="text-destructive">*</span></label>
                   <input 
                     type="text" 
                     value={pkg.duration}
                     onChange={e => setPkg({...pkg, duration: e.target.value})}
-                    className="w-full text-sm bg-background border border-input rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                    className="w-full text-sm bg-background border border-input rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                     placeholder="e.g. 15 Days / 14 Nights"
                   />
                 </div>
               </div>
 
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground">Category</label>
-                <select 
-                  value={pkg.category_id || ""}
-                  onChange={e => setPkg({...pkg, category_id: e.target.value || null})}
-                  className="w-full text-sm bg-background border border-input rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                >
-                  <option value="">No Category</option>
-                  {categories.map(cat => (
-                    <option key={cat.id} value={cat.id}>{cat.name}</option>
-                  ))}
-                </select>
-              </div>
-            </div>
-          </section>
-
-          {/* Pricing & Media */}
-          <section className="space-y-4">
-            <h2 className="text-sm font-black uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-              <Tag className="size-4" /> Pricing & Media
-            </h2>
-            <div className="p-6 bg-card border border-border rounded-2xl shadow-sm space-y-5">
-              <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-foreground">Starting Price</label>
-                  <input 
-                    type="number" 
-                    value={pkg.price_min}
-                    onChange={e => setPkg({...pkg, price_min: e.target.value})}
-                    className="w-full text-sm bg-background border border-input rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                    placeholder="e.g. 2500"
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-foreground">Currency</label>
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-foreground">Category</label>
                   <select 
-                    value={pkg.price_currency}
-                    onChange={e => setPkg({...pkg, price_currency: e.target.value})}
-                    className="w-full text-sm bg-background border border-input rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                    value={pkg.category_id || ""}
+                    onChange={e => setPkg({...pkg, category_id: e.target.value || null})}
+                    className="w-full text-sm bg-background border border-input rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
                   >
-                    <option value="USD">USD ($)</option>
-                    <option value="GBP">GBP (£)</option>
-                    <option value="EUR">EUR (€)</option>
+                    <option value="">No Category</option>
+                    {categories.map(cat => (
+                      <option key={cat.id} value={cat.id}>{cat.name}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-foreground">Availability</label>
+                  <select 
+                    value={pkg.availability}
+                    onChange={e => setPkg({...pkg, availability: e.target.value})}
+                    className="w-full text-sm bg-background border border-input rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                  >
+                    <option value="Open">Open (Available)</option>
+                    <option value="Limited">Limited Spaces</option>
+                    <option value="Closed">Closed</option>
+                    <option value="Sold Out">Sold Out</option>
                   </select>
                 </div>
               </div>
 
-              <div className="space-y-4 pt-4 border-t border-border/50">
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-foreground flex items-center gap-1"><ImageIcon className="size-3"/> Cover Image URL</label>
-                  <input 
-                    type="text" 
-                    value={pkg.image_url}
-                    onChange={e => setPkg({...pkg, image_url: e.target.value})}
-                    className="w-full text-sm bg-background border border-input rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                    placeholder="https://..."
-                  />
-                </div>
-                <div className="space-y-1.5">
-                  <label className="text-xs font-bold text-foreground flex items-center gap-1"><Video className="size-3"/> Promotional Video URL</label>
-                  <input 
-                    type="text" 
-                    value={pkg.video_url}
-                    onChange={e => setPkg({...pkg, video_url: e.target.value})}
-                    className="w-full text-sm bg-background border border-input rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                    placeholder="https://youtube.com/..."
-                  />
+              <div className="p-5 border border-border/80 bg-muted/20 rounded-2xl space-y-5">
+                <h3 className="text-xs font-black uppercase tracking-widest text-foreground">Pricing Configuration</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-foreground flex items-center gap-2"><Tag className="size-3"/> Starting Price</label>
+                    <input 
+                      type="number" 
+                      value={pkg.price_min}
+                      onChange={e => setPkg({...pkg, price_min: e.target.value})}
+                      className="w-full text-sm bg-background border border-input rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                      placeholder="e.g. 250000"
+                    />
+                  </div>
+                  <div className="space-y-2">
+                    <label className="text-xs font-bold text-foreground">Currency</label>
+                    <select 
+                      value={pkg.price_currency}
+                      onChange={e => setPkg({...pkg, price_currency: e.target.value})}
+                      className="w-full text-sm bg-background border border-input rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                    >
+                      <option value="INR">INR (₹)</option>
+                      <option value="USD">USD ($)</option>
+                      <option value="GBP">GBP (£)</option>
+                      <option value="EUR">EUR (€)</option>
+                      <option value="SAR">SAR (﷼)</option>
+                    </select>
+                  </div>
                 </div>
               </div>
-            </div>
-          </section>
 
-          {/* Simple String Arrays */}
-          <section className="space-y-4">
-            <h2 className="text-sm font-black uppercase tracking-wider text-muted-foreground flex items-center gap-2">
-              <FileText className="size-4" /> Highlights & Inclusions
-            </h2>
-            <div className="grid grid-cols-1 sm:grid-cols-2 gap-5 p-6 bg-card border border-border rounded-2xl shadow-sm">
+            </div>
+          </div>
+
+          {/* DETAILS TAB */}
+          <div className={cn("space-y-8 transition-all duration-500 absolute inset-0 p-6 md:p-8 overflow-y-auto custom-scrollbar", activeTab === 'details' ? "opacity-100 translate-x-0 relative" : "opacity-0 translate-x-8 pointer-events-none")}>
+            <div className="space-y-1">
+              <h2 className="text-lg font-black text-foreground">Package Details</h2>
+              <p className="text-xs text-muted-foreground">Manage checklists and specific FAQs</p>
+            </div>
+            
+            <div className="grid grid-cols-1 xl:grid-cols-2 gap-8">
               <StringArrayEditor
-                label="Highlights"
-                description="Key selling points of the package"
+                label="Key Highlights"
+                description="Top selling points displayed on the card"
                 values={pkg.highlights}
                 onChange={val => setPkg({...pkg, highlights: val})}
+                placeholder="e.g. 5-Star VIP Tents"
               />
               <StringArrayEditor
                 label="Inclusions"
                 description="What is strictly included in the price"
                 values={pkg.inclusions}
                 onChange={val => setPkg({...pkg, inclusions: val})}
-              />
-              <StringArrayEditor
-                label="Complimentary"
-                description="Free additions (e.g. Ihram, Zamzam)"
-                values={pkg.complimentary}
-                onChange={val => setPkg({...pkg, complimentary: val})}
+                placeholder="e.g. Round Trip Flights"
               />
               <StringArrayEditor
                 label="Exclusions"
                 description="What is explicitly not included"
                 values={pkg.exclusions}
                 onChange={val => setPkg({...pkg, exclusions: val})}
+                placeholder="e.g. Personal Expenses"
+              />
+              <StringArrayEditor
+                label="Complimentary Add-ons"
+                description="Free additions like Zamzam or Ihram"
+                values={pkg.complimentary}
+                onChange={val => setPkg({...pkg, complimentary: val})}
+                placeholder="e.g. 5L Zamzam Water"
               />
             </div>
-          </section>
+            
+            <div className="pt-6 border-t border-border">
+              <ObjectArrayEditor
+                label="Frequently Asked Questions (FAQs)"
+                description="Specific Q&A tailored for this package"
+                schema={FAQ_SCHEMA}
+                values={pkg.faqs}
+                onChange={val => setPkg({...pkg, faqs: val})}
+                defaultItem={{ question: "", answer: "" }}
+                itemTitleKey="question"
+              />
+            </div>
+          </div>
 
-          {/* Advanced Object Arrays */}
-          <section className="space-y-6 pt-4">
+          {/* ITINERARY TAB */}
+          <div className={cn("space-y-8 transition-all duration-500 absolute inset-0 p-6 md:p-8 overflow-y-auto custom-scrollbar", activeTab === 'itinerary' ? "opacity-100 translate-x-0 relative" : "opacity-0 translate-x-8 pointer-events-none")}>
+            <div className="space-y-1">
+              <h2 className="text-lg font-black text-foreground">Itinerary Builder</h2>
+              <p className="text-xs text-muted-foreground">Define the day-by-day travel plan</p>
+            </div>
+            
             <ObjectArrayEditor
-              label="Itinerary"
-              description="Day-by-day travel plan and activities"
+              label="Daily Schedule"
+              description="Construct the timeline of activities"
               schema={ITINERARY_SCHEMA}
               values={pkg.itinerary}
               onChange={val => setPkg({...pkg, itinerary: val})}
               defaultItem={{ dayNumber: (pkg.itinerary?.length || 0) + 1, title: "", description: "" }}
               itemTitleKey="title"
             />
+          </div>
+
+          {/* TRANSPORT & STAY TAB */}
+          <div className={cn("space-y-8 transition-all duration-500 absolute inset-0 p-6 md:p-8 overflow-y-auto custom-scrollbar", activeTab === 'transport' ? "opacity-100 translate-x-0 relative" : "opacity-0 translate-x-8 pointer-events-none")}>
+            <div className="space-y-1">
+              <h2 className="text-lg font-black text-foreground">Transport & Stay</h2>
+              <p className="text-xs text-muted-foreground">Manage locations, hotels, and flights</p>
+            </div>
+
+            <div className="p-6 bg-muted/20 border border-border/80 rounded-2xl space-y-4">
+              <label className="text-sm font-black uppercase tracking-wider text-foreground flex items-center gap-2"><MapPin className="size-4"/> Connected Destinations</label>
+              <div className="flex flex-wrap gap-3">
+                {allDestinations.map(dest => {
+                  const isSelected = (pkg.destination_ids || []).includes(dest.id);
+                  return (
+                    <button
+                      key={dest.id}
+                      onClick={() => toggleDestination(dest.id)}
+                      className={cn(
+                        "px-4 py-2 text-xs font-bold rounded-xl border transition-all duration-200",
+                        isSelected 
+                          ? "bg-foreground text-background border-foreground shadow-md" 
+                          : "bg-background text-muted-foreground border-border hover:border-foreground/30 hover:text-foreground"
+                      )}
+                    >
+                      {dest.name}
+                    </button>
+                  );
+                })}
+                {allDestinations.length === 0 && <span className="text-xs text-muted-foreground">No destinations found in database.</span>}
+              </div>
+            </div>
 
             <ObjectArrayEditor
               label="Hotels & Accommodation"
@@ -366,7 +504,7 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
             />
 
             <ObjectArrayEditor
-              label="Flights & Transport"
+              label="Flights & Travel"
               description="Details of the journeys included"
               schema={FLIGHT_SCHEMA}
               values={pkg.flights}
@@ -374,117 +512,59 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
               defaultItem={{ airline: "", route: "", class: "Economy", details: "" }}
               itemTitleKey="airline"
             />
+          </div>
 
-            <ObjectArrayEditor
-              label="Frequently Asked Questions (FAQs)"
-              description="Specific Q&A for this package"
-              schema={FAQ_SCHEMA}
-              values={pkg.faqs}
-              onChange={val => setPkg({...pkg, faqs: val})}
-              defaultItem={{ question: "", answer: "" }}
-              itemTitleKey="question"
-            />
-          </section>
-
-        </div>
-
-        {/* Sidebar Settings */}
-        <div className="space-y-6">
-          <section className="space-y-4">
-            <h2 className="text-sm font-black uppercase tracking-wider text-muted-foreground">Properties</h2>
-            <div className="p-6 bg-card border border-border rounded-2xl shadow-sm space-y-6">
-              
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground">Availability</label>
-                <select 
-                  value={pkg.availability}
-                  onChange={e => setPkg({...pkg, availability: e.target.value})}
-                  className="w-full text-sm bg-background border border-input rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                >
-                  <option value="Open">Open</option>
-                  <option value="Limited">Limited Spaces</option>
-                  <option value="Closed">Closed</option>
-                  <option value="Sold Out">Sold Out</option>
-                </select>
-              </div>
-
-              <div className="space-y-3 pt-4 border-t border-border/50">
-                <label className="text-xs font-bold text-foreground flex items-center gap-1"><MapPin className="size-3"/> Linked Destinations</label>
-                <div className="space-y-2 max-h-[200px] overflow-y-auto pr-2 custom-scrollbar">
-                  {allDestinations.map(dest => (
-                    <label key={dest.id} className="flex items-center space-x-2 p-2 rounded hover:bg-muted/50 cursor-pointer transition-colors">
-                      <input 
-                        type="checkbox"
-                        checked={(pkg.destination_ids || []).includes(dest.id)}
-                        onChange={() => toggleDestination(dest.id)}
-                        className="rounded border-input text-primary focus:ring-primary size-3.5"
-                      />
-                      <span className="text-xs font-medium">{dest.name}</span>
-                    </label>
-                  ))}
-                  {allDestinations.length === 0 && (
-                    <span className="text-xs text-muted-foreground">No destinations found.</span>
-                  )}
+          {/* MEDIA & SEO TAB */}
+          <div className={cn("space-y-8 transition-all duration-500 absolute inset-0 p-6 md:p-8 overflow-y-auto custom-scrollbar", activeTab === 'media' ? "opacity-100 translate-x-0 relative" : "opacity-0 translate-x-8 pointer-events-none")}>
+            <div className="space-y-1">
+              <h2 className="text-lg font-black text-foreground">Media Gallery & SEO</h2>
+              <p className="text-xs text-muted-foreground">Add multiple images and optimize for search engines</p>
+            </div>
+            
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+              <StringArrayEditor
+                label="Gallery Image URLs"
+                description="The first image is used as the cover. You can paste any direct image links here."
+                values={imageUrls}
+                onChange={val => setImageUrls(val)}
+                placeholder="https://..."
+              />
+              <StringArrayEditor
+                label="Video URLs"
+                description="Links to YouTube, Vimeo, or direct MP4 files."
+                values={videoUrls}
+                onChange={val => setVideoUrls(val)}
+                placeholder="https://..."
+              />
+            </div>
+            
+            <div className="mt-8 pt-8 border-t border-border">
+              <h3 className="text-sm font-black uppercase tracking-wider text-foreground mb-4 flex items-center gap-2"><Search className="size-4"/> Search Engine Config</h3>
+              <div className="space-y-6 max-w-2xl">
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-foreground">SEO Meta Title</label>
+                  <input 
+                    type="text" 
+                    value={pkg.seo_title || ""}
+                    onChange={e => setPkg({...pkg, seo_title: e.target.value})}
+                    className="w-full text-sm bg-background border border-input rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
+                    placeholder="Optional SEO title override..."
+                  />
+                </div>
+                <div className="space-y-2">
+                  <label className="text-xs font-bold text-foreground">SEO Meta Description</label>
+                  <textarea 
+                    value={pkg.seo_description || ""}
+                    onChange={e => setPkg({...pkg, seo_description: e.target.value})}
+                    rows={4}
+                    className="w-full text-sm bg-background border border-input rounded-xl px-4 py-3 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-y"
+                    placeholder="Short description for Google search results..."
+                  />
                 </div>
               </div>
-
-              <div className="space-y-3 pt-4 border-t border-border/50">
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input 
-                    type="checkbox"
-                    checked={pkg.is_template}
-                    onChange={e => setPkg({...pkg, is_template: e.target.checked})}
-                    className="rounded border-input text-foreground focus:ring-foreground size-4"
-                  />
-                  <span className="text-sm font-bold text-foreground">Is Template</span>
-                </label>
-                <p className="text-[10px] text-muted-foreground ml-7">
-                  Blueprints for future packages. Templates won't appear on the public site.
-                </p>
-              </div>
-
-              <div className="space-y-3 pt-4 border-t border-border/50">
-                <label className="flex items-center space-x-3 cursor-pointer">
-                  <input 
-                    type="checkbox"
-                    checked={pkg.featured}
-                    onChange={e => setPkg({...pkg, featured: e.target.checked})}
-                    className="rounded border-input text-foreground focus:ring-foreground size-4"
-                  />
-                  <span className="text-sm font-bold text-foreground">Featured Package</span>
-                </label>
-                <p className="text-[10px] text-muted-foreground ml-7">
-                  Display prominently on the homepage and top of listings.
-                </p>
-              </div>
             </div>
-          </section>
+          </div>
 
-          <section className="space-y-4">
-            <h2 className="text-sm font-black uppercase tracking-wider text-muted-foreground">Search Engine (SEO)</h2>
-            <div className="p-6 bg-card border border-border rounded-2xl shadow-sm space-y-4">
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground">SEO Title</label>
-                <input 
-                  type="text" 
-                  value={pkg.seo_title || ""}
-                  onChange={e => setPkg({...pkg, seo_title: e.target.value})}
-                  className="w-full text-sm bg-background border border-input rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all"
-                  placeholder="Optional SEO override..."
-                />
-              </div>
-              <div className="space-y-1.5">
-                <label className="text-xs font-bold text-foreground">Meta Description</label>
-                <textarea 
-                  value={pkg.seo_description || ""}
-                  onChange={e => setPkg({...pkg, seo_description: e.target.value})}
-                  rows={4}
-                  className="w-full text-sm bg-background border border-input rounded-xl px-4 py-2.5 focus:ring-2 focus:ring-primary/20 focus:border-primary outline-none transition-all resize-y"
-                  placeholder="Short description for Google search results..."
-                />
-              </div>
-            </div>
-          </section>
         </div>
       </div>
     </div>

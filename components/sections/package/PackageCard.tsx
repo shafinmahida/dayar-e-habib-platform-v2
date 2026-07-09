@@ -25,7 +25,13 @@ export function PackageCard({ pkg }: PackageCardProps) {
     "classic-ziyarat": ["/ziyarat-dome.png", "/ziyarat-najaf.png", "/madinah-dawn.png"],
   };
 
-  const slides = slideshowMap[pkg.slug] || [pkg.imageUrl || "/kaaba-sunset.png"];
+  // Support multiple images separated by commas from the new admin media editor
+  let defaultSlides = ["/kaaba-sunset.png"];
+  if (pkg.imageUrl) {
+    defaultSlides = pkg.imageUrl.split(',').filter(Boolean);
+  }
+
+  const slides = slideshowMap[pkg.slug] || defaultSlides;
   const [activeSlide, setActiveSlide] = useState(0);
 
   useEffect(() => {

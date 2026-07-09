@@ -2,35 +2,32 @@
 
 import { useEffect, useState } from "react";
 import { X } from "lucide-react";
-
 import { Container } from "@/components/layout/Container";
 import { Button } from "@/components/ui/button";
-import { SITE_SETTINGS } from "@/lib/config/ui";
 
-export function AnnouncementBar() {
-  const [visible, setVisible] = useState(SITE_SETTINGS.announcementEnabled);
+interface AnnouncementBarProps {
+  text: string;
+  enabled: boolean;
+}
+
+export function AnnouncementBar({ text, enabled }: AnnouncementBarProps) {
+  const storageKey = "deh-announcement-dismissed-v2";
+  const [visible, setVisible] = useState(enabled);
 
   useEffect(() => {
-    if (!SITE_SETTINGS.announcementEnabled) {
-      return;
-    }
-
-    const dismissed =
-      window.localStorage.getItem(SITE_SETTINGS.announcementStorageKey) === "true";
-
+    if (!enabled) return;
+    const dismissed = window.localStorage.getItem(storageKey) === "true";
     if (dismissed) {
       setTimeout(() => setVisible(false), 0);
     }
-  }, []);
+  }, [enabled]);
 
   const handleDismiss = () => {
-    window.localStorage.setItem(SITE_SETTINGS.announcementStorageKey, "true");
+    window.localStorage.setItem(storageKey, "true");
     setVisible(false);
   };
 
-  if (!SITE_SETTINGS.announcementEnabled || !visible) {
-    return null;
-  }
+  if (!enabled || !visible) return null;
 
   return (
     <div
@@ -41,7 +38,7 @@ export function AnnouncementBar() {
       <Container>
         <div className="relative flex min-h-10 items-center justify-center py-2 pr-10">
           <p className="text-center text-xs tracking-wider uppercase font-semibold">
-            {SITE_SETTINGS.announcementText}
+            {text}
           </p>
           <Button
             type="button"
