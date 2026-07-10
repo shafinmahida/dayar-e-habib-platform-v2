@@ -82,6 +82,11 @@ export function StringArrayEditor({
           value={newValue}
           onChange={(e) => setNewValue(e.target.value)}
           onKeyDown={handleKeyDown}
+          onBlur={() => {
+            if (newValue.trim()) {
+              handleAdd();
+            }
+          }}
           placeholder={placeholder}
           className="flex-1 text-sm bg-muted/30 border border-input rounded-lg px-3 py-2 focus:ring-1 focus:ring-primary outline-none"
         />

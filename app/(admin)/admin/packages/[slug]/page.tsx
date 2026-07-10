@@ -61,6 +61,7 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
     availability: "Open",
     status: "draft",
     is_template: false,
+    featured: false,
     price_min: "",
     price_currency: "INR",
     image_url: "",
