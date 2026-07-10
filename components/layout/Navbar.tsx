@@ -15,7 +15,7 @@ import { Button } from "@/components/ui/button";
 
 const SCROLL_THRESHOLD = 20;
 
-export function Navbar() {
+export function Navbar({ categories = [] }: { categories?: any[] }) {
   const [scrolled, setScrolled] = useState(false);
   const [mobileOpen, setMobileOpen] = useState(false);
   const [dropdownOpen, setDropdownOpen] = useState(false);
@@ -126,7 +126,7 @@ export function Navbar() {
                   type="button"
                   className={cn(
                     "text-[10px] font-extrabold uppercase tracking-[0.35em] transition-all duration-300 flex items-center gap-1.5 focus-visible:outline-none",
-                    dropdownOpen || pathname.includes("/hajj") || pathname.includes("/umrah") || pathname.includes("/tours")
+                    dropdownOpen || pathname.includes("/tours") || categories?.some((c: any) => pathname.includes(`/${c.slug}`))
                       ? "text-accent font-black"
                       : "text-muted-foreground hover:text-foreground"
                   )}
@@ -142,23 +142,29 @@ export function Navbar() {
                     dropdownOpen ? "opacity-100 scale-100 translate-y-0 visible" : "opacity-0 scale-95 -translate-y-2 invisible"
                   )}
                 >
+                  {categories && categories.length > 0 ? (
+                    categories.map((cat: any) => {
+                      // For legacy pages (hajj, umrah, ziyarat) link directly to them if they exist, otherwise link to filtered tours page
+                      const isLegacy = ["hajj", "umrah", "ziyarat"].includes(cat.slug);
+                      const href = isLegacy ? `/${cat.slug}` : `/tours?category=${cat.slug}`;
+                      return (
+                        <Link 
+                          key={cat.id}
+                          href={href}
+                          className="block px-4 py-2.5 text-[9px] font-black uppercase tracking-[0.25em] text-foreground hover:bg-secondary/40 hover:text-accent transition-colors duration-200"
+                        >
+                          {cat.name}
+                        </Link>
+                      );
+                    })
+                  ) : (
+                    <div className="px-4 py-2 text-[9px] text-muted-foreground uppercase tracking-widest">No Categories Found</div>
+                  )}
                   <Link 
-                    href={ROUTES.HAJJ}
-                    className="block px-4 py-2.5 text-[9px] font-black uppercase tracking-[0.25em] text-foreground hover:bg-secondary/40 hover:text-accent transition-colors duration-200"
+                    href="/tours"
+                    className="block px-4 py-2.5 text-[9px] font-black uppercase tracking-[0.25em] text-accent/80 hover:bg-secondary/40 hover:text-accent transition-colors duration-200 border-t border-border mt-1 pt-3"
                   >
-                    Hajj Packages
-                  </Link>
-                  <Link 
-                    href={ROUTES.UMRAH} 
-                    className="block px-4 py-2.5 text-[9px] font-black uppercase tracking-[0.25em] text-foreground hover:bg-secondary/40 hover:text-accent transition-colors duration-200"
-                  >
-                    Umrah Packages
-                  </Link>
-                  <Link 
-                    href={ROUTES.ZIYARAT} 
-                    className="block px-4 py-2.5 text-[9px] font-black uppercase tracking-[0.25em] text-foreground hover:bg-secondary/40 hover:text-accent transition-colors duration-200"
-                  >
-                    Ziyarat Packages
+                    View All Packages
                   </Link>
                 </div>
               </div>

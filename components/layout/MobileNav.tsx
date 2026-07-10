@@ -11,7 +11,11 @@ import { Logo } from "@/components/layout/Logo";
 import { NavLinks } from "@/components/layout/NavLinks";
 import type { MobileNavProps } from "@/types/navigation";
 
-export function MobileNav({ open, onOpenChange }: MobileNavProps) {
+interface ExtendedMobileNavProps extends MobileNavProps {
+  categories?: any[];
+}
+
+export function MobileNav({ open, onOpenChange, categories = [] }: ExtendedMobileNavProps) {
   const handleNavigate = () => {
     onOpenChange(false);
   };
@@ -39,6 +43,7 @@ export function MobileNav({ open, onOpenChange }: MobileNavProps) {
             orientation="vertical"
             linkClassName="px-4 py-3.5 text-sm font-semibold uppercase tracking-widest block"
             onNavigate={handleNavigate}
+            categories={categories}
           />
         </nav>
       </SheetContent>

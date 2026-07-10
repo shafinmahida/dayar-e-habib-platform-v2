@@ -8,13 +8,32 @@ import { isActiveRoute } from "@/lib/navigation";
 import { cn } from "@/lib/utils";
 import type { NavLinksProps } from "@/types/navigation";
 
+interface ExtendedNavLinksProps extends NavLinksProps {
+  categories?: any[];
+}
+
 export function NavLinks({
   className,
   linkClassName,
   orientation = "horizontal",
   onNavigate,
-}: NavLinksProps) {
+  categories = [],
+}: ExtendedNavLinksProps) {
   const pathname = usePathname();
+
+  // Create a dynamic version of NAV_LINKS
+  const dynamicNavLinks = NAV_LINKS.map(link => {
+    if (link.label === "Packages") {
+      return {
+        ...link,
+        children: categories.length > 0 ? categories.map(cat => ({
+          label: cat.name,
+          href: ["hajj", "umrah", "ziyarat"].includes(cat.slug) ? `/${cat.slug}` : `/tours?category=${cat.slug}`
+        })) : link.children
+      };
+    }
+    return link;
+  });
 
   return (
     <ul
@@ -26,7 +45,7 @@ export function NavLinks({
         className,
       )}
     >
-      {NAV_LINKS.map((link) => {
+      {dynamicNavLinks.map((link) => {
         const active = isActiveRoute(pathname, link.href);
 
         return (
@@ -46,6 +65,23 @@ export function NavLinks({
             >
               {link.label}
             </Link>
+            
+            {/* Render children for vertical mobile view */}
+            {orientation === "vertical" && link.children && (
+              <ul className="ml-4 mt-2 space-y-1 border-l border-border pl-2">
+                {link.children.map(child => (
+                  <li key={child.href}>
+                    <Link
+                      href={child.href}
+                      onClick={onNavigate}
+                      className="block px-4 py-2 text-[10px] font-semibold text-muted-foreground hover:text-foreground uppercase tracking-widest"
+                    >
+                      {child.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            )}
           </li>
         );
       })}
