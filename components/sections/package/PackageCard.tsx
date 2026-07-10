@@ -26,47 +26,93 @@ export function PackageCard({ pkg }: PackageCardProps) {
   };
 
   // Support multiple images separated by commas from the new admin media editor
+  // We use `any` casting since Supabase raw row returns snake_case but types might be camelCase
+  const rawPkg = pkg as any;
   let defaultSlides = ["/kaaba-sunset.png"];
-  if (pkg.imageUrl) {
-    defaultSlides = pkg.imageUrl.split(',').filter(Boolean);
+  let videoSlides: string[] = [];
+
+  if (rawPkg.image_url) {
+    defaultSlides = rawPkg.image_url.split(',').filter(Boolean);
+  } else if (rawPkg.imageUrl) {
+    defaultSlides = rawPkg.imageUrl.split(',').filter(Boolean);
+  }
+
+  if (rawPkg.video_url) {
+    videoSlides = rawPkg.video_url.split(',').filter(Boolean);
+  } else if (rawPkg.videoUrl) {
+    videoSlides = rawPkg.videoUrl.split(',').filter(Boolean);
   }
 
   const slides = slideshowMap[pkg.slug] || defaultSlides;
+  const totalMedia = slides.length + videoSlides.length;
   const [activeSlide, setActiveSlide] = useState(0);
 
   useEffect(() => {
-    if (slides.length <= 1) return;
+    if (totalMedia <= 1) return;
     const timer = setInterval(() => {
-      setActiveSlide((prev) => (prev + 1) % slides.length);
+      setActiveSlide((prev) => (prev + 1) % totalMedia);
     }, 4500);
     return () => clearInterval(timer);
-  }, [slides.length]);
+  }, [totalMedia]);
+
+  const getYoutubeId = (url: string) => {
+    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
+    return match ? match[1] : null;
+  };
 
   return (
     <div className="flex flex-col rounded-3xl border border-border bg-card p-4 transition-all duration-500 hover:shadow-[0_24px_60px_rgba(0,0,0,0.025)] group">
       {/* Luxury Rectangular Gallery Window with Double Borders */}
       <div className="relative aspect-[16/10] w-full overflow-hidden rounded-2xl border border-border bg-card p-2.5 transition-all duration-500 hover:border-accent/40">
-        <div className="relative w-full h-full overflow-hidden border border-border/30 rounded-xl bg-muted">
+        <div className="relative w-full h-full overflow-hidden border border-border/30 rounded-xl bg-black">
           {/* Color filter tint */}
           <div className="absolute inset-0 bg-[#8A6A36]/3 mix-blend-color z-10 pointer-events-none" />
           
-          {slides.map((slide, idx) => (
-            <Image
-              key={slide}
-              src={slide}
-              alt={`${pkg.title} - View ${idx + 1}`}
-              fill
-              sizes="(max-width: 768px) 100vw, 33vw"
-              className={cn(
-                "object-cover transition-all duration-[1200ms] ease-in-out group-hover:scale-104 absolute inset-0",
-                idx === activeSlide ? "opacity-100 scale-100" : "opacity-0 scale-95"
-              )}
-              priority={idx === 0}
-            />
-          ))}
+          {/* Render Videos */}
+          {videoSlides.map((url, idx) => {
+            const yId = getYoutubeId(url);
+            return (
+              <div
+                key={`vid-${idx}`}
+                className={cn(
+                  "absolute inset-0 transition-all duration-[1200ms] ease-in-out",
+                  idx === activeSlide ? "opacity-100 scale-100 z-0" : "opacity-0 scale-95 -z-10"
+                )}
+              >
+                {yId ? (
+                  <iframe
+                    src={`https://www.youtube-nocookie.com/embed/${yId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&playsinline=1&loop=1&playlist=${yId}`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    className="w-full h-full object-cover rounded-sm pointer-events-none"
+                  ></iframe>
+                ) : (
+                  <video src={url} autoPlay muted loop playsInline className="w-full h-full object-cover rounded-sm pointer-events-none" />
+                )}
+              </div>
+            );
+          })}
+
+          {/* Render Images */}
+          {slides.map((slide, idx) => {
+            const globalIdx = videoSlides.length + idx;
+            return (
+              <Image
+                key={slide}
+                src={slide}
+                alt={`${pkg.title} - View ${idx + 1}`}
+                fill
+                sizes="(max-width: 768px) 100vw, 33vw"
+                className={cn(
+                  "object-cover transition-all duration-[1200ms] ease-in-out group-hover:scale-104 absolute inset-0",
+                  globalIdx === activeSlide ? "opacity-100 scale-100 z-0" : "opacity-0 scale-95 -z-10"
+                )}
+                priority={globalIdx === 0}
+              />
+            );
+          })}
           
-          {/* Availability Badge - Now 100% visible inside the rectangular box layout */}
-          <div className="absolute top-4 right-4 z-20 bg-[#FCFAF5] border border-border/50 px-3 py-1 text-[8px] font-black tracking-widest text-foreground uppercase select-none">
+          {/* Availability Badge */}
+          <div className="absolute top-4 right-4 z-20 bg-[#FCFAF5] border border-border/50 px-3 py-1 text-[8px] font-black tracking-widest text-foreground uppercase select-none shadow-sm">
             {pkg.availability || "Direct Booking"}
           </div>
         </div>
