@@ -8,9 +8,11 @@ import { createClient } from "@/lib/supabase/client";
 interface PackageEnquiryProps {
   packageTitle: string;
   defaultPhone?: string;
+  priceMin?: number | null;
+  priceCurrency?: string;
 }
 
-export function PackageEnquiry({ packageTitle, defaultPhone = "+91 91722 22718" }: PackageEnquiryProps) {
+export function PackageEnquiry({ packageTitle, defaultPhone = "+91 91722 22718", priceMin, priceCurrency = "INR" }: PackageEnquiryProps) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -53,15 +55,37 @@ export function PackageEnquiry({ packageTitle, defaultPhone = "+91 91722 22718" 
     }
   };
 
+  const formatPrice = (amount: number, currency: string) => {
+    return new Intl.NumberFormat('en-IN', {
+      style: 'currency',
+      currency: currency,
+      maximumFractionDigits: 0
+    }).format(amount);
+  };
+
   return (
     <div className="rounded-md border border-border bg-card p-8 space-y-6 shadow-[0_4px_24px_rgba(0,0,0,0.015)]">
-      <div className="space-y-2">
-        <h4 className="font-heading text-xl font-bold tracking-tight text-foreground">
-          Inquire About This Journey
-        </h4>
-        <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
-          Fill out the secure form below. Our dedicated pilgrimage directors will contact you within 24 hours.
-        </p>
+      <div className="space-y-4">
+        {/* Pricing Banner */}
+        {priceMin ? (
+          <div className="flex items-baseline gap-2">
+            <span className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">Starts from</span>
+            <span className="font-heading text-2xl font-black text-accent">{formatPrice(priceMin, priceCurrency)}</span>
+          </div>
+        ) : (
+          <div className="flex items-baseline gap-2">
+            <span className="font-heading text-xl font-black text-accent">Price on Request</span>
+          </div>
+        )}
+
+        <div className="space-y-2">
+          <h4 className="font-heading text-xl font-bold tracking-tight text-foreground">
+            Inquire About This Journey
+          </h4>
+          <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
+            Fill out the secure form below. Our dedicated pilgrimage directors will contact you within 24 hours.
+          </p>
+        </div>
       </div>
 
       <div className="border-t border-border/80 my-4" />

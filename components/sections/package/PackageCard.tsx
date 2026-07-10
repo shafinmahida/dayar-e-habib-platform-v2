@@ -75,12 +75,27 @@ export function PackageCard({ pkg }: PackageCardProps) {
       {/* Brochure Content */}
       <div className="flex-1 flex flex-col p-6 sm:p-8">
         <div className="space-y-4">
-          <div className="text-[8px] font-black tracking-[0.3em] text-accent uppercase flex items-center gap-2">
-            <span className="size-1 rounded-full bg-accent" />
-            <span>Guaranteed Legacy Journey</span>
+          <div className="flex items-start justify-between gap-4">
+            <div className="text-[8px] font-black tracking-[0.3em] text-accent uppercase flex items-center gap-2 mt-1">
+              <span className="size-1 rounded-full bg-accent" />
+              <span>Guaranteed Legacy Journey</span>
+            </div>
+            
+            {pkg.priceMin && (
+              <div className="flex flex-col items-end shrink-0">
+                <span className="text-[9px] font-bold tracking-widest text-muted-foreground uppercase mb-0.5">From</span>
+                <span className="font-heading text-lg font-black text-accent leading-none">
+                  {new Intl.NumberFormat('en-IN', {
+                    style: 'currency',
+                    currency: pkg.priceCurrency || 'INR',
+                    maximumFractionDigits: 0
+                  }).format(pkg.priceMin)}
+                </span>
+              </div>
+            )}
           </div>
           
-          <h3 className="font-heading text-xl sm:text-2xl font-extrabold tracking-tight text-foreground leading-tight group-hover:text-accent transition-colors duration-300">
+          <h3 className="font-heading text-xl sm:text-2xl font-extrabold tracking-tight text-foreground leading-tight group-hover:text-accent transition-colors duration-300 pr-2">
             {(() => {
               const match = pkg.title.match(/^(.*?)\s*(\(\s*\d+\+?\s*Days\s*\))$/i);
               if (match) {

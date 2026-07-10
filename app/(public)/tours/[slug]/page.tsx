@@ -244,7 +244,11 @@ export default async function PackageDetailPage({ params }: PackageDetailPagePro
 
           {/* Right Column: Sticky Enquiry CTA */}
           <div className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-24">
-            <PackageEnquiry packageTitle={pkg.title} />
+            <PackageEnquiry 
+              packageTitle={pkg.title} 
+              priceMin={pkg.price_min} 
+              priceCurrency={pkg.price_currency} 
+            />
           </div>
 
         </div>

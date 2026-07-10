@@ -41,12 +41,13 @@ export function PackageGallery({ galleryUrls, videoUrls, mainImageUrl, title }: 
         if (yId) {
           return (
             <div key={`vid-${index}`} className="relative aspect-[4/3] sm:aspect-auto sm:h-[400px] overflow-hidden rounded-md border border-border bg-black shadow-[0_2px_8px_rgba(0,0,0,0.015)] group">
+              {/* Disable pointer events on the iframe so the user can't pause/click it, making it look like a clean looping background OR let them click it but with no UI */}
               <iframe
-                src={`https://www.youtube.com/embed/${yId}`}
+                src={`https://www.youtube-nocookie.com/embed/${yId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&playsinline=1&loop=1&playlist=${yId}`}
                 title={`Video ${index + 1}`}
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen
-                className="w-full h-full object-cover rounded-sm"
+                className="w-full h-full object-cover rounded-sm pointer-events-none"
               ></iframe>
             </div>
           );
@@ -62,12 +63,11 @@ export function PackageGallery({ galleryUrls, videoUrls, mainImageUrl, title }: 
       {/* Render Images */}
       {images.map((url, index) => (
         <div key={`img-${index}`} className="relative aspect-[4/3] overflow-hidden rounded-md border border-border bg-card p-2 shadow-[0_2px_8px_rgba(0,0,0,0.015)] group">
-          <Image
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
             src={url}
             alt={`${title} Gallery Image ${index + 1}`}
-            fill
-            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 33vw, 25vw"
-            className="object-cover rounded-sm transition-transform duration-500 group-hover:scale-103"
+            className="w-full h-full object-cover rounded-sm transition-transform duration-500 group-hover:scale-105"
           />
         </div>
       ))}
