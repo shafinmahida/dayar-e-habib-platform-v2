@@ -127,9 +127,9 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
         .toLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/(^-|-$)+/g, '');
-      setPkg({ ...pkg, title: newTitle, slug: autoSlug });
+      setPkg((prev: any) => ({ ...prev, title: newTitle, slug: autoSlug }));
     } else {
-      setPkg({ ...pkg, title: newTitle });
+      setPkg((prev: any) => ({ ...prev, title: newTitle }));
     }
   };
 
@@ -176,13 +176,34 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
     }
   };
 
-  const toggleDestination = (destId: string) => {
-    const current = pkg.destination_ids || [];
-    if (current.includes(destId)) {
-      setPkg({ ...pkg, destination_ids: current.filter((id: string) => id !== destId) });
+  const handleDelete = async () => {
+    if (isNew) return;
+    const confirmDelete = window.confirm(`Are you sure you want to permanently delete the package "${pkg.title}"? This action cannot be undone.`);
+    if (!confirmDelete) return;
+
+    setSaving(true);
+    const { error } = await supabase
+      .from('packages')
+      .delete()
+      .eq('slug', originalSlug);
+
+    if (error) {
+      alert(`Error deleting package: ${error.message}`);
+      setSaving(false);
     } else {
-      setPkg({ ...pkg, destination_ids: [...current, destId] });
+      router.push('/admin/packages');
     }
+  };
+
+  const toggleDestination = (destId: string) => {
+    setPkg((prev: any) => {
+      const current = prev.destination_ids || [];
+      if (current.includes(destId)) {
+        return { ...prev, destination_ids: current.filter((id: string) => id !== destId) };
+      } else {
+        return { ...prev, destination_ids: [...current, destId] };
+      }
+    });
   };
 
   if (loading) return <div className="p-8 text-sm text-stone-500 flex items-center justify-center min-h-[50vh] animate-pulse">Initializing cockpit...</div>;
@@ -198,7 +219,7 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
   return (
     <div className="max-w-6xl mx-auto space-y-6 animate-in fade-in duration-300 pb-24">
       {/* Floating Action Bar */}
-      <div className="flex items-center justify-between sticky top-4 z-50 bg-background/70 backdrop-blur-xl py-3 px-4 border border-border/50 rounded-2xl shadow-lg">
+      <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center justify-between sticky top-4 z-50 bg-background/70 backdrop-blur-xl py-3 px-4 border border-border/50 rounded-2xl shadow-lg">
         <div className="flex items-center space-x-4">
           <Link href="/admin/packages" className="p-2 -ml-1 rounded-xl bg-muted/50 hover:bg-muted text-muted-foreground transition-colors">
             <ArrowLeft className="size-4" />
@@ -213,7 +234,16 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
           </div>
         </div>
         
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-wrap items-center gap-3">
+          {!isNew && (
+            <button
+              onClick={handleDelete}
+              disabled={saving}
+              className="text-xs font-bold text-destructive hover:bg-destructive/10 px-4 h-10 rounded-xl transition-colors disabled:opacity-50"
+            >
+              Delete
+            </button>
+          )}
           <select 
             value={pkg.status}
             onChange={e => setPkg({...pkg, status: e.target.value})}
