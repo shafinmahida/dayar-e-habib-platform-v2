@@ -41,7 +41,7 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
         <iframe
           src={`https://www.youtube-nocookie.com/embed/${yId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&playsinline=1&loop=1&playlist=${yId}&fs=0`}
           allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          className="absolute top-1/2 left-1/2 w-[150%] h-[150%] max-w-none max-h-none -translate-x-1/2 -translate-y-1/2 opacity-95 pointer-events-none"
+          className="absolute inset-0 w-full h-full opacity-95 pointer-events-none"
         />
       </div>
     );
@@ -59,7 +59,7 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
       <div className={cn("relative w-full aspect-[9/16] rounded-xl overflow-hidden bg-black", className)}>
         <iframe 
           src={`https://www.instagram.com/p/${igId}/embed`} 
-          className="w-full h-full object-cover absolute inset-0" 
+          className="w-full h-full absolute inset-0" 
           frameBorder="0" 
           scrolling="no" 
           allowTransparency={true}
@@ -75,7 +75,7 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
       <div className={cn("relative w-full aspect-video rounded-xl overflow-hidden bg-black", className)}>
         <iframe
           src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&width=auto`}
-          className="w-full h-full object-cover absolute inset-0"
+          className="w-full h-full absolute inset-0"
           style={{ border: 'none', overflow: 'hidden' }}
           scrolling="no"
           frameBorder="0"
