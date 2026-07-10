@@ -2,10 +2,14 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { LayoutDashboard, Building2, MapPin, Navigation, Type, Save, Loader2, Check } from "lucide-react";
+import { LayoutDashboard, Building2, MapPin, Navigation, Type, Save, Loader2, Check, FolderOpen, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
-type Tab = 'business_profile' | 'locations' | 'navigation' | 'pages';
+// New Components
+import { CategoriesManager } from "@/components/admin/builder/CategoriesManager";
+import { HomepageHeroManager } from "@/components/admin/builder/HomepageHeroManager";
+
+type Tab = 'business_profile' | 'homepage_hero' | 'categories' | 'destinations' | 'locations';
 
 export default function WebsiteBuilderPage() {
   const supabase = createClient();
@@ -22,7 +26,6 @@ export default function WebsiteBuilderPage() {
         const { data } = await supabase.from('company_profile').select('*').limit(1).single();
         if (data) setBusinessProfile(data);
       }
-      // Fetch other tabs' data as needed...
     };
 
     fetchData();
@@ -46,18 +49,20 @@ export default function WebsiteBuilderPage() {
   const renderTabIcon = (tab: Tab) => {
     switch (tab) {
       case 'business_profile': return <Building2 className="size-4" />;
-      case 'locations': return <MapPin className="size-4" />;
-      case 'navigation': return <Navigation className="size-4" />;
-      case 'pages': return <Type className="size-4" />;
+      case 'homepage_hero': return <ImageIcon className="size-4" />;
+      case 'categories': return <FolderOpen className="size-4" />;
+      case 'destinations': return <MapPin className="size-4" />;
+      case 'locations': return <Navigation className="size-4" />;
     }
   };
 
   const renderTabLabel = (tab: Tab) => {
     switch (tab) {
       case 'business_profile': return 'Business Profile';
-      case 'locations': return 'Locations & Contact';
-      case 'navigation': return 'Navigation & Footer';
-      case 'pages': return 'Page Structure';
+      case 'homepage_hero': return 'Homepage Hero';
+      case 'categories': return 'Package Categories';
+      case 'destinations': return 'Destinations';
+      case 'locations': return 'Contact Offices';
     }
   };
 
@@ -69,14 +74,14 @@ export default function WebsiteBuilderPage() {
             <LayoutDashboard className="size-8 text-accent" />
             Website Builder
           </h1>
-          <p className="text-muted-foreground">Manage the structure and core identity of your website.</p>
+          <p className="text-muted-foreground">Flawless control over your platform's core data and visual identity.</p>
         </div>
       </div>
 
       <div className="flex flex-col lg:flex-row gap-8 flex-1 min-h-0">
         {/* Left Nav */}
         <div className="w-full lg:w-64 space-y-2 shrink-0">
-          {(['business_profile', 'locations', 'navigation', 'pages'] as Tab[]).map((tab) => (
+          {(['business_profile', 'homepage_hero', 'categories', 'destinations', 'locations'] as Tab[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -106,7 +111,7 @@ export default function WebsiteBuilderPage() {
           </div>
           
           <div className="flex-1 overflow-y-auto p-6">
-            {activeTab === 'business_profile' ? (
+            {activeTab === 'business_profile' && (
               <div className="max-w-2xl space-y-6">
                 {!businessProfile ? (
                   <div className="animate-pulse flex items-center gap-2 text-muted-foreground">
@@ -177,11 +182,15 @@ export default function WebsiteBuilderPage() {
                   </>
                 )}
               </div>
-            ) : (
+            )}
+
+            {activeTab === 'categories' && <CategoriesManager />}
+            {activeTab === 'homepage_hero' && <HomepageHeroManager />}
+            
+            {(activeTab === 'destinations' || activeTab === 'locations') && (
               <div className="flex flex-col items-center justify-center h-full text-muted-foreground py-12">
                 <LayoutDashboard className="size-12 opacity-20 mb-4" />
-                <p>Select an item from the list to edit its structure.</p>
-                <p className="text-xs opacity-60 mt-2">(Advanced Layout Editor Coming Soon)</p>
+                <p>This manager is coming soon in the next sprint.</p>
               </div>
             )}
           </div>

@@ -6,10 +6,20 @@ import { createClient } from "@/lib/supabase/server";
 import { Container } from "@/components/layout/Container";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { SmartMediaPlayer } from "@/components/shared/SmartMediaPlayer";
 
 export async function Hero() {
   const supabase = await createClient();
-  const { data: profile } = await supabase.from('company_profile').select('*').single();
+  const [{ data: profile }, { data: heroBlock }] = await Promise.all([
+    supabase.from('company_profile').select('*').single(),
+    supabase.from('content_blocks').select('content').eq('slug', 'home_hero').single()
+  ]);
+
+  const heroContent = heroBlock?.content || {
+    mediaType: "image",
+    mediaUrl: "/kaaba-sunset.png",
+    caption: "Masjid Al-Haram — Golden Hour"
+  };
 
   return (
     <section className="relative overflow-hidden bg-background flex items-center border-b border-border/20 py-16 lg:py-24">
@@ -139,22 +149,17 @@ export async function Hero() {
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1E1A16]/20 via-transparent to-transparent z-10 pointer-events-none" />
                 
                 {/* Live Status Badge */}
-                <div className="absolute bottom-6 left-6 z-20 flex items-center gap-2.5 rounded-none bg-[#1E1A16]/90 px-4 py-2 text-[8px] font-black tracking-[0.25em] text-[#FCFAF5] uppercase select-none border border-border/10">
+                <div className="absolute bottom-6 left-6 z-20 flex items-center gap-2.5 rounded-none bg-[#1E1A16]/90 px-4 py-2 text-[8px] font-black tracking-[0.25em] text-[#FCFAF5] uppercase select-none border border-border/10 shadow-xl">
                   <span className="relative flex h-1.5 w-1.5">
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent"></span>
                   </span>
-                  <span>Masjid Al-Haram — Golden Hour</span>
+                  <span>{heroContent.caption}</span>
                 </div>
 
-                <Image
-                  src="/kaaba-sunset.png"
-                  alt="Kaaba at Masjid Al-Haram in Makkah, framed in an understated modern gallery frame"
-                  fill
-                  sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-                  className="object-cover rounded-none transition-transform duration-[1200ms] ease-out group-hover:scale-104"
-                  priority
-                />
+                <div className="absolute inset-0 z-0 transition-transform duration-[1200ms] ease-out group-hover:scale-105">
+                  <SmartMediaPlayer url={heroContent.mediaUrl} type={heroContent.mediaType as any} priority={true} />
+                </div>
               </div>
             </div>
           </div>

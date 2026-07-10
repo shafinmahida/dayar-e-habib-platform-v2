@@ -8,6 +8,7 @@ import type { Package } from "@/types/package";
 import { DESTINATIONS_DATA } from "@/lib/data/destinations";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
+import { SmartMediaPlayer } from "@/components/shared/SmartMediaPlayer";
 
 interface PackageCardProps {
   pkg: Package;
@@ -55,10 +56,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
     return () => clearInterval(timer);
   }, [totalMedia]);
 
-  const getYoutubeId = (url: string) => {
-    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
-    return match ? match[1] : null;
-  };
+
 
   return (
     <div className="flex flex-col rounded-3xl border border-border bg-card p-4 transition-all duration-500 hover:shadow-[0_24px_60px_rgba(0,0,0,0.025)] group">
@@ -70,7 +68,6 @@ export function PackageCard({ pkg }: PackageCardProps) {
           
           {/* Render Videos */}
           {videoSlides.map((url, idx) => {
-            const yId = getYoutubeId(url);
             return (
               <div
                 key={`vid-${idx}`}
@@ -79,15 +76,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
                   idx === activeSlide ? "opacity-100 scale-100 z-0" : "opacity-0 scale-95 -z-10"
                 )}
               >
-                {yId ? (
-                  <iframe
-                    src={`https://www.youtube-nocookie.com/embed/${yId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&playsinline=1&loop=1&playlist=${yId}`}
-                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-                    className="w-full h-full object-cover rounded-sm pointer-events-none"
-                  ></iframe>
-                ) : (
-                  <video src={url} autoPlay muted loop playsInline className="w-full h-full object-cover rounded-sm pointer-events-none" />
-                )}
+                <SmartMediaPlayer url={url} type="video" />
               </div>
             );
           })}
