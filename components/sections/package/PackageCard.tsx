@@ -124,7 +124,7 @@ export function PackageCard({ pkg }: PackageCardProps) {
           <div className="flex items-start justify-between gap-4">
             <div className="text-[8px] font-black tracking-[0.3em] text-accent uppercase flex items-center gap-2 mt-1">
               <span className="size-1 rounded-full bg-accent" />
-              <span>Guaranteed Legacy Journey</span>
+              <span>{rawPkg.package_categories?.name || "Premium Journey"}</span>
             </div>
             
             {pkg.priceMin && (

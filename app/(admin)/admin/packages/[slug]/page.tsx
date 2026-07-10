@@ -3,7 +3,7 @@
 import { useEffect, useState, use } from "react";
 import { useRouter } from "next/navigation";
 import { createClient } from "@/lib/supabase/client";
-import { Save, ArrowLeft, Image as ImageIcon, Video, FileText, Tag, MapPin, AlignLeft, Info, Calendar, Search } from "lucide-react";
+import { Save, ArrowLeft, Image as ImageIcon, Video, FileText, Tag, MapPin, AlignLeft, Info, Calendar, Search, Copy } from "lucide-react";
 import Link from "next/link";
 import { StringArrayEditor } from "@/components/admin/shared/StringArrayEditor";
 import { ObjectArrayEditor, ObjectFieldSchema } from "@/components/admin/shared/ObjectArrayEditor";
@@ -196,6 +196,29 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
     }
   };
 
+  const handleDuplicate = async () => {
+    if (isNew) return;
+    
+    setSaving(true);
+    const newSlug = `${pkg.slug}-copy-${Date.now()}`;
+    const { id, search_vector, created_at, updated_at, ...rest } = pkg;
+    
+    const { error } = await supabase.from('packages').insert({
+      ...rest,
+      slug: newSlug,
+      title: `${pkg.title} (Copy)`,
+      status: 'draft',
+      is_template: false,
+    });
+    
+    if (error) {
+      alert(`Failed to duplicate: ${error.message}`);
+      setSaving(false);
+    } else {
+      router.push(`/admin/packages/${newSlug}`);
+    }
+  };
+
   const toggleDestination = (destId: string) => {
     setPkg((prev: any) => {
       const current = prev.destination_ids || [];
@@ -237,13 +260,23 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
         
         <div className="flex flex-wrap items-center gap-3">
           {!isNew && (
-            <button
-              onClick={handleDelete}
-              disabled={saving}
-              className="text-xs font-bold text-destructive hover:bg-destructive/10 px-4 h-10 rounded-xl transition-colors disabled:opacity-50"
-            >
-              Delete
-            </button>
+            <>
+              <button
+                onClick={handleDuplicate}
+                disabled={saving}
+                className="text-xs font-bold text-stone-500 hover:text-stone-900 dark:hover:text-stone-100 hover:bg-stone-100 dark:hover:bg-stone-800 px-4 h-10 rounded-xl transition-colors disabled:opacity-50 flex items-center gap-2"
+              >
+                <Copy className="size-3.5" />
+                <span>Duplicate</span>
+              </button>
+              <button
+                onClick={handleDelete}
+                disabled={saving}
+                className="text-xs font-bold text-destructive hover:bg-destructive/10 px-4 h-10 rounded-xl transition-colors disabled:opacity-50"
+              >
+                Delete
+              </button>
+            </>
           )}
           <select 
             value={pkg.status}
