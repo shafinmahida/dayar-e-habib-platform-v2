@@ -592,6 +592,7 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
                 values={imageUrls}
                 onChange={val => setImageUrls(val)}
                 placeholder="https://..."
+                mode="media"
               />
               <StringArrayEditor
                 label="Video URLs"
@@ -599,6 +600,7 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
                 values={videoUrls}
                 onChange={val => setVideoUrls(val)}
                 placeholder="https://..."
+                mode="media"
               />
             </div>
             

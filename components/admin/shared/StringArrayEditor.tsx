@@ -4,12 +4,15 @@ import { useState } from "react";
 import { Plus, X, GripVertical } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+import { UniversalUploader } from "./UniversalUploader";
+
 interface StringArrayEditorProps {
   label: string;
   description?: string;
   values: string[];
   onChange: (newValues: string[]) => void;
   placeholder?: string;
+  mode?: "text" | "media";
 }
 
 export function StringArrayEditor({
@@ -17,7 +20,8 @@ export function StringArrayEditor({
   description,
   values = [],
   onChange,
-  placeholder = "Add item..."
+  placeholder = "Add item...",
+  mode = "text"
 }: StringArrayEditorProps) {
   const [newValue, setNewValue] = useState("");
 
@@ -54,21 +58,34 @@ export function StringArrayEditor({
         {description && <p className="text-[10px] text-muted-foreground mt-0.5">{description}</p>}
       </div>
       
-      <div className="space-y-2">
+      <div className="space-y-4">
         {values?.map((val, idx) => (
-          <div key={idx} className="flex items-center gap-2">
-            <div className="p-2 text-muted-foreground/50 cursor-grab active:cursor-grabbing hover:bg-muted rounded">
+          <div key={idx} className="flex gap-2">
+            <div className="pt-3 text-muted-foreground/50 cursor-grab active:cursor-grabbing hover:bg-muted rounded">
               <GripVertical className="size-4" />
             </div>
-            <input
-              type="text"
-              value={val}
-              onChange={(e) => handleChange(idx, e.target.value)}
-              className="flex-1 text-sm bg-background border border-input rounded-lg px-3 py-2 focus:ring-1 focus:ring-primary outline-none"
-            />
+            
+            <div className="flex-1">
+              {mode === "media" ? (
+                <UniversalUploader
+                  value={val}
+                  onChange={(newUrl) => handleChange(idx, newUrl)}
+                  placeholder={placeholder}
+                  label={`Media Item ${idx + 1}`}
+                />
+              ) : (
+                <input
+                  type="text"
+                  value={val}
+                  onChange={(e) => handleChange(idx, e.target.value)}
+                  className="w-full text-sm bg-background border border-input rounded-lg px-3 py-2 focus:ring-1 focus:ring-primary outline-none"
+                />
+              )}
+            </div>
+            
             <button
               onClick={() => handleRemove(idx)}
-              className="p-2 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+              className="mt-2 h-8 w-8 flex items-center justify-center shrink-0 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
             >
               <X className="size-4" />
             </button>
@@ -76,24 +93,33 @@ export function StringArrayEditor({
         ))}
       </div>
 
-      <div className="flex items-center gap-2 mt-2">
-        <input
-          type="text"
-          value={newValue}
-          onChange={(e) => setNewValue(e.target.value)}
-          onKeyDown={handleKeyDown}
-          onBlur={() => {
-            if (newValue.trim()) {
-              handleAdd();
-            }
-          }}
-          placeholder={placeholder}
-          className="flex-1 text-sm bg-muted/30 border border-input rounded-lg px-3 py-2 focus:ring-1 focus:ring-primary outline-none"
-        />
-        <Button onClick={handleAdd} type="button" variant="secondary" size="sm" className="h-[38px] px-4 shrink-0">
-          <Plus className="size-4 mr-1.5" />
-          Add
-        </Button>
+      <div className="flex items-center gap-2 mt-4 pt-2 border-t border-border">
+        {mode === "media" ? (
+          <Button onClick={() => onChange([...(values || []), ""])} type="button" variant="outline" size="sm" className="w-full border-dashed">
+            <Plus className="size-4 mr-1.5" />
+            Add New Media Item
+          </Button>
+        ) : (
+          <>
+            <input
+              type="text"
+              value={newValue}
+              onChange={(e) => setNewValue(e.target.value)}
+              onKeyDown={handleKeyDown}
+              onBlur={() => {
+                if (newValue.trim()) {
+                  handleAdd();
+                }
+              }}
+              placeholder={placeholder}
+              className="flex-1 text-sm bg-muted/30 border border-input rounded-lg px-3 py-2 focus:ring-1 focus:ring-primary outline-none"
+            />
+            <Button onClick={handleAdd} type="button" variant="secondary" size="sm" className="h-[38px] px-4 shrink-0">
+              <Plus className="size-4 mr-1.5" />
+              Add
+            </Button>
+          </>
+        )}
       </div>
     </div>
   );

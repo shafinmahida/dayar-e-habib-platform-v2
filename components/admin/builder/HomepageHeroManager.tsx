@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Save, Loader2, Image as ImageIcon, Video } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { UniversalUploader } from "@/components/admin/shared/UniversalUploader";
 
 export function HomepageHeroManager() {
   const supabase = createClient();
@@ -85,23 +86,12 @@ export function HomepageHeroManager() {
           </div>
         </div>
 
-        <div className="space-y-2">
-          <label className="text-sm font-bold text-foreground">
-            {heroData.mediaType === 'video' ? "Video URL (YouTube, Instagram, or MP4)" : "Image URL (Upload or Paste Link)"}
-          </label>
-          <input 
-            type="text" 
-            value={heroData.mediaUrl}
-            onChange={e => setHeroData({...heroData, mediaUrl: e.target.value})}
-            className="w-full p-3 bg-background border border-border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-primary/50"
-            placeholder={heroData.mediaType === 'video' ? "https://youtube.com/..." : "https://..."}
-          />
-          <p className="text-xs text-muted-foreground">
-            {heroData.mediaType === 'video' 
-              ? "YouTube videos will automatically loop with no UI/branding." 
-              : "Paste an external URL or use the Media tab to upload an image and paste the link here."}
-          </p>
-        </div>
+        <UniversalUploader 
+          value={heroData.mediaUrl}
+          onChange={(url) => setHeroData({...heroData, mediaUrl: url})}
+          label={heroData.mediaType === 'video' ? "Video URL (Upload or Paste Link)" : "Image URL (Upload or Paste Link)"}
+          placeholder={heroData.mediaType === 'video' ? "https://youtube.com/... or browse .mp4" : "https://... or browse .jpg"}
+        />
 
         <div className="space-y-2">
           <label className="text-sm font-bold text-foreground">Live Status Badge (Caption)</label>

@@ -3,6 +3,7 @@
 import { useState } from "react";
 import Image from "next/image";
 import { Play, Image as ImageIcon, Video, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { SmartMediaPlayer } from "@/components/shared/SmartMediaPlayer";
 
 interface MediaItem {
   id: string;
@@ -227,40 +228,21 @@ export default function GalleryPage() {
                 className="group relative flex flex-col bg-[#FCFAF5] border border-border/45 rounded-2xl overflow-hidden cursor-pointer shadow-xs transition-all duration-500 hover:shadow-[0_20px_50px_rgba(0,0,0,0.02)]"
               >
                 {/* Media Preview Window */}
-                <div className="relative aspect-[16/10] w-full bg-muted overflow-hidden">
+                <div className="relative aspect-[16/10] w-full bg-muted overflow-hidden flex items-center justify-center bg-black">
                   <div className="absolute inset-0 bg-[#8A6A36]/3 mix-blend-color z-1 pointer-events-none" />
                   
-                  {item.type === "video" ? (
-                    <>
-                      {/* Video element plays muted on hover */}
-                      <video
-                        src={`${item.src}#t=0.1`}
-                        preload="metadata"
-                        className="object-cover w-full h-full transition-transform duration-[1200ms] group-hover:scale-103"
-                        muted
-                        playsInline
-                      />
-                      <div className="absolute inset-0 bg-black/15 z-1 flex items-center justify-center transition-opacity duration-300 group-hover:bg-black/35">
-                        <div className="flex size-12 items-center justify-center rounded-full bg-[#FCFAF5] text-accent border border-accent/20 shadow-md transform scale-100 transition-all duration-300 group-hover:scale-105 group-hover:bg-accent group-hover:text-[#FCFAF5] group-hover:border-accent">
-                          <Play className="size-5 fill-current translate-x-0.5" />
-                        </div>
+                  <SmartMediaPlayer url={item.src} type={item.type} className="w-full h-full object-cover transition-transform duration-[1200ms] group-hover:scale-105 opacity-90" />
+                  
+                  {item.type === "video" && (
+                    <div className="absolute inset-0 bg-black/15 z-1 flex items-center justify-center transition-opacity duration-300 group-hover:bg-black/35 pointer-events-none">
+                      <div className="flex size-12 items-center justify-center rounded-full bg-[#FCFAF5] text-accent border border-accent/20 shadow-md transform scale-100 transition-all duration-300 group-hover:scale-105 group-hover:bg-accent group-hover:text-[#FCFAF5] group-hover:border-accent">
+                        <Play className="size-5 fill-current translate-x-0.5" />
                       </div>
-                    </>
-                  ) : (
-                    <>
-                      <Image
-                        src={item.src}
-                        alt={item.title}
-                        fill
-                        className="object-cover transition-transform duration-[1200ms] group-hover:scale-103"
-                        sizes="(max-width: 768px) 100vw, 33vw"
-                      />
-                      <div className="absolute inset-0 bg-black/0 z-1 flex items-center justify-center transition-opacity duration-300 group-hover:bg-black/20" />
-                    </>
+                    </div>
                   )}
 
                   {/* Category Tag */}
-                  <span className="absolute top-4 left-4 z-2 bg-[#FCFAF5]/90 border border-border/55 px-2.5 py-1 text-[8px] font-black tracking-widest text-accent uppercase select-none rounded-md">
+                  <span className="absolute top-4 left-4 z-10 bg-[#FCFAF5]/90 border border-border/55 px-2.5 py-1 text-[8px] font-black tracking-widest text-accent uppercase select-none rounded-md">
                     {item.category}
                   </span>
                 </div>
@@ -317,26 +299,7 @@ export default function GalleryPage() {
             onClick={(e) => e.stopPropagation()}
             className="relative w-full max-w-5xl aspect-video bg-black flex items-center justify-center rounded-xl overflow-hidden shadow-2xl border border-white/10"
           >
-            {activeMedia.type === "video" ? (
-              <video
-                src={activeMedia.src}
-                controls
-                autoPlay
-                className="w-full h-full object-contain"
-                playsInline
-              />
-            ) : (
-              <div className="relative w-full h-full">
-                <Image
-                  src={activeMedia.src}
-                  alt={activeMedia.title}
-                  fill
-                  className="object-contain"
-                  sizes="100vw"
-                  priority
-                />
-              </div>
-            )}
+            <SmartMediaPlayer url={activeMedia.src} type={activeMedia.type} className="w-full h-full object-contain" />
           </div>
 
           {/* Right Arrow */}
