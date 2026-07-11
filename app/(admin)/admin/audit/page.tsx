@@ -48,14 +48,21 @@ export default function AdminAuditLogsPage() {
       // Fetch logs
       const { data: logsData } = await supabase
         .from('audit_logs')
-        .select(`
-          *,
-          profiles:user_id (full_name, email)
-        `)
+        .select('*')
         .order('created_at', { ascending: false })
         .limit(100);
       
-      if (logsData) setLogs(logsData);
+      if (logsData) {
+        // Manually join with usersData to fix 'Unknown'
+        const enrichedLogs = logsData.map(log => {
+          const user = usersData.find(u => u.id === log.user_id);
+          return {
+            ...log,
+            profiles: user ? { full_name: user.full_name, email: user.email } : null
+          };
+        });
+        setLogs(enrichedLogs);
+      }
     } catch (e) {
       console.error(e);
     } finally {
@@ -92,6 +99,14 @@ export default function AdminAuditLogsPage() {
     const oldKeys = Object.keys(oldData || {});
     const newKeys = Object.keys(newData || {});
     const allKeys = Array.from(new Set([...oldKeys, ...newKeys]));
+
+    if (allKeys.length === 0) {
+      return (
+        <div className="text-muted-foreground text-xs italic">
+          No structured data payload available for this action.
+        </div>
+      );
+    }
 
     return (
       <div className="space-y-1 font-mono text-xs">
@@ -155,15 +170,20 @@ export default function AdminAuditLogsPage() {
             <div className="p-4 overflow-y-auto flex-1 space-y-3 custom-scrollbar">
               {systemUsers.map(user => (
                 <div key={user.id} className="flex items-center gap-3 p-2 rounded-lg hover:bg-muted/30 transition-colors">
-                  <div className={`size-2.5 rounded-full ${getStatusColor(user.last_sign_in_at)}`} />
+                  <div className={`size-2.5 rounded-full shrink-0 ${getStatusColor(user.last_sign_in_at)}`} />
                   <div className="flex-1 truncate">
                     <div className="text-sm font-bold truncate">{user.full_name}</div>
                     <div className="text-[10px] text-muted-foreground truncate">{user.email}</div>
                   </div>
-                  <div className="text-[10px] text-right text-muted-foreground">
-                    {user.last_sign_in_at 
-                      ? formatDistanceToNow(parseISO(user.last_sign_in_at), { addSuffix: true })
-                      : "Never"}
+                  <div className="text-[10px] text-right text-muted-foreground flex flex-col items-end">
+                    {user.last_sign_in_at ? (
+                      <>
+                        <span className="font-bold text-foreground">{formatDistanceToNow(parseISO(user.last_sign_in_at), { addSuffix: true })}</span>
+                        <span>{new Date(user.last_sign_in_at).toLocaleString()}</span>
+                      </>
+                    ) : (
+                      "Never logged in"
+                    )}
                   </div>
                 </div>
               ))}

@@ -4,8 +4,8 @@ import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Volume2, VolumeX, Maximize, Play, Pause } from "lucide-react";
-import ReactPlayer from "react-player";
-const Player = ReactPlayer as any;
+import dynamic from "next/dynamic";
+const Player: any = dynamic(() => import("react-player"), { ssr: false });
 
 interface SmartMediaPlayerProps {
   url: string;
@@ -56,8 +56,8 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
     setIsPlaying(!isPlaying);
   };
 
-  // If explicitly an image, render an image intrinsically sized
-  if (type === "image" || url.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
+  // If explicitly an image, OR if the url is a static image, render an img
+  if (type === "image" || (url && url.match(/\.(jpeg|jpg|gif|png|webp)$/i))) {
     return (
       <div 
         ref={containerRef}
