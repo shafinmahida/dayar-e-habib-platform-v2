@@ -38,7 +38,7 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
         onDoubleClick={handleFullscreen}
       >
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={url} alt={alt} className="w-full h-full object-contain pointer-events-none" />
+        <img src={url} alt={alt} className={cn("w-full h-full object-cover pointer-events-none", className?.includes('object-contain') ? 'object-contain' : '')} />
       </div>
     );
   }
@@ -57,7 +57,7 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
           muted 
           loop 
           playsInline
-          className="w-full h-full object-cover pointer-events-none"
+          className={cn("w-full h-full object-cover pointer-events-none", className?.includes('object-contain') ? 'object-contain' : '')}
         />
         <div className="absolute inset-0 z-10 bg-transparent" />
       </div>
