@@ -25,8 +25,8 @@ export async function getSystemUsers() {
       email: user.email,
       last_sign_in_at: user.last_sign_in_at,
       created_at: user.created_at,
-      full_name: profile?.full_name || "Unknown",
-      role: profile?.role || "user"
+      full_name: profile?.full_name || user.user_metadata?.full_name || "Unknown",
+      role: profile?.role || user.user_metadata?.role || "user"
     };
   });
 }

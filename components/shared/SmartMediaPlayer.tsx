@@ -56,8 +56,8 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
     setIsPlaying(!isPlaying);
   };
 
-  // If explicitly an image, OR if the url is a static image, render an img
-  if (type === "image" || (url && url.match(/\.(jpeg|jpg|gif|png|webp)$/i))) {
+  // If explicitly an image, OR if the url is a static image (even with query params), render an img
+  if (type === "image" || (url && url.split('?')[0].match(/\.(jpeg|jpg|gif|png|webp)$/i))) {
     return (
       <div 
         ref={containerRef}
