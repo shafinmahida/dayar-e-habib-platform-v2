@@ -213,7 +213,7 @@ export default function AdminAuditLogsPage() {
                   onChange={e => setFilterTable(e.target.value)}
                 >
                   <option value="all">All Tables</option>
-                  <option value="destinations">Destinations</option>
+
                   <option value="packages">Packages</option>
                 </select>
                 <select 

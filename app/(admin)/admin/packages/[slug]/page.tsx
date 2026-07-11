@@ -48,7 +48,7 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
   const [saving, setSaving] = useState(false);
   const [activeTab, setActiveTab] = useState<TabId>('general');
   const [categories, setCategories] = useState<any[]>([]);
-  const [allDestinations, setAllDestinations] = useState<any[]>([]);
+
   
   // Media Arrays (Temporary state for UI)
   const [imageUrls, setImageUrls] = useState<string[]>([]);
@@ -86,12 +86,10 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
   }, [originalSlug]);
 
   const fetchMetadata = async () => {
-    const [cats, dests] = await Promise.all([
-      supabase.from('package_categories').select('id, name').order('name'),
-      supabase.from('destinations').select('id, name').order('name')
+    const [cats] = await Promise.all([
+      supabase.from('package_categories').select('id, name').order('name')
     ]);
     if (cats.data) setCategories(cats.data);
-    if (dests.data) setAllDestinations(dests.data);
   };
 
   const fetchPackage = async () => {
@@ -218,17 +216,6 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
     } else {
       router.push(`/admin/packages/${newSlug}`);
     }
-  };
-
-  const toggleDestination = (destId: string) => {
-    setPkg((prev: any) => {
-      const current = prev.destination_ids || [];
-      if (current.includes(destId)) {
-        return { ...prev, destination_ids: current.filter((id: string) => id !== destId) };
-      } else {
-        return { ...prev, destination_ids: [...current, destId] };
-      }
-    });
   };
 
   if (loading) return <div className="p-8 text-sm text-stone-500 flex items-center justify-center min-h-[50vh] animate-pulse">Initializing cockpit...</div>;
@@ -534,29 +521,7 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
               <p className="text-xs text-muted-foreground">Manage locations, hotels, and flights</p>
             </div>
 
-            <div className="p-6 bg-muted/20 border border-border/80 rounded-2xl space-y-4">
-              <label className="text-sm font-black uppercase tracking-wider text-foreground flex items-center gap-2"><MapPin className="size-4"/> Connected Destinations</label>
-              <div className="flex flex-wrap gap-3">
-                {allDestinations.map(dest => {
-                  const isSelected = (pkg.destination_ids || []).includes(dest.id);
-                  return (
-                    <button
-                      key={dest.id}
-                      onClick={() => toggleDestination(dest.id)}
-                      className={cn(
-                        "px-4 py-2 text-xs font-bold rounded-xl border transition-all duration-200",
-                        isSelected 
-                          ? "bg-foreground text-background border-foreground shadow-md" 
-                          : "bg-background text-muted-foreground border-border hover:border-foreground/30 hover:text-foreground"
-                      )}
-                    >
-                      {dest.name}
-                    </button>
-                  );
-                })}
-                {allDestinations.length === 0 && <span className="text-xs text-muted-foreground">No destinations found in database.</span>}
-              </div>
-            </div>
+
 
             <ObjectArrayEditor
               label="Hotels & Accommodation"

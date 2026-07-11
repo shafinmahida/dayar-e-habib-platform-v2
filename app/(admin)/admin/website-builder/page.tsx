@@ -8,10 +8,10 @@ import { Button } from "@/components/ui/button";
 // New Components
 import { CategoriesManager } from "@/components/admin/builder/CategoriesManager";
 import { HomepageHeroManager } from "@/components/admin/builder/HomepageHeroManager";
-import { DestinationsManager } from "@/components/admin/builder/DestinationsManager";
+
 import { EnlightenmentManager } from "@/components/admin/builder/EnlightenmentManager";
 
-type Tab = 'business_profile' | 'homepage_hero' | 'categories' | 'destinations' | 'enlightenment' | 'locations';
+type Tab = 'business_profile' | 'homepage_hero' | 'categories' | 'enlightenment' | 'locations';
 
 export default function WebsiteBuilderPage() {
   const supabase = createClient();
@@ -53,7 +53,7 @@ export default function WebsiteBuilderPage() {
       case 'business_profile': return <Building2 className="size-4" />;
       case 'homepage_hero': return <ImageIcon className="size-4" />;
       case 'categories': return <FolderOpen className="size-4" />;
-      case 'destinations': return <MapPin className="size-4" />;
+
       case 'enlightenment': return <Type className="size-4" />;
       case 'locations': return <Navigation className="size-4" />;
     }
@@ -64,7 +64,7 @@ export default function WebsiteBuilderPage() {
       case 'business_profile': return 'Business Profile';
       case 'homepage_hero': return 'Homepage Hero';
       case 'categories': return 'Package Categories';
-      case 'destinations': return 'Destinations';
+
       case 'enlightenment': return 'Enlightenment';
       case 'locations': return 'Contact Offices';
     }
@@ -85,7 +85,7 @@ export default function WebsiteBuilderPage() {
       <div className="flex flex-col lg:flex-row gap-8 flex-1 min-h-0">
         {/* Left Nav */}
         <div className="w-full lg:w-64 space-y-2 shrink-0 overflow-y-auto pb-4 custom-scrollbar">
-          {(['business_profile', 'homepage_hero', 'categories', 'destinations', 'enlightenment', 'locations'] as Tab[]).map((tab) => (
+          {(['business_profile', 'homepage_hero', 'categories', 'enlightenment', 'locations'] as Tab[]).map((tab) => (
             <button
               key={tab}
               onClick={() => setActiveTab(tab)}
@@ -190,7 +190,7 @@ export default function WebsiteBuilderPage() {
 
             {activeTab === 'categories' && <CategoriesManager />}
             {activeTab === 'homepage_hero' && <HomepageHeroManager />}
-            {activeTab === 'destinations' && <DestinationsManager />}
+
             {activeTab === 'enlightenment' && <EnlightenmentManager />}
             
             {activeTab === 'locations' && (

@@ -5,7 +5,7 @@ import Image from "next/image";
 import { useEffect, useState } from "react";
 import { ArrowRight, Calendar, MapPin } from "lucide-react";
 import type { Package } from "@/types/package";
-import { DESTINATIONS_DATA } from "@/lib/data/destinations";
+
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 import { SmartMediaPlayer } from "@/components/shared/SmartMediaPlayer";
@@ -15,9 +15,7 @@ interface PackageCardProps {
 }
 
 export function PackageCard({ pkg }: PackageCardProps) {
-  const destinationNames = (pkg.destinationSlugs || [])
-    .map((slug: string) => DESTINATIONS_DATA.find(d => d.slug === slug)?.name || slug)
-    .join(" & ");
+  const destinationNames = pkg.hotels?.[0]?.location || "Saudi Arabia";
 
   // Custom visual slides arrays for luxury rotation
   const slideshowMap: Record<string, string[]> = {

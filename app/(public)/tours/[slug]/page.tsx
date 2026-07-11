@@ -63,16 +63,7 @@ export default async function PackageDetailPage({ params }: PackageDetailPagePro
   }
 
   // Fetch destination names based on destination_ids array
-  let destinationNames = "";
-  if (pkg.destination_ids && pkg.destination_ids.length > 0) {
-    const { data: destinations } = await supabase
-      .from('destinations')
-      .select('name')
-      .in('id', pkg.destination_ids);
-    if (destinations) {
-      destinationNames = destinations.map(d => d.name).join(" & ");
-    }
-  }
+  let destinationNames = pkg.hotels?.[0]?.location || "Saudi Arabia";
 
   return (
     <div className="bg-background min-h-screen">

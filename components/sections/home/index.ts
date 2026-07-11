@@ -2,7 +2,7 @@ export { Hero } from "./hero";
 export { Trust } from "./trust";
 export { FeaturedPackages } from "./featured-packages";
 export { JourneyTimeline } from "./journey-timeline";
-export { Destinations } from "./destinations";
+
 export { Gallery } from "./gallery";
 export { Enlightenment } from "./Enlightenment";
 export { Services } from "./services";

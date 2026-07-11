@@ -1,30 +1,23 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
-import { motion, AnimatePresence } from "framer-motion";
-import { PlayCircle, MapPin, ChevronRight, Sparkles } from "lucide-react";
-
-import { Container } from "@/components/layout/Container";
-import { Section } from "@/components/layout/Section";
-import { SmartMediaPlayer } from "@/components/shared/SmartMediaPlayer";
+import { useState, useMemo } from "react";
 import { cn } from "@/lib/utils";
+import { SmartMediaPlayer } from "@/components/shared/SmartMediaPlayer";
+import { Play } from "lucide-react";
 
 export interface HolyPlace {
   title: string;
-  description?: string;
+  category?: string;
+  description: string;
   videoUrl: string;
 }
 
 export interface EnlightenmentData {
-  visible?: boolean;
-  overline?: string;
-  sectionTitle?: string;
-  sectionSubtitle?: string;
+  visible: boolean;
+  overline: string;
+  sectionTitle: string;
+  sectionSubtitle: string;
   holyPlaces: HolyPlace[];
-}
-
-interface EnlightenmentClientProps {
-  data: EnlightenmentData;
 }
 
 const DEFAULT_DATA: EnlightenmentData = {
@@ -33,261 +26,136 @@ const DEFAULT_DATA: EnlightenmentData = {
   sectionTitle: "Enlightenment to Holy Places",
   sectionSubtitle: "Explore the sacred history, profound stories, and majestic significance of the most revered destinations in Islam.",
   holyPlaces: [
-    {
-      title: "Masjid Al-Haram",
-      description: "The Great Mosque of Makkah, home to the Holy Kaaba.",
-      videoUrl: "/kaaba-sunset.png"
-    },
-    {
-      title: "Al-Masjid an-Nabawi",
-      description: "The Prophet's Mosque in Madinah, a place of peace.",
-      videoUrl: "/madinah-dawn.png"
-    }
+    { title: "Masjid Al-Haram", category: "Makkah", description: "The Great Mosque of Makkah", videoUrl: "/kaaba-sunset.png" },
+    { title: "Jabal Al-Nour", category: "Makkah", description: "Cave of Hira", videoUrl: "/kaaba-sunset.png" },
+    { title: "Al-Masjid an-Nabawi", category: "Madinah", description: "The Prophet's Mosque", videoUrl: "/madinah-dawn.png" },
+    { title: "Masjid Quba", category: "Madinah", description: "First Mosque of Islam", videoUrl: "/madinah-dawn.png" },
+    { title: "Al-Balad", category: "Jeddah", description: "Historic District", videoUrl: "/media__1783076608743.png" },
   ]
 };
 
-export function EnlightenmentClient({ data = DEFAULT_DATA }: EnlightenmentClientProps) {
-  const finalData = data?.holyPlaces?.length ? data : DEFAULT_DATA;
-  const [activeIndex, setActiveIndex] = useState(0);
-  const containerRef = useRef<HTMLDivElement>(null);
+export function EnlightenmentClient({ data }: { data?: EnlightenmentData }) {
+  const finalData = data || DEFAULT_DATA;
+  const places = finalData.holyPlaces || [];
+  
+  // Extract unique categories
+  const categories = useMemo(() => {
+    const cats = new Set(places.map(p => p.category || "Other"));
+    return ["All", ...Array.from(cats)];
+  }, [places]);
 
-  const activePlace = finalData.holyPlaces[activeIndex] || finalData.holyPlaces[0];
+  const [activeCategory, setActiveCategory] = useState("All");
 
-  useEffect(() => {
-    const el = containerRef.current;
-    if (!el) return;
+  if (!finalData.visible) return null;
 
-    let touchStartY = 0;
-    let scrollAccumulator = 0;
-    const SCROLL_THRESHOLD = 75; // Pixels to scroll before switching slide
-
-    const handleWheelNative = (e: WheelEvent) => {
-      e.preventDefault(); // Completely stop page scroll
-      scrollAccumulator += e.deltaY;
-      
-      if (scrollAccumulator > SCROLL_THRESHOLD) {
-        setActiveIndex((prev) => (prev + 1) % finalData.holyPlaces.length);
-        scrollAccumulator = 0;
-      } else if (scrollAccumulator < -SCROLL_THRESHOLD) {
-        setActiveIndex((prev) => (prev - 1 + finalData.holyPlaces.length) % finalData.holyPlaces.length);
-        scrollAccumulator = 0;
-      }
-    };
-
-    const handleTouchStartNative = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-      scrollAccumulator = 0;
-    };
-
-    const handleTouchMoveNative = (e: TouchEvent) => {
-      e.preventDefault(); // Completely stop page scroll on touch
-      const touchY = e.touches[0].clientY;
-      const deltaY = touchStartY - touchY;
-      
-      if (deltaY > SCROLL_THRESHOLD) {
-        setActiveIndex((prev) => (prev + 1) % finalData.holyPlaces.length);
-        touchStartY = touchY; 
-        scrollAccumulator = 0;
-      } else if (deltaY < -SCROLL_THRESHOLD) {
-        setActiveIndex((prev) => (prev - 1 + finalData.holyPlaces.length) % finalData.holyPlaces.length);
-        touchStartY = touchY;
-        scrollAccumulator = 0;
-      }
-    };
-
-    el.addEventListener("wheel", handleWheelNative, { passive: false });
-    el.addEventListener("touchstart", handleTouchStartNative, { passive: false });
-    el.addEventListener("touchmove", handleTouchMoveNative, { passive: false });
-
-    return () => {
-      el.removeEventListener("wheel", handleWheelNative);
-      el.removeEventListener("touchstart", handleTouchStartNative);
-      el.removeEventListener("touchmove", handleTouchMoveNative);
-    };
-  }, [finalData.holyPlaces.length]);
-
-  if (finalData.visible === false) return null;
+  const filteredPlaces = activeCategory === "All" 
+    ? places 
+    : places.filter(p => (p.category || "Other") === activeCategory);
 
   return (
-    <Section
-      className="bg-[#1E1A16] border-t border-border/10 py-20 lg:py-32 overflow-hidden relative perspective-[1000px]"
-      id="enlightenment"
-    >
-      {/* Background ambient glow */}
-      <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-4xl h-full bg-[#8A6A36]/5 blur-[120px] pointer-events-none rounded-full" />
-      
-      <Container className="relative z-10">
-        <div className="mb-12 md:mb-16 text-center space-y-4">
-          <div className="inline-flex items-center gap-2 rounded-full border border-[#8A6A36]/30 bg-[#8A6A36]/10 px-4 py-1.5 text-[9px] font-black tracking-widest text-[#D4AF37] uppercase select-none">
-            <Sparkles className="size-3" />
-            <span>{finalData.overline || "Spiritual Heritage"}</span>
+    <section className="relative py-24 md:py-32 bg-[#FAF8F5] overflow-hidden" id="enlightenment">
+      <div className="container mx-auto px-4 md:px-8 max-w-7xl relative z-10">
+        
+        {/* Header Section */}
+        <div className="max-w-3xl mx-auto text-center mb-16 space-y-6">
+          <div className="inline-flex items-center gap-3">
+            <div className="h-[1px] w-8 bg-[#8A6A36]" />
+            <span className="text-xs md:text-sm font-black tracking-[0.25em] text-[#8A6A36] uppercase">
+              {finalData.overline || "Spiritual Heritage"}
+            </span>
+            <div className="h-[1px] w-8 bg-[#8A6A36]" />
           </div>
-          <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#FCFAF5]">
+          
+          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#1A1A1A] tracking-tight leading-[1.1]">
             {finalData.sectionTitle || "Enlightenment to Holy Places"}
           </h2>
-          <p className="max-w-2xl mx-auto text-sm leading-relaxed text-[#FCFAF5]/60 font-medium">
+          
+          <p className="text-base md:text-lg text-[#1A1A1A]/70 font-medium leading-relaxed max-w-2xl mx-auto">
             {finalData.sectionSubtitle || "Explore the sacred history, profound stories, and majestic significance of the most revered destinations in Islam."}
           </p>
         </div>
 
-        <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
-          
-          {/* Left Column: 70% Video Player Wheel */}
-          <div 
-            ref={containerRef}
-            className="lg:col-span-8 w-full h-[600px] relative flex flex-col items-center justify-center cursor-grab active:cursor-grabbing overflow-hidden touch-none [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)]"
-            style={{ perspective: "1500px" }}
-          >
-            <div className="relative w-full h-full flex items-center justify-center [transform-style:preserve-3d]">
-              {finalData.holyPlaces.map((place, idx) => {
-                const count = finalData.holyPlaces.length;
-                let diff = idx - activeIndex;
+        {/* Filter Tabs */}
+        {categories.length > 2 && (
+          <div className="flex flex-wrap justify-center gap-2 mb-12">
+            {categories.map(cat => (
+              <button
+                key={cat}
+                onClick={() => setActiveCategory(cat)}
+                className={cn(
+                  "px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300",
+                  activeCategory === cat
+                    ? "bg-[#8A6A36] text-white shadow-lg shadow-[#8A6A36]/20 scale-105"
+                    : "bg-white text-[#1A1A1A]/60 hover:bg-[#8A6A36]/10 hover:text-[#8A6A36] border border-black/5"
+                )}
+              >
+                {cat}
+              </button>
+            ))}
+          </div>
+        )}
 
-                // Handle infinite wrapping calculations
-                if (diff < -Math.floor(count / 2)) diff += count;
-                if (diff > Math.floor(count / 2)) diff -= count;
+        {/* Responsive Grid System */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
+          {filteredPlaces.map((place, idx) => {
+            const currentVideo = place.videoUrl || "/kaaba-sunset.png";
+            
+            return (
+              <div 
+                key={idx}
+                className="group relative h-[400px] md:h-[450px] w-full rounded-3xl overflow-hidden bg-black isolation-isolate shadow-xl shadow-black/5"
+              >
+                {/* Background Media Engine */}
+                <div className="absolute inset-0 w-full h-full transition-transform duration-[1200ms] ease-out group-hover:scale-105">
+                  <SmartMediaPlayer url={currentVideo} className="w-full h-full object-cover rounded-none border-0" />
+                </div>
 
-                const isActive = diff === 0;
-                const absDiff = Math.abs(diff);
-                const isHidden = absDiff > 2;
+                {/* Dark Gradient Overlay for text legibility */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500 pointer-events-none" />
 
-                // 3D Math for the wheel cylinder
-                const translateY = diff * 240; // Vertical spacing
-                const translateZ = isActive ? 0 : -absDiff * 150; // Push back non-active items
-                const rotateX = -diff * 15; // Angle them towards the viewer
-                const opacity = isActive ? 1 : Math.max(0, 1 - absDiff * 0.4);
-                const scale = isActive ? 1 : Math.max(0.75, 1 - absDiff * 0.15);
-                const currentVideo = place.videoUrl || "/kaaba-sunset.png";
-
-                return (
-                  <div
-                    key={idx}
-                    onClick={() => { if (!isActive) setActiveIndex(idx); }}
-                    className={cn(
-                      "absolute w-full max-w-4xl aspect-video transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) flex items-center justify-center [transform-style:preserve-3d] rounded-3xl overflow-hidden bg-black",
-                      isActive 
-                        ? "z-30 shadow-[0_0_60px_rgba(138,106,54,0.2)] border-2 border-[#8A6A36]/50 ring-1 ring-white/10" 
-                        : "z-10 shadow-xl border border-white/10"
-                    )}
-                    style={{
-                      transform: `translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) scale(${scale})`,
-                      opacity: isHidden ? 0 : opacity,
-                      pointerEvents: isHidden ? 'none' : 'auto',
-                    }}
-                  >
-                    <SmartMediaPlayer url={currentVideo} type="video" className="w-full h-full object-cover rounded-none border-0" />
+                {/* Content HUD */}
+                <div className="absolute inset-0 p-8 flex flex-col justify-end pointer-events-none z-20">
+                  <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
                     
-                    {/* Active Place HUD Overlay inside the video */}
-                    {isActive && (
-                      <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none z-20">
-                        <motion.div
-                          initial={{ opacity: 0, y: 20 }}
-                          animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.5, delay: 0.3 }}
-                        >
-                          <h3 className="font-heading text-3xl md:text-4xl font-black text-white drop-shadow-lg tracking-tight">
-                            {place.title}
-                          </h3>
-                          {place.description && (
-                            <p className="text-sm md:text-base text-white/90 mt-2 max-w-2xl drop-shadow-md font-medium leading-relaxed">
-                              {place.description}
-                            </p>
-                          )}
-                        </motion.div>
+                    {place.category && (
+                      <span className="inline-block px-3 py-1 mb-4 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest border border-white/20">
+                        {place.category}
+                      </span>
+                    )}
+                    
+                    <h3 className="font-heading text-2xl md:text-3xl font-black text-white drop-shadow-lg tracking-tight mb-3">
+                      {place.title}
+                    </h3>
+                    
+                    <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-out">
+                      <div className="overflow-hidden">
+                        <p className="text-white/80 text-sm font-medium leading-relaxed drop-shadow-md pb-1">
+                          {place.description}
+                        </p>
                       </div>
-                    )}
-
-                    {/* Interactive overlay for non-active slides so they can catch swipes and clicks without iframe interference */}
-                    {!isActive && (
-                      <div className="absolute inset-0 bg-black/60 z-30 cursor-pointer hover:bg-black/40 transition-colors" />
-                    )}
+                    </div>
+                    
                   </div>
-                );
-              })}
-            </div>
-          </div>
+                </div>
 
-          {/* Right Column: 30% Holy Places Synced 3D Text Wheel */}
-          <div className="lg:col-span-4 w-full h-[500px] relative flex flex-col items-center justify-center overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)] mt-8 lg:mt-0">
-            <h3 className="absolute top-0 left-0 text-[10px] font-black tracking-[0.2em] text-[#D4AF37] uppercase z-40 pl-2">
-              Select a Destination
-            </h3>
-            <div className="relative w-full h-full flex items-center justify-center [transform-style:preserve-3d]" style={{ perspective: "1200px" }}>
-              {finalData.holyPlaces.map((place, idx) => {
-                const count = finalData.holyPlaces.length;
-                let diff = idx - activeIndex;
+                {/* Subtle Hover Play Icon Overlay */}
+                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-90 group-hover:scale-100 pointer-events-none z-20">
+                  <Play className="w-6 h-6 text-white ml-1" />
+                </div>
 
-                // Handle infinite wrapping calculations
-                if (diff < -Math.floor(count / 2)) diff += count;
-                if (diff > Math.floor(count / 2)) diff -= count;
-
-                const isActive = diff === 0;
-                const absDiff = Math.abs(diff);
-                const isHidden = absDiff > 4; // Show slightly more text items than videos
-
-                // 3D Math for the text wheel
-                const translateY = diff * 110; // Vertical spacing for text
-                const translateZ = isActive ? 0 : -absDiff * 50; 
-                const rotateX = -diff * 20; 
-                const opacity = isActive ? 1 : Math.max(0, 1 - absDiff * 0.25);
-                const scale = isActive ? 1 : Math.max(0.85, 1 - absDiff * 0.1);
-
-                return (
-                  <button
-                    key={idx}
-                    onClick={() => setActiveIndex(idx)}
-                    className={cn(
-                      "absolute w-full text-left flex items-start gap-4 p-5 rounded-2xl transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) border group",
-                      isActive 
-                        ? "bg-[#8A6A36]/20 border-[#8A6A36] shadow-[0_10px_40px_rgba(138,106,54,0.15)] z-30" 
-                        : "bg-[#1E1A16] border-white/5 hover:bg-white/5 hover:border-white/10 z-10"
-                    )}
-                    style={{
-                      transform: `translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) scale(${scale})`,
-                      opacity: isHidden ? 0 : opacity,
-                      pointerEvents: isHidden ? 'none' : 'auto',
-                    }}
-                  >
-                    {/* Subtle active glow inside button */}
-                    {isActive && (
-                      <div className="absolute inset-0 bg-gradient-to-r from-[#8A6A36]/10 to-transparent pointer-events-none rounded-2xl" />
-                    )}
-                    
-                    <div className={cn(
-                      "mt-0.5 rounded-full p-2 transition-colors duration-700 shrink-0 relative z-10",
-                      isActive ? "bg-[#D4AF37] text-[#1E1A16] shadow-[0_0_15px_rgba(212,175,55,0.4)]" : "bg-white/5 text-white/50 group-hover:bg-white/10 group-hover:text-white/80"
-                    )}>
-                      {isActive ? <PlayCircle className="size-4" /> : <MapPin className="size-4" />}
-                    </div>
-                    
-                    <div className="flex-1 relative z-10">
-                      <h4 className={cn(
-                        "font-heading text-lg font-bold transition-colors duration-700",
-                        isActive ? "text-white" : "text-white/50 group-hover:text-white/90"
-                      )}>
-                        {place.title}
-                      </h4>
-                      <p className={cn(
-                        "text-xs mt-1 transition-colors duration-700 line-clamp-2 leading-relaxed",
-                        isActive ? "text-[#D4AF37]/90 font-medium" : "text-white/30 group-hover:text-white/50"
-                      )}>
-                        {place.description || "Discover the history and significance."}
-                      </p>
-                    </div>
-                    
-                    <div className="relative z-10 shrink-0 self-center">
-                      <ChevronRight className={cn(
-                        "size-4 transition-transform duration-700",
-                        isActive ? "text-[#D4AF37] translate-x-1" : "text-white/10 group-hover:text-white/30"
-                      )} />
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </div>
+              </div>
+            );
+          })}
         </div>
-      </Container>
-    </Section>
+
+        {filteredPlaces.length === 0 && (
+          <div className="text-center py-24 px-4 bg-white/50 backdrop-blur-sm rounded-3xl border border-black/5">
+            <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">No places found</h3>
+            <p className="text-[#1A1A1A]/60">There are no holy places in this category yet.</p>
+          </div>
+        )}
+
+      </div>
+    </section>
   );
 }

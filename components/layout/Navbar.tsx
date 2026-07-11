@@ -51,7 +51,7 @@ export function Navbar({ categories = [] }: { categories?: any[] }) {
   }, []);
 
   const rightLinks = [
-    { label: "Destinations", href: ROUTES.DESTINATIONS },
+    // Destinations section completely removed per architectural decision
     { label: "Gallery", href: ROUTES.GALLERY },
     { label: "About", href: ROUTES.ABOUT },
     { label: "Contact", href: ROUTES.CONTACT },

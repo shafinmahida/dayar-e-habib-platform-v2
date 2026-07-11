@@ -20,6 +20,7 @@ export function EnlightenmentManager() {
     holyPlaces: [
       {
         title: "Masjid Al-Haram",
+        category: "Makkah",
         description: "The Great Mosque of Makkah, home to the Holy Kaaba.",
         videoUrl: "/kaaba-sunset.png"
       }
@@ -63,7 +64,7 @@ export function EnlightenmentManager() {
       ...formData,
       holyPlaces: [
         ...formData.holyPlaces, 
-        { title: "New Destination", description: "", videoUrl: "" }
+        { title: "New Destination", category: "Makkah", description: "", videoUrl: "" }
       ]
     });
   };
@@ -150,8 +151,8 @@ export function EnlightenmentManager() {
       <div className="space-y-6">
         <div className="flex items-center justify-between">
           <div>
-            <h3 className="font-bold text-lg">Holy Places (3D Wheel Items)</h3>
-            <p className="text-sm text-muted-foreground">These appear in the vertical rotating carousel.</p>
+            <h3 className="font-bold text-lg">Holy Places (Grid Items)</h3>
+            <p className="text-sm text-muted-foreground">These appear in the categorized Ziyarat grid.</p>
           </div>
           <Button onClick={addPlace} size="sm" variant="outline" className="gap-2">
             <Plus className="size-4" /> Add Place
@@ -186,6 +187,16 @@ export function EnlightenmentManager() {
                     />
                   </div>
                   <div className="space-y-2">
+                    <label className="text-xs font-bold">Category (Tab)</label>
+                    <input 
+                      type="text" 
+                      value={place.category || ""}
+                      onChange={e => updatePlace(idx, 'category', e.target.value)}
+                      className="w-full p-2 bg-background border border-border rounded-lg text-sm"
+                      placeholder="e.g. Makkah, Madinah, Jeddah"
+                    />
+                  </div>
+                  <div className="space-y-2 md:col-span-2">
                     <label className="text-xs font-bold">Description (Optional)</label>
                     <input 
                       type="text" 
@@ -217,7 +228,7 @@ export function EnlightenmentManager() {
           ))}
           {formData.holyPlaces.length === 0 && (
              <div className="text-center p-8 text-muted-foreground text-sm border border-dashed rounded-lg bg-muted/10">
-               No holy places added. The 3D wheel will be empty.
+               No holy places added. The grid will be empty.
              </div>
           )}
         </div>

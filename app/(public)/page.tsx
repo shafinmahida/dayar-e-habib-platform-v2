@@ -3,7 +3,6 @@ import {
   Trust,
   FeaturedPackages,
   JourneyTimeline,
-  Destinations,
   Enlightenment,
   Testimonials,
   Faq,
@@ -61,7 +60,6 @@ export default async function HomePage() {
       {trustProps.length > 0 && <Trust items={trustProps} />}
       {featuredPackages && featuredPackages.length > 0 && <FeaturedPackages packages={featuredPackages} />}
       {timelineSteps.length > 0 && <JourneyTimeline steps={timelineSteps} />}
-      <Destinations />
       <Enlightenment />
       {testimonials && testimonials.length > 0 && <Testimonials testimonials={testimonials} />}
       {faqs && faqs.length > 0 && <Faq items={faqs} />}

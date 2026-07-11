@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { ArrowRight, Calendar, MapPin, ChevronLeft, ChevronRight } from "lucide-react";
 import type { Package } from "@/types/package";
-import { DESTINATIONS_DATA } from "@/lib/data/destinations";
+
 import { cn } from "@/lib/utils";
 
 interface FeaturedPackagesProps {
@@ -107,10 +107,7 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
               const isNext = diff === 1;
               const isHidden = !isActive && !isPrev && !isNext;
 
-              // Map destination names
-              const destinationNames = (pkg.destinationSlugs || [])
-                .map((slug: string) => DESTINATIONS_DATA.find(d => d.slug === slug)?.name || slug)
-                .join(" & ");
+              const destinationNames = pkg.hotels?.[0]?.location || "Saudi Arabia";
 
               const cardSlides = slideshowMap[pkg.slug] || [pkg.imageUrl || "/kaaba-sunset.png"];
 
