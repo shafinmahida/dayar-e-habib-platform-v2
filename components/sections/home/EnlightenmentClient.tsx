@@ -44,10 +44,8 @@ export function EnlightenmentClient({ data = DEFAULT_DATA }: EnlightenmentClient
   const finalData = data?.holyPlaces?.length ? data : DEFAULT_DATA;
   const [activeIndex, setActiveIndex] = useState(0);
   const [touchStart, setTouchStart] = useState<number | null>(null);
-  const [touchEnd, setTouchEnd] = useState<number | null>(null);
 
   const activePlace = finalData.holyPlaces[activeIndex] || finalData.holyPlaces[0];
-  const currentVideo = activePlace?.videoUrl || finalData.rotatingVideos?.[0];
 
   const handleNext = () => {
     setActiveIndex((prev) => (prev + 1) % finalData.holyPlaces.length);
@@ -62,26 +60,23 @@ export function EnlightenmentClient({ data = DEFAULT_DATA }: EnlightenmentClient
     setTouchStart(e.targetTouches[0].clientY);
   };
 
-  const handleTouchMove = (e: React.TouchEvent) => {
-    setTouchEnd(e.targetTouches[0].clientY);
-  };
-
-  const handleTouchEnd = () => {
-    if (!touchStart || !touchEnd) return;
+  const handleTouchEnd = (e: React.TouchEvent) => {
+    if (touchStart === null) return;
+    const touchEnd = e.changedTouches[0].clientY;
     const distance = touchStart - touchEnd;
     const isSwipeThreshold = distance > 30 || distance < -30;
+    
     if (isSwipeThreshold) {
       if (distance > 0) handleNext(); // Swiped up
       else handlePrev(); // Swiped down
     }
     setTouchStart(null);
-    setTouchEnd(null);
   };
 
   const handleWheel = (e: React.WheelEvent) => {
-    if (e.deltaY > 20) {
+    if (e.deltaY > 30) {
       handleNext();
-    } else if (e.deltaY < -20) {
+    } else if (e.deltaY < -30) {
       handlePrev();
     }
   };
@@ -110,63 +105,14 @@ export function EnlightenmentClient({ data = DEFAULT_DATA }: EnlightenmentClient
 
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-8 lg:gap-12 items-center">
           
-          {/* Left Column: 70% Video Player */}
-          <div className="lg:col-span-8 w-full">
-            <div className="relative aspect-video w-full rounded-3xl overflow-hidden border border-[#8A6A36]/30 shadow-[0_0_50px_rgba(138,106,54,0.15)] bg-black group">
-              <AnimatePresence mode="wait">
-                <motion.div
-                  key={currentVideo}
-                  initial={{ opacity: 0, scale: 1.05 }}
-                  animate={{ opacity: 1, scale: 1 }}
-                  exit={{ opacity: 0, scale: 0.95 }}
-                  transition={{ duration: 0.8, ease: "easeInOut" }}
-                  className="absolute inset-0 w-full h-full"
-                >
-                  <SmartMediaPlayer url={currentVideo} type="video" className="w-full h-full object-cover rounded-none border-0" />
-                </motion.div>
-              </AnimatePresence>
-              
-              {/* Overlay Gradient for luxury feel */}
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent pointer-events-none" />
-              
-              {/* Active Place HUD */}
-              <div className="absolute bottom-8 left-8 right-8 z-20 pointer-events-none">
-                <AnimatePresence mode="wait">
-                  {activePlace && (
-                    <motion.div
-                      key={activePlace.title}
-                      initial={{ opacity: 0, y: 20 }}
-                      animate={{ opacity: 1, y: 0 }}
-                      exit={{ opacity: 0, y: -20 }}
-                      transition={{ duration: 0.5, delay: 0.2 }}
-                    >
-                      <h3 className="font-heading text-3xl md:text-4xl font-black text-white drop-shadow-lg tracking-tight">
-                        {activePlace.title}
-                      </h3>
-                      {activePlace.description && (
-                        <p className="text-sm md:text-base text-white/90 mt-2 max-w-xl drop-shadow-md font-medium leading-relaxed">
-                          {activePlace.description}
-                        </p>
-                      )}
-                    </motion.div>
-                  )}
-                </AnimatePresence>
-              </div>
-            </div>
-          </div>
-
-          {/* Right Column: 30% iOS Clock-style Vertical Wheel */}
+          {/* Left Column: 70% Video Player Wheel */}
           <div 
-            className="lg:col-span-4 w-full h-[500px] relative flex flex-col items-center justify-center cursor-grab active:cursor-grabbing overflow-hidden rounded-3xl"
-            style={{ perspective: "1000px" }}
+            className="lg:col-span-8 w-full h-[600px] relative flex flex-col items-center justify-center cursor-grab active:cursor-grabbing overflow-hidden touch-none [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)]"
+            style={{ perspective: "1500px" }}
             onTouchStart={handleTouchStart}
-            onTouchMove={handleTouchMove}
             onTouchEnd={handleTouchEnd}
             onWheel={handleWheel}
           >
-            {/* Visual selection markers (like iOS date picker borders) */}
-            <div className="absolute top-1/2 left-0 right-0 h-[100px] -translate-y-1/2 border-y border-[#8A6A36]/30 bg-[#8A6A36]/5 pointer-events-none rounded-xl" />
-
             <div className="relative w-full h-full flex items-center justify-center [transform-style:preserve-3d]">
               {finalData.holyPlaces.map((place, idx) => {
                 const count = finalData.holyPlaces.length;
@@ -177,25 +123,27 @@ export function EnlightenmentClient({ data = DEFAULT_DATA }: EnlightenmentClient
                 if (diff > Math.floor(count / 2)) diff -= count;
 
                 const isActive = diff === 0;
-                
-                // Absolute distance from center for opacity/scaling
                 const absDiff = Math.abs(diff);
-                const isHidden = absDiff > 3; // Hide items too far away
+                const isHidden = absDiff > 2;
 
                 // 3D Math for the wheel cylinder
-                const translateY = diff * 85; // Vertical spacing
-                const translateZ = isActive ? 0 : -absDiff * 50; // Push back non-active items
-                const rotateX = -diff * 20; // Angle them towards the viewer
-                const opacity = isActive ? 1 : Math.max(0, 1 - absDiff * 0.35);
-                const scale = isActive ? 1 : Math.max(0.7, 1 - absDiff * 0.1);
+                const translateY = diff * 240; // Vertical spacing
+                const translateZ = isActive ? 0 : -absDiff * 150; // Push back non-active items
+                const rotateX = -diff * 15; // Angle them towards the viewer
+                const opacity = isActive ? 1 : Math.max(0, 1 - absDiff * 0.4);
+                const scale = isActive ? 1 : Math.max(0.75, 1 - absDiff * 0.15);
+
+                const currentVideo = place.videoUrl || finalData.rotatingVideos?.[0];
 
                 return (
                   <div
                     key={idx}
-                    onClick={() => setActiveIndex(idx)}
+                    onClick={() => { if (!isActive) setActiveIndex(idx); }}
                     className={cn(
-                      "absolute w-full px-4 transition-all duration-500 ease-out flex items-center justify-center [transform-style:preserve-3d]",
-                      isActive ? "z-30 pointer-events-auto" : "z-10 cursor-pointer pointer-events-auto"
+                      "absolute w-full max-w-4xl aspect-video transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) flex items-center justify-center [transform-style:preserve-3d] rounded-3xl overflow-hidden bg-black",
+                      isActive 
+                        ? "z-30 shadow-[0_0_60px_rgba(138,106,54,0.2)] border-2 border-[#8A6A36]/50 ring-1 ring-white/10" 
+                        : "z-10 shadow-xl border border-white/10"
                     )}
                     style={{
                       transform: `translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) scale(${scale})`,
@@ -203,32 +151,93 @@ export function EnlightenmentClient({ data = DEFAULT_DATA }: EnlightenmentClient
                       pointerEvents: isHidden ? 'none' : 'auto',
                     }}
                   >
-                    <div className={cn(
-                      "w-full max-w-[320px] p-5 rounded-2xl border transition-all duration-500 flex items-center gap-4 backdrop-blur-md",
-                      isActive 
-                        ? "bg-[#8A6A36]/20 border-[#8A6A36]/50 shadow-[0_0_30px_rgba(138,106,54,0.2)]" 
-                        : "bg-white/5 border-white/5 hover:border-white/15 hover:bg-white/10"
-                    )}>
-                      <div className={cn(
-                        "rounded-full p-2.5 transition-colors duration-500 shrink-0",
-                        isActive ? "bg-[#D4AF37] text-[#1E1A16] shadow-lg shadow-[#D4AF37]/30" : "bg-white/10 text-white/50"
-                      )}>
-                        {isActive ? <PlayCircle className="size-5" /> : <MapPin className="size-5" />}
+                    <SmartMediaPlayer url={currentVideo} type="video" className="w-full h-full object-cover rounded-none border-0" />
+                    
+                    {/* Active Place HUD Overlay inside the video */}
+                    {isActive && (
+                      <div className="absolute bottom-0 left-0 right-0 p-8 bg-gradient-to-t from-black/90 via-black/40 to-transparent pointer-events-none z-20">
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ duration: 0.5, delay: 0.3 }}
+                        >
+                          <h3 className="font-heading text-3xl md:text-4xl font-black text-white drop-shadow-lg tracking-tight">
+                            {place.title}
+                          </h3>
+                          {place.description && (
+                            <p className="text-sm md:text-base text-white/90 mt-2 max-w-2xl drop-shadow-md font-medium leading-relaxed">
+                              {place.description}
+                            </p>
+                          )}
+                        </motion.div>
                       </div>
-                      
-                      <div className="flex-1">
-                        <h4 className={cn(
-                          "font-heading font-bold transition-colors duration-500",
-                          isActive ? "text-white text-xl" : "text-white/60 text-lg"
-                        )}>
-                          {place.title}
-                        </h4>
-                      </div>
-                    </div>
+                    )}
+
+                    {/* Interactive overlay for non-active slides so they can catch swipes and clicks without iframe interference */}
+                    {!isActive && (
+                      <div className="absolute inset-0 bg-black/60 z-30 cursor-pointer hover:bg-black/40 transition-colors" />
+                    )}
                   </div>
                 );
               })}
             </div>
+          </div>
+
+          {/* Right Column: 30% Holy Places List (Normal List syncing with wheel) */}
+          <div className="lg:col-span-4 w-full flex flex-col gap-3 max-h-[600px] overflow-y-auto custom-scrollbar pr-2">
+            <h3 className="text-[10px] font-black tracking-[0.2em] text-[#D4AF37] uppercase mb-2 pl-2">
+              Select a Destination
+            </h3>
+            
+            {finalData.holyPlaces.map((place, idx) => {
+              const isActive = activePlace?.title === place.title;
+              return (
+                <button
+                  key={idx}
+                  onClick={() => setActiveIndex(idx)}
+                  className={cn(
+                    "text-left flex items-start gap-4 w-full p-4 rounded-xl transition-all duration-300 border relative overflow-hidden group",
+                    isActive 
+                      ? "bg-[#8A6A36]/20 border-[#8A6A36] shadow-lg shadow-[#8A6A36]/10" 
+                      : "bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20"
+                  )}
+                >
+                  {/* Subtle active glow inside button */}
+                  {isActive && (
+                    <div className="absolute inset-0 bg-gradient-to-r from-[#8A6A36]/10 to-transparent pointer-events-none" />
+                  )}
+                  
+                  <div className={cn(
+                    "mt-0.5 rounded-full p-2 transition-colors duration-300 shrink-0 relative z-10",
+                    isActive ? "bg-[#D4AF37] text-[#1E1A16]" : "bg-white/10 text-white group-hover:bg-white/20"
+                  )}>
+                    {isActive ? <PlayCircle className="size-4" /> : <MapPin className="size-4" />}
+                  </div>
+                  
+                  <div className="flex-1 relative z-10">
+                    <h4 className={cn(
+                      "font-heading text-lg font-bold transition-colors duration-300",
+                      isActive ? "text-white" : "text-white/80 group-hover:text-white"
+                    )}>
+                      {place.title}
+                    </h4>
+                    <p className={cn(
+                      "text-xs mt-1 transition-colors duration-300 line-clamp-2",
+                      isActive ? "text-[#D4AF37]/80" : "text-white/40 group-hover:text-white/60"
+                    )}>
+                      {place.description || "Discover the history and significance."}
+                    </p>
+                  </div>
+                  
+                  <div className="relative z-10 shrink-0 self-center">
+                    <ChevronRight className={cn(
+                      "size-4 transition-transform duration-300",
+                      isActive ? "text-[#D4AF37] translate-x-1" : "text-white/20 group-hover:text-white/50"
+                    )} />
+                  </div>
+                </button>
+              );
+            })}
           </div>
           
         </div>
