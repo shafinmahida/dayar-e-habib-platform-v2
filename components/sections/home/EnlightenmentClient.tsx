@@ -207,63 +207,85 @@ export function EnlightenmentClient({ data = DEFAULT_DATA }: EnlightenmentClient
             </div>
           </div>
 
-          {/* Right Column: 30% Holy Places List (Normal List syncing with wheel) */}
-          <div className="lg:col-span-4 w-full flex flex-col gap-3 max-h-[600px] overflow-y-auto custom-scrollbar pr-2">
-            <h3 className="text-[10px] font-black tracking-[0.2em] text-[#D4AF37] uppercase mb-2 pl-2">
+          {/* Right Column: 30% Holy Places Synced 3D Text Wheel */}
+          <div className="lg:col-span-4 w-full h-[500px] relative flex flex-col items-center justify-center overflow-hidden [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)] mt-8 lg:mt-0">
+            <h3 className="absolute top-0 left-0 text-[10px] font-black tracking-[0.2em] text-[#D4AF37] uppercase z-40 pl-2">
               Select a Destination
             </h3>
-            
-            {finalData.holyPlaces.map((place, idx) => {
-              const isActive = activePlace?.title === place.title;
-              return (
-                <button
-                  key={idx}
-                  onClick={() => setActiveIndex(idx)}
-                  className={cn(
-                    "text-left flex items-start gap-4 w-full p-4 rounded-xl transition-all duration-300 border relative overflow-hidden group",
-                    isActive 
-                      ? "bg-[#8A6A36]/20 border-[#8A6A36] shadow-lg shadow-[#8A6A36]/10" 
-                      : "bg-white/5 border-white/10 hover:bg-white/10 hover:border-white/20"
-                  )}
-                >
-                  {/* Subtle active glow inside button */}
-                  {isActive && (
-                    <div className="absolute inset-0 bg-gradient-to-r from-[#8A6A36]/10 to-transparent pointer-events-none" />
-                  )}
-                  
-                  <div className={cn(
-                    "mt-0.5 rounded-full p-2 transition-colors duration-300 shrink-0 relative z-10",
-                    isActive ? "bg-[#D4AF37] text-[#1E1A16]" : "bg-white/10 text-white group-hover:bg-white/20"
-                  )}>
-                    {isActive ? <PlayCircle className="size-4" /> : <MapPin className="size-4" />}
-                  </div>
-                  
-                  <div className="flex-1 relative z-10">
-                    <h4 className={cn(
-                      "font-heading text-lg font-bold transition-colors duration-300",
-                      isActive ? "text-white" : "text-white/80 group-hover:text-white"
+            <div className="relative w-full h-full flex items-center justify-center [transform-style:preserve-3d]" style={{ perspective: "1200px" }}>
+              {finalData.holyPlaces.map((place, idx) => {
+                const count = finalData.holyPlaces.length;
+                let diff = idx - activeIndex;
+
+                // Handle infinite wrapping calculations
+                if (diff < -Math.floor(count / 2)) diff += count;
+                if (diff > Math.floor(count / 2)) diff -= count;
+
+                const isActive = diff === 0;
+                const absDiff = Math.abs(diff);
+                const isHidden = absDiff > 4; // Show slightly more text items than videos
+
+                // 3D Math for the text wheel
+                const translateY = diff * 110; // Vertical spacing for text
+                const translateZ = isActive ? 0 : -absDiff * 50; 
+                const rotateX = -diff * 20; 
+                const opacity = isActive ? 1 : Math.max(0, 1 - absDiff * 0.25);
+                const scale = isActive ? 1 : Math.max(0.85, 1 - absDiff * 0.1);
+
+                return (
+                  <button
+                    key={idx}
+                    onClick={() => setActiveIndex(idx)}
+                    className={cn(
+                      "absolute w-full text-left flex items-start gap-4 p-5 rounded-2xl transition-all duration-700 cubic-bezier(0.16, 1, 0.3, 1) border group",
+                      isActive 
+                        ? "bg-[#8A6A36]/20 border-[#8A6A36] shadow-[0_10px_40px_rgba(138,106,54,0.15)] z-30" 
+                        : "bg-[#1E1A16] border-white/5 hover:bg-white/5 hover:border-white/10 z-10"
+                    )}
+                    style={{
+                      transform: `translateY(${translateY}px) translateZ(${translateZ}px) rotateX(${rotateX}deg) scale(${scale})`,
+                      opacity: isHidden ? 0 : opacity,
+                      pointerEvents: isHidden ? 'none' : 'auto',
+                    }}
+                  >
+                    {/* Subtle active glow inside button */}
+                    {isActive && (
+                      <div className="absolute inset-0 bg-gradient-to-r from-[#8A6A36]/10 to-transparent pointer-events-none rounded-2xl" />
+                    )}
+                    
+                    <div className={cn(
+                      "mt-0.5 rounded-full p-2 transition-colors duration-700 shrink-0 relative z-10",
+                      isActive ? "bg-[#D4AF37] text-[#1E1A16] shadow-[0_0_15px_rgba(212,175,55,0.4)]" : "bg-white/5 text-white/50 group-hover:bg-white/10 group-hover:text-white/80"
                     )}>
-                      {place.title}
-                    </h4>
-                    <p className={cn(
-                      "text-xs mt-1 transition-colors duration-300 line-clamp-2",
-                      isActive ? "text-[#D4AF37]/80" : "text-white/40 group-hover:text-white/60"
-                    )}>
-                      {place.description || "Discover the history and significance."}
-                    </p>
-                  </div>
-                  
-                  <div className="relative z-10 shrink-0 self-center">
-                    <ChevronRight className={cn(
-                      "size-4 transition-transform duration-300",
-                      isActive ? "text-[#D4AF37] translate-x-1" : "text-white/20 group-hover:text-white/50"
-                    )} />
-                  </div>
-                </button>
-              );
-            })}
+                      {isActive ? <PlayCircle className="size-4" /> : <MapPin className="size-4" />}
+                    </div>
+                    
+                    <div className="flex-1 relative z-10">
+                      <h4 className={cn(
+                        "font-heading text-lg font-bold transition-colors duration-700",
+                        isActive ? "text-white" : "text-white/50 group-hover:text-white/90"
+                      )}>
+                        {place.title}
+                      </h4>
+                      <p className={cn(
+                        "text-xs mt-1 transition-colors duration-700 line-clamp-2 leading-relaxed",
+                        isActive ? "text-[#D4AF37]/90 font-medium" : "text-white/30 group-hover:text-white/50"
+                      )}>
+                        {place.description || "Discover the history and significance."}
+                      </p>
+                    </div>
+                    
+                    <div className="relative z-10 shrink-0 self-center">
+                      <ChevronRight className={cn(
+                        "size-4 transition-transform duration-700",
+                        isActive ? "text-[#D4AF37] translate-x-1" : "text-white/10 group-hover:text-white/30"
+                      )} />
+                    </div>
+                  </button>
+                );
+              })}
+            </div>
           </div>
-          
         </div>
       </Container>
     </Section>

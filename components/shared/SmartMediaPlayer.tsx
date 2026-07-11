@@ -1,7 +1,9 @@
 "use client";
 
+import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
+import { Volume2, VolumeX, Maximize } from "lucide-react";
 
 interface SmartMediaPlayerProps {
   url: string;
@@ -12,15 +14,55 @@ interface SmartMediaPlayerProps {
 }
 
 export function SmartMediaPlayer({ url, type = "image", alt = "Media content", className, priority = false }: SmartMediaPlayerProps) {
+  const [isMuted, setIsMuted] = useState(true);
+  const [lastTap, setLastTap] = useState(0);
+  const containerRef = useRef<HTMLDivElement>(null);
+  const videoRef = useRef<HTMLVideoElement>(null);
+
+  const handleFullscreen = () => {
+    const el = containerRef.current;
+    if (!el) return;
+    if (el.requestFullscreen) {
+      el.requestFullscreen();
+    } else if ((el as any).webkitRequestFullscreen) {
+      (el as any).webkitRequestFullscreen();
+    } else if ((el as any).msRequestFullscreen) {
+      (el as any).msRequestFullscreen();
+    }
+  };
+
+  const handleTouchStart = () => {
+    const now = Date.now();
+    if (now - lastTap < 300) {
+      handleFullscreen();
+    }
+    setLastTap(now);
+  };
+
+  const toggleMute = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+    setIsMuted(!isMuted);
+    if (videoRef.current) {
+      videoRef.current.muted = !isMuted;
+    }
+  };
+
   // If explicitly an image, render an image intrinsically sized
   if (type === "image" || url.match(/\.(jpeg|jpg|gif|png|webp)$/i)) {
     return (
-      // eslint-disable-next-line @next/next/no-img-element
-      <img
-        src={url}
-        alt={alt}
-        className={cn("w-full h-auto block rounded-xl", className)}
-      />
+      <div 
+        ref={containerRef}
+        className={cn("relative w-full overflow-hidden rounded-xl bg-black flex items-center justify-center", className)}
+        onDoubleClick={handleFullscreen}
+        onTouchStart={handleTouchStart}
+      >
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={url}
+          alt={alt}
+          className="w-full h-full object-contain"
+        />
+      </div>
     );
   }
 
@@ -35,14 +77,19 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
   
   const yId = getYoutubeId(url);
   if (yId) {
-    // If we want no black borders, we must set the exact aspect ratio of the iframe wrapper
     return (
-      <div className={cn("relative w-full rounded-xl overflow-hidden bg-black", isShort ? "aspect-[9/16]" : "aspect-video", className)}>
+      <div 
+        ref={containerRef}
+        className={cn("relative w-full rounded-xl overflow-hidden bg-black flex items-center justify-center", isShort ? "aspect-[9/16]" : "aspect-video", className)}
+        onDoubleClick={handleFullscreen}
+        onTouchStart={handleTouchStart}
+      >
         <iframe
-          src={`https://www.youtube-nocookie.com/embed/${yId}?autoplay=1&mute=1&controls=0&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&playsinline=1&loop=1&playlist=${yId}&fs=0`}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-          className="absolute inset-0 w-full h-full opacity-95 pointer-events-none"
+          src={`https://www.youtube-nocookie.com/embed/${yId}?autoplay=1&mute=${isMuted ? 1 : 0}&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&playsinline=1&loop=1&playlist=${yId}&fs=1`}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
+          className="absolute inset-0 w-full h-full"
         />
+        {/* We can't overlay buttons cleanly on YouTube without blocking interactions, so we rely on controls=1 */}
       </div>
     );
   }
@@ -56,44 +103,55 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
   const igId = getInstagramId(url);
   if (igId) {
     return (
-      <div className={cn("relative w-full aspect-[9/16] rounded-xl overflow-hidden bg-black", className)}>
+      <div 
+        ref={containerRef}
+        className={cn("relative w-full aspect-[9/16] rounded-xl overflow-hidden bg-black", className)}
+        onDoubleClick={handleFullscreen}
+        onTouchStart={handleTouchStart}
+      >
         <iframe 
           src={`https://www.instagram.com/p/${igId}/embed`} 
           className="absolute inset-0 w-full h-full border-0"
           frameBorder="0" 
           scrolling="no" 
+          allowFullScreen
         />
       </div>
     );
   }
 
-  // 3. Facebook
-  const isFacebook = url.includes('facebook.com');
-  if (isFacebook) {
-    return (
-      <div className={cn("relative w-full aspect-video rounded-xl overflow-hidden bg-black", className)}>
-        <iframe
-          src={`https://www.facebook.com/plugins/video.php?href=${encodeURIComponent(url)}&show_text=false&width=auto`}
-          className="w-full h-full absolute inset-0"
-          style={{ border: 'none', overflow: 'hidden' }}
-          scrolling="no"
-          frameBorder="0"
-          allowFullScreen={true}
-          allow="autoplay; clipboard-write; encrypted-media; picture-in-picture; web-share"
-        />
-      </div>
-    );
-  }
-
-  // 4. Default native video for .mp4, .webm, etc.
+  // 3. Native Video (Uploaded MP4s, etc)
   return (
-    <video 
-      src={url} 
-      autoPlay 
-      muted 
-      loop 
-      playsInline 
-      className={cn("w-full h-auto block rounded-xl", className)} 
-    />
+    <div 
+      ref={containerRef}
+      className={cn("relative w-full overflow-hidden rounded-xl bg-black group", className)}
+      onDoubleClick={handleFullscreen}
+      onTouchStart={handleTouchStart}
+    >
+      <video 
+        ref={videoRef}
+        src={url} 
+        autoPlay 
+        muted={isMuted}
+        loop 
+        playsInline 
+        className="w-full h-full object-contain" 
+      />
+      
+      {/* Audio Toggle Overlay */}
+      <button 
+        onClick={toggleMute}
+        onTouchEnd={toggleMute}
+        className="absolute bottom-4 right-4 p-3 bg-black/60 hover:bg-black/80 backdrop-blur-md rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-xl"
+        title="Toggle Audio"
+      >
+        {isMuted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
+      </button>
+
+      {/* Double Tap Hint */}
+      <div className="absolute top-4 right-4 p-2 bg-black/40 backdrop-blur-md rounded-full text-white/70 opacity-0 group-hover:opacity-100 transition-opacity pointer-events-none z-20">
+        <Maximize className="size-4" />
+      </div>
+    </div>
   );
 }

@@ -30,19 +30,18 @@ export async function Destinations() {
                 key={dest.id || index} 
                 className="group relative flex-none w-[85vw] sm:w-[320px] md:w-[380px] snap-center flex flex-col space-y-6 transition-all duration-700 hover:-translate-y-2"
               >
-                {/* Editorial Photo Frame */}
-                <div className="relative aspect-[3/4] w-full overflow-hidden rounded-xl border border-border/40 bg-card p-2 sm:p-3 shadow-xl transition-all duration-700 hover:border-accent/40 hover:shadow-[0_20px_50px_rgba(138,106,54,0.15)]">
-                  <div className="relative w-full h-full overflow-hidden rounded-lg">
+                {/* Editorial Photo Frame - Adjusted for No Cropping */}
+                <div className="relative aspect-[4/3] w-full overflow-hidden rounded-xl border border-border/40 bg-[#120F0D] p-2 sm:p-3 shadow-xl transition-all duration-700 hover:border-accent/40 hover:shadow-[0_20px_50px_rgba(138,106,54,0.15)]">
+                  <div className="relative w-full h-full overflow-hidden rounded-lg bg-black flex items-center justify-center">
                     {/* Luxury overlays */}
                     <div className="absolute inset-0 bg-[#8A6A36]/5 mix-blend-overlay z-10 pointer-events-none" />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent z-10 pointer-events-none opacity-60 group-hover:opacity-80 transition-opacity duration-500" />
                     
                     <Image
                       src={displayImage}
                       alt={dest.name}
                       fill
                       sizes="(max-width: 768px) 100vw, 400px"
-                      className="object-cover transition-transform duration-[2s] ease-out group-hover:scale-105"
+                      className="object-contain transition-transform duration-[2s] ease-out group-hover:scale-[1.02]"
                     />
 
                     {/* Image inner border for premium framing */}
