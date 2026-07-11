@@ -51,6 +51,7 @@ export function Navbar({ categories = [] }: { categories?: any[] }) {
   }, []);
 
   const rightLinks = [
+    { label: "Destinations", href: ROUTES.DESTINATIONS },
     { label: "Gallery", href: ROUTES.GALLERY },
     { label: "About", href: ROUTES.ABOUT },
     { label: "Contact", href: ROUTES.CONTACT },

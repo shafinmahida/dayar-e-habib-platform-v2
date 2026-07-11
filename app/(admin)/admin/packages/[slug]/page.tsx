@@ -7,6 +7,7 @@ import { Save, ArrowLeft, Image as ImageIcon, Video, FileText, Tag, MapPin, Alig
 import Link from "next/link";
 import { StringArrayEditor } from "@/components/admin/shared/StringArrayEditor";
 import { ObjectArrayEditor, ObjectFieldSchema } from "@/components/admin/shared/ObjectArrayEditor";
+import { UniversalUploader } from "@/components/admin/shared/UniversalUploader";
 import { cn } from "@/lib/utils";
 
 const ITINERARY_SCHEMA: ObjectFieldSchema[] = [
@@ -62,8 +63,8 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
     status: "draft",
     is_template: false,
     featured: false,
-    price_min: "",
     price_currency: "INR",
+    cover_image: "",
     image_url: "",
     video_url: "",
     seo_title: "",
@@ -112,8 +113,8 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
         flights: data.flights || [],
         faqs: data.faqs || [],
         destination_ids: data.destination_ids || [],
-        price_min: data.price_min || "",
-        price_currency: data.price_currency || "INR"
+        price_currency: data.price_currency || "INR",
+        cover_image: data.cover_image || ""
       });
       // Parse comma-separated strings back into arrays
       setImageUrls(data.image_url ? data.image_url.split(',').filter(Boolean) : []);
@@ -585,23 +586,37 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
               <p className="text-xs text-muted-foreground">Add multiple images and optimize for search engines</p>
             </div>
             
-            <div className="flex flex-col xl:grid xl:grid-cols-2 gap-8">
-              <StringArrayEditor
-                label="Gallery Image URLs"
-                description="The first image is used as the cover. You can paste any direct image links here."
-                values={imageUrls}
-                onChange={val => setImageUrls(val)}
-                placeholder="https://..."
-                mode="media"
-              />
-              <StringArrayEditor
-                label="Video URLs"
-                description="Links to YouTube, Vimeo, or direct MP4 files."
-                values={videoUrls}
-                onChange={val => setVideoUrls(val)}
-                placeholder="https://..."
-                mode="media"
-              />
+            <div className="flex flex-col gap-8">
+              <div className="bg-muted/20 p-6 rounded-2xl border border-border/80">
+                <h3 className="text-sm font-black uppercase tracking-wider text-foreground mb-4">Dedicated Cover Image</h3>
+                <div className="max-w-xl">
+                  <UniversalUploader
+                    value={pkg.cover_image}
+                    onChange={(url) => setPkg({...pkg, cover_image: url})}
+                    label="Package Cover Photo"
+                    description="This is the main image shown on the Package Card and at the top of the details page."
+                  />
+                </div>
+              </div>
+
+              <div className="flex flex-col xl:grid xl:grid-cols-2 gap-8">
+                <StringArrayEditor
+                  label="Gallery Image URLs"
+                  description="Secondary images for the carousel. Do not include the cover photo here."
+                  values={imageUrls}
+                  onChange={val => setImageUrls(val)}
+                  placeholder="https://..."
+                  mode="media"
+                />
+                <StringArrayEditor
+                  label="Video URLs"
+                  description="Links to YouTube, Vimeo, or direct MP4 files."
+                  values={videoUrls}
+                  onChange={val => setVideoUrls(val)}
+                  placeholder="https://..."
+                  mode="media"
+                />
+              </div>
             </div>
             
             <div className="mt-8 pt-8 border-t border-border">

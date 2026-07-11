@@ -225,7 +225,7 @@ export default async function PackageDetailPage({ params }: PackageDetailPagePro
               <PackageGallery 
                 galleryUrls={pkg.image_url ? pkg.image_url.split(',').filter(Boolean) : []} 
                 videoUrls={pkg.video_url ? pkg.video_url.split(',').filter(Boolean) : []}
-                mainImageUrl={pkg.image_url ? pkg.image_url.split(',').filter(Boolean)[0] : null} 
+                mainImageUrl={pkg.cover_image || (pkg.image_url ? pkg.image_url.split(',').filter(Boolean)[0] : null)} 
                 title={pkg.title} 
               />
             </div>

@@ -11,9 +11,10 @@ interface UniversalUploaderProps {
   placeholder?: string;
   className?: string;
   label?: string;
+  description?: string;
 }
 
-export function UniversalUploader({ value, onChange, placeholder = "Paste URL or Upload File", className, label = "Media URL" }: UniversalUploaderProps) {
+export function UniversalUploader({ value, onChange, placeholder = "Paste URL or Upload File", className, label = "Media URL", description }: UniversalUploaderProps) {
   const [isUploading, setIsUploading] = useState(false);
   const [dragActive, setDragActive] = useState(false);
   const fileInputRef = useRef<HTMLInputElement>(null);
@@ -131,7 +132,7 @@ export function UniversalUploader({ value, onChange, placeholder = "Paste URL or
       </div>
       
       <p className="text-xs text-muted-foreground mt-1.5 leading-relaxed">
-        Paste a YouTube, Instagram, or external URL. Or click <strong>Browse</strong> to upload an image/video file directly from your device. Direct uploads ensure permanent playback bypassing social media restrictions.
+        {description || "Paste a YouTube, Instagram, or external URL. Or click Browse to upload an image/video file directly from your device."}
       </p>
     </div>
   );

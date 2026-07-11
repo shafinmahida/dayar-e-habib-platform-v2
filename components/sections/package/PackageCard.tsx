@@ -38,13 +38,14 @@ export function PackageCard({ pkg }: PackageCardProps) {
     defaultSlides = rawPkg.imageUrl.split(',').filter(Boolean);
   }
 
+  const slides = pkg.coverImage ? [pkg.coverImage] : (pkg.cover_image ? [pkg.cover_image] : (slideshowMap[pkg.slug] || defaultSlides));
+  
   if (rawPkg.video_url) {
     videoSlides = rawPkg.video_url.split(',').filter(Boolean);
   } else if (rawPkg.videoUrl) {
     videoSlides = rawPkg.videoUrl.split(',').filter(Boolean);
   }
 
-  const slides = slideshowMap[pkg.slug] || defaultSlides;
   const totalMedia = slides.length + videoSlides.length;
   const [activeSlide, setActiveSlide] = useState(0);
 

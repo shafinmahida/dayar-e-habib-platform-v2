@@ -35,6 +35,8 @@ export interface Package {
   priceCurrency: string | null;
   
   // Media support fields
+  coverImage?: string | null;
+  cover_image?: string | null;
   imageUrl: string | null;
   videoUrl: string | null;
   galleryUrls: string[];

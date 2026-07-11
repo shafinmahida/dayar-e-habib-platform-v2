@@ -4,7 +4,7 @@ import {
   FeaturedPackages,
   JourneyTimeline,
   Destinations,
-  Gallery,
+  Enlightenment,
   Testimonials,
   Faq,
   Cta,
@@ -62,7 +62,7 @@ export default async function HomePage() {
       {featuredPackages && featuredPackages.length > 0 && <FeaturedPackages packages={featuredPackages} />}
       {timelineSteps.length > 0 && <JourneyTimeline steps={timelineSteps} />}
       <Destinations />
-      <Gallery />
+      <Enlightenment />
       {testimonials && testimonials.length > 0 && <Testimonials testimonials={testimonials} />}
       {faqs && faqs.length > 0 && <Faq items={faqs} />}
       <Cta />

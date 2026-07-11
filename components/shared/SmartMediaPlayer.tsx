@@ -59,10 +59,9 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
       <div className={cn("relative w-full aspect-[9/16] rounded-xl overflow-hidden bg-black", className)}>
         <iframe 
           src={`https://www.instagram.com/p/${igId}/embed`} 
-          className="w-full h-full absolute inset-0" 
+          className="absolute inset-0 w-full h-full border-0"
           frameBorder="0" 
           scrolling="no" 
-          allowTransparency={true}
         />
       </div>
     );
