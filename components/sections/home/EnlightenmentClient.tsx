@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { PlayCircle, MapPin, ChevronRight, Sparkles } from "lucide-react";
 
@@ -43,43 +43,62 @@ const DEFAULT_DATA: EnlightenmentData = {
 export function EnlightenmentClient({ data = DEFAULT_DATA }: EnlightenmentClientProps) {
   const finalData = data?.holyPlaces?.length ? data : DEFAULT_DATA;
   const [activeIndex, setActiveIndex] = useState(0);
-  const [touchStart, setTouchStart] = useState<number | null>(null);
+  const containerRef = useRef<HTMLDivElement>(null);
 
   const activePlace = finalData.holyPlaces[activeIndex] || finalData.holyPlaces[0];
 
-  const handleNext = () => {
-    setActiveIndex((prev) => (prev + 1) % finalData.holyPlaces.length);
-  };
+  useEffect(() => {
+    const el = containerRef.current;
+    if (!el) return;
 
-  const handlePrev = () => {
-    setActiveIndex((prev) => (prev - 1 + finalData.holyPlaces.length) % finalData.holyPlaces.length);
-  };
+    let touchStartY = 0;
+    let scrollAccumulator = 0;
+    const SCROLL_THRESHOLD = 75; // Pixels to scroll before switching slide
 
-  // Touch Swipe Handlers for the vertical wheel
-  const handleTouchStart = (e: React.TouchEvent) => {
-    setTouchStart(e.targetTouches[0].clientY);
-  };
+    const handleWheelNative = (e: WheelEvent) => {
+      e.preventDefault(); // Completely stop page scroll
+      scrollAccumulator += e.deltaY;
+      
+      if (scrollAccumulator > SCROLL_THRESHOLD) {
+        setActiveIndex((prev) => (prev + 1) % finalData.holyPlaces.length);
+        scrollAccumulator = 0;
+      } else if (scrollAccumulator < -SCROLL_THRESHOLD) {
+        setActiveIndex((prev) => (prev - 1 + finalData.holyPlaces.length) % finalData.holyPlaces.length);
+        scrollAccumulator = 0;
+      }
+    };
 
-  const handleTouchEnd = (e: React.TouchEvent) => {
-    if (touchStart === null) return;
-    const touchEnd = e.changedTouches[0].clientY;
-    const distance = touchStart - touchEnd;
-    const isSwipeThreshold = distance > 30 || distance < -30;
-    
-    if (isSwipeThreshold) {
-      if (distance > 0) handleNext(); // Swiped up
-      else handlePrev(); // Swiped down
-    }
-    setTouchStart(null);
-  };
+    const handleTouchStartNative = (e: TouchEvent) => {
+      touchStartY = e.touches[0].clientY;
+      scrollAccumulator = 0;
+    };
 
-  const handleWheel = (e: React.WheelEvent) => {
-    if (e.deltaY > 30) {
-      handleNext();
-    } else if (e.deltaY < -30) {
-      handlePrev();
-    }
-  };
+    const handleTouchMoveNative = (e: TouchEvent) => {
+      e.preventDefault(); // Completely stop page scroll on touch
+      const touchY = e.touches[0].clientY;
+      const deltaY = touchStartY - touchY;
+      
+      if (deltaY > SCROLL_THRESHOLD) {
+        setActiveIndex((prev) => (prev + 1) % finalData.holyPlaces.length);
+        touchStartY = touchY; 
+        scrollAccumulator = 0;
+      } else if (deltaY < -SCROLL_THRESHOLD) {
+        setActiveIndex((prev) => (prev - 1 + finalData.holyPlaces.length) % finalData.holyPlaces.length);
+        touchStartY = touchY;
+        scrollAccumulator = 0;
+      }
+    };
+
+    el.addEventListener("wheel", handleWheelNative, { passive: false });
+    el.addEventListener("touchstart", handleTouchStartNative, { passive: false });
+    el.addEventListener("touchmove", handleTouchMoveNative, { passive: false });
+
+    return () => {
+      el.removeEventListener("wheel", handleWheelNative);
+      el.removeEventListener("touchstart", handleTouchStartNative);
+      el.removeEventListener("touchmove", handleTouchMoveNative);
+    };
+  }, [finalData.holyPlaces.length]);
 
   return (
     <Section
@@ -107,11 +126,9 @@ export function EnlightenmentClient({ data = DEFAULT_DATA }: EnlightenmentClient
           
           {/* Left Column: 70% Video Player Wheel */}
           <div 
+            ref={containerRef}
             className="lg:col-span-8 w-full h-[600px] relative flex flex-col items-center justify-center cursor-grab active:cursor-grabbing overflow-hidden touch-none [mask-image:linear-gradient(to_bottom,transparent,black_15%,black_85%,transparent)]"
             style={{ perspective: "1500px" }}
-            onTouchStart={handleTouchStart}
-            onTouchEnd={handleTouchEnd}
-            onWheel={handleWheel}
           >
             <div className="relative w-full h-full flex items-center justify-center [transform-style:preserve-3d]">
               {finalData.holyPlaces.map((place, idx) => {
