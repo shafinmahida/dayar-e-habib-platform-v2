@@ -16,7 +16,10 @@ export interface HolyPlace {
 }
 
 export interface EnlightenmentData {
-  rotatingVideos: string[];
+  visible?: boolean;
+  overline?: string;
+  sectionTitle?: string;
+  sectionSubtitle?: string;
   holyPlaces: HolyPlace[];
 }
 
@@ -25,7 +28,10 @@ interface EnlightenmentClientProps {
 }
 
 const DEFAULT_DATA: EnlightenmentData = {
-  rotatingVideos: ["/kaaba-sunset.png"],
+  visible: true,
+  overline: "Spiritual Heritage",
+  sectionTitle: "Enlightenment to Holy Places",
+  sectionSubtitle: "Explore the sacred history, profound stories, and majestic significance of the most revered destinations in Islam.",
   holyPlaces: [
     {
       title: "Masjid Al-Haram",
@@ -100,6 +106,8 @@ export function EnlightenmentClient({ data = DEFAULT_DATA }: EnlightenmentClient
     };
   }, [finalData.holyPlaces.length]);
 
+  if (finalData.visible === false) return null;
+
   return (
     <Section
       className="bg-[#1E1A16] border-t border-border/10 py-20 lg:py-32 overflow-hidden relative perspective-[1000px]"
@@ -112,13 +120,13 @@ export function EnlightenmentClient({ data = DEFAULT_DATA }: EnlightenmentClient
         <div className="mb-12 md:mb-16 text-center space-y-4">
           <div className="inline-flex items-center gap-2 rounded-full border border-[#8A6A36]/30 bg-[#8A6A36]/10 px-4 py-1.5 text-[9px] font-black tracking-widest text-[#D4AF37] uppercase select-none">
             <Sparkles className="size-3" />
-            <span>Spiritual Heritage</span>
+            <span>{finalData.overline || "Spiritual Heritage"}</span>
           </div>
           <h2 className="font-heading text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight text-[#FCFAF5]">
-            Enlightenment to Holy Places
+            {finalData.sectionTitle || "Enlightenment to Holy Places"}
           </h2>
           <p className="max-w-2xl mx-auto text-sm leading-relaxed text-[#FCFAF5]/60 font-medium">
-            Explore the sacred history, profound stories, and majestic significance of the most revered destinations in Islam.
+            {finalData.sectionSubtitle || "Explore the sacred history, profound stories, and majestic significance of the most revered destinations in Islam."}
           </p>
         </div>
 
@@ -149,8 +157,7 @@ export function EnlightenmentClient({ data = DEFAULT_DATA }: EnlightenmentClient
                 const rotateX = -diff * 15; // Angle them towards the viewer
                 const opacity = isActive ? 1 : Math.max(0, 1 - absDiff * 0.4);
                 const scale = isActive ? 1 : Math.max(0.75, 1 - absDiff * 0.15);
-
-                const currentVideo = place.videoUrl || finalData.rotatingVideos?.[0];
+                const currentVideo = place.videoUrl || "/kaaba-sunset.png";
 
                 return (
                   <div
