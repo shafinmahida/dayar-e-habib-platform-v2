@@ -5,6 +5,7 @@ import Image from "next/image";
 import { cn } from "@/lib/utils";
 import { Volume2, VolumeX, Maximize, Play, Pause } from "lucide-react";
 import ReactPlayer from "react-player";
+const Player = ReactPlayer as any;
 
 interface SmartMediaPlayerProps {
   url: string;
@@ -85,7 +86,7 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
       {isMounted && (
         <div className="absolute inset-0 w-full h-full pointer-events-none scale-[1.05]">
           {/* We scale the player slightly to hide YouTube's embedded borders/title if they sneak through */}
-          <ReactPlayer 
+          <Player 
             url={url} 
             playing={isPlaying}
             muted={isMuted}
