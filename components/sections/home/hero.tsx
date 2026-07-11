@@ -6,20 +6,12 @@ import { createClient } from "@/lib/supabase/server";
 import { Container } from "@/components/layout/Container";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
-import { SmartMediaPlayer } from "@/components/shared/SmartMediaPlayer";
+import { DynamicContent } from "@/components/shared/DynamicContent";
+import { DynamicMedia } from "@/components/shared/DynamicMedia";
 
 export async function Hero() {
   const supabase = await createClient();
-  const [{ data: profile }, { data: heroBlock }] = await Promise.all([
-    supabase.from('company_profile').select('*').single(),
-    supabase.from('content_blocks').select('content').eq('slug', 'home_hero').single()
-  ]);
-
-  const heroContent = heroBlock?.content || {
-    mediaType: "image",
-    mediaUrl: "/kaaba-sunset.png",
-    caption: "Masjid Al-Haram — Golden Hour"
-  };
+  const { data: profile } = await supabase.from('company_profile').select('*').single();
 
   return (
     <section className="relative overflow-hidden bg-background flex items-center border-b border-border/20 py-16 lg:py-24">
@@ -42,11 +34,17 @@ export async function Hero() {
 
             {/* Headline */}
             <div className="space-y-4">
-              <h1 className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground leading-[1.08] max-w-xl">
-                A Sacred <br />
-                Journey. <br />
-                <span className="text-muted-foreground/80 font-normal italic font-serif">Guided by Faith.</span>
-              </h1>
+              <DynamicContent 
+                slug="homepage_hero_title" 
+                className="font-heading text-3xl sm:text-4xl md:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground leading-[1.08] max-w-xl block"
+                fallback={
+                  <>
+                    A Sacred <br />
+                    Journey. <br />
+                    <span className="text-muted-foreground/80 font-normal italic font-serif">Guided by Faith.</span>
+                  </>
+                }
+              />
               <p className="max-w-md text-xs sm:text-sm leading-relaxed text-muted-foreground/90 font-medium">
                 {profile?.description || `Established in ${profile?.established_year || "1986"}, Dayar-E-Habib orchestrates premium, scholar-led Hajj, Umrah, and Ziyarat experiences, focusing on deep personal devotion and comfort.`}
               </p>
@@ -154,11 +152,11 @@ export async function Hero() {
                     <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-accent opacity-75"></span>
                     <span className="relative inline-flex rounded-full h-1.5 w-1.5 bg-accent"></span>
                   </span>
-                  <span>{heroContent.caption}</span>
+                  <DynamicContent slug="homepage_hero_caption" fallback="Masjid Al-Haram — Golden Hour" />
                 </div>
 
                 <div className="absolute inset-0 z-0 transition-transform duration-[1200ms] ease-out group-hover:scale-105">
-                  <SmartMediaPlayer url={heroContent.mediaUrl} type={heroContent.mediaType as any} priority={true} />
+                  <DynamicMedia slug="homepage_hero_media" fallbackUrl="/kaaba-sunset.png" type="image" priority={true} className="w-full h-full object-cover" />
                 </div>
               </div>
             </div>

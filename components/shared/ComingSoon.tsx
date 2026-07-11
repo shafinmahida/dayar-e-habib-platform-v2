@@ -7,8 +7,8 @@ import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
 type ComingSoonProps = {
-  title: string;
-  description: string;
+  title: React.ReactNode;
+  description: React.ReactNode;
 };
 
 export function ComingSoon({ title, description }: ComingSoonProps) {

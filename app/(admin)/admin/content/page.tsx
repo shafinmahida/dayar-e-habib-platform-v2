@@ -2,8 +2,10 @@
 
 import { useEffect, useState } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Globe, Users, MessageSquare, Quote, FileText, Search, Plus, Loader2, Trash2, Edit } from "lucide-react";
+import { Globe, Users, MessageSquare, Quote, FileText, Search, Plus, Loader2, Trash2, Edit, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+import { UniversalUploader } from "@/components/admin/shared/UniversalUploader";
 
 type Tab = 'testimonials' | 'faqs' | 'representatives' | 'content_blocks';
 
@@ -13,6 +15,11 @@ export default function AdminContentHubPage() {
   const [data, setData] = useState<any[]>([]);
   const [loading, setLoading] = useState(true);
   const [searchTerm, setSearchTerm] = useState("");
+  
+  const [isModalOpen, setIsModalOpen] = useState(false);
+  const [editingItem, setEditingItem] = useState<any>(null);
+  const [formData, setFormData] = useState<any>({});
+  const [saving, setSaving] = useState(false);
 
   useEffect(() => {
     fetchData();
@@ -37,6 +44,42 @@ export default function AdminContentHubPage() {
     if (confirm("Are you sure you want to delete this item?")) {
       await supabase.from(activeTab).delete().eq('id', id);
       fetchData();
+    }
+  };
+
+  const openModal = (item: any = null) => {
+    setEditingItem(item);
+    if (item) {
+      setFormData(item);
+    } else {
+      // Defaults
+      setFormData({ active: true });
+    }
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setEditingItem(null);
+    setFormData({});
+  };
+
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      if (editingItem) {
+        const { error } = await supabase.from(activeTab).update(formData).eq('id', editingItem.id);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from(activeTab).insert([formData]);
+        if (error) throw error;
+      }
+      closeModal();
+      fetchData();
+    } catch (err: any) {
+      alert("Error saving: " + err.message);
+    } finally {
+      setSaving(false);
     }
   };
 
@@ -71,7 +114,7 @@ export default function AdminContentHubPage() {
   };
 
   return (
-    <div className="p-8 max-w-7xl mx-auto space-y-8 h-[calc(100vh-2rem)] flex flex-col">
+    <div className="p-8 max-w-7xl mx-auto space-y-8 h-[calc(100vh-2rem)] flex flex-col relative">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
         <div className="space-y-1">
           <h1 className="text-3xl font-bold tracking-tight flex items-center gap-2">
@@ -80,7 +123,7 @@ export default function AdminContentHubPage() {
           </h1>
           <p className="text-muted-foreground">Manage reusable entities like FAQs, Testimonials, and Staff.</p>
         </div>
-        <Button className="shrink-0">
+        <Button className="shrink-0" onClick={() => openModal()}>
           <Plus className="size-4 mr-2" /> Add {renderTabLabel(activeTab).replace(/s$/, '')}
         </Button>
       </div>
@@ -164,10 +207,10 @@ export default function AdminContentHubPage() {
                     </div>
                     
                     <div className="flex items-center gap-2">
-                      <div className="px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider bg-green-500/10 text-green-500 border border-green-500/20 mr-2">
+                      <div className={`px-2 py-0.5 rounded text-[10px] font-bold uppercase tracking-wider mr-2 border ${item.active !== false ? 'bg-green-500/10 text-green-500 border-green-500/20' : 'bg-muted text-muted-foreground border-border'}`}>
                         {item.active !== false ? 'Active' : 'Inactive'}
                       </div>
-                      <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground">
+                      <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-foreground" onClick={() => openModal(item)}>
                         <Edit className="size-4" />
                       </Button>
                       <Button size="icon" variant="ghost" className="h-8 w-8 text-muted-foreground hover:text-destructive" onClick={() => deleteItem(item.id)}>
@@ -181,6 +224,86 @@ export default function AdminContentHubPage() {
           </div>
         </div>
       </div>
+
+      {/* Editor Modal */}
+      {isModalOpen && (
+        <div className="fixed inset-0 z-50 bg-black/60 flex items-center justify-center p-4 backdrop-blur-sm animate-in fade-in">
+          <div className="bg-background border border-border rounded-xl shadow-2xl w-full max-w-2xl overflow-hidden flex flex-col max-h-[90vh]">
+            <div className="p-4 border-b border-border flex justify-between items-center bg-muted/30">
+              <h2 className="font-bold text-lg">{editingItem ? 'Edit' : 'Add'} {renderTabLabel(activeTab).replace(/s$/, '')}</h2>
+              <button onClick={closeModal} className="text-muted-foreground hover:text-foreground"><X className="size-5" /></button>
+            </div>
+            
+            <div className="p-6 overflow-y-auto space-y-4 flex-1">
+              
+              {activeTab === 'faqs' && (
+                <>
+                  <div><label className="text-xs font-bold">Question</label><input type="text" value={formData.question || ''} onChange={e => setFormData({...formData, question: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
+                  <div><label className="text-xs font-bold">Answer</label><textarea rows={4} value={formData.answer || ''} onChange={e => setFormData({...formData, answer: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
+                  <div><label className="text-xs font-bold">Category</label><input type="text" value={formData.category || ''} onChange={e => setFormData({...formData, category: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
+                </>
+              )}
+
+              {activeTab === 'testimonials' && (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><label className="text-xs font-bold">Name</label><input type="text" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
+                    <div><label className="text-xs font-bold">Location</label><input type="text" value={formData.location || ''} onChange={e => setFormData({...formData, location: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
+                  </div>
+                  <div><label className="text-xs font-bold">Content</label><textarea rows={4} value={formData.content || ''} onChange={e => setFormData({...formData, content: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
+                  <div><label className="text-xs font-bold">Rating (1-5)</label><input type="number" min="1" max="5" value={formData.rating || 5} onChange={e => setFormData({...formData, rating: parseInt(e.target.value)})} className="w-full p-2 border rounded mt-1" /></div>
+                  <UniversalUploader value={formData.avatar_url || ''} onChange={url => setFormData({...formData, avatar_url: url})} label="Avatar URL" />
+                </>
+              )}
+
+              {activeTab === 'representatives' && (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><label className="text-xs font-bold">Name</label><input type="text" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
+                    <div><label className="text-xs font-bold">Role</label><input type="text" value={formData.role || ''} onChange={e => setFormData({...formData, role: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
+                  </div>
+                  <div><label className="text-xs font-bold">Location</label><input type="text" value={formData.location || ''} onChange={e => setFormData({...formData, location: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><label className="text-xs font-bold">Phone</label><input type="text" value={formData.phone || ''} onChange={e => setFormData({...formData, phone: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
+                    <div><label className="text-xs font-bold">Email</label><input type="text" value={formData.email || ''} onChange={e => setFormData({...formData, email: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
+                  </div>
+                  <UniversalUploader value={formData.image_url || ''} onChange={url => setFormData({...formData, image_url: url})} label="Profile Image" />
+                </>
+              )}
+
+              {activeTab === 'content_blocks' && (
+                <>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><label className="text-xs font-bold">Title (Internal reference)</label><input type="text" value={formData.title || ''} onChange={e => setFormData({...formData, title: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
+                    <div><label className="text-xs font-bold">Slug (Unique Key)</label><input type="text" value={formData.slug || ''} onChange={e => setFormData({...formData, slug: e.target.value})} className="w-full p-2 border rounded mt-1 font-mono text-xs" /></div>
+                  </div>
+                  
+                  <div className="p-4 bg-muted/30 border border-border rounded-xl">
+                    <p className="text-xs text-muted-foreground mb-4">You can type simple text, HTML content, or even paste a Universal Uploader URL here if this block is for an image/video.</p>
+                    <UniversalUploader value={formData.content || ''} onChange={url => setFormData({...formData, content: url})} label="Optional: Media Upload Helper" />
+                    <div className="mt-4"><label className="text-xs font-bold">Content Text / HTML</label><textarea rows={6} value={formData.content || ''} onChange={e => setFormData({...formData, content: e.target.value})} className="w-full p-3 border rounded mt-1 font-mono text-sm" /></div>
+                  </div>
+                </>
+              )}
+              
+              <div className="flex items-center gap-2 mt-4 pt-4 border-t border-border">
+                <input type="checkbox" id="active" checked={formData.active !== false} onChange={e => setFormData({...formData, active: e.target.checked})} className="rounded border-gray-300" />
+                <label htmlFor="active" className="text-sm">Active</label>
+              </div>
+
+            </div>
+            
+            <div className="p-4 border-t border-border bg-muted/30 flex justify-end gap-3">
+              <Button variant="ghost" onClick={closeModal} disabled={saving}>Cancel</Button>
+              <Button onClick={handleSave} disabled={saving}>
+                {saving && <Loader2 className="size-4 mr-2 animate-spin" />}
+                {saving ? 'Saving...' : 'Save Changes'}
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }

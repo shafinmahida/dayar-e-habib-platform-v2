@@ -3,6 +3,7 @@ import { Mail, MapPin, Phone, Clock, Sparkles } from "lucide-react";
 import Image from "next/image";
 import { createClient } from "@/lib/supabase/server";
 
+import { DynamicContent } from "@/components/shared/DynamicContent";
 import { Container } from "@/components/layout/Container";
 import { PackageEnquiry } from "@/components/sections/package/PackageEnquiry";
 
@@ -26,12 +27,16 @@ export default async function ContactPage() {
               <Sparkles className="size-3 fill-current" />
               <span>Get In Touch</span>
             </div>
-            <h1 className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground">
-              Contact Our Travel Advisors
-            </h1>
-            <p className="text-sm sm:text-base leading-relaxed text-muted-foreground max-w-2xl">
-              We are here to assist you with visa processing, hotel bookings, flight tickets, or planning your personalized Hajj, Umrah, or Ziyarat journey.
-            </p>
+            <DynamicContent 
+              slug="contact_title" 
+              className="font-heading text-3xl sm:text-4xl lg:text-5xl font-extrabold tracking-tight text-foreground block"
+              fallback="Contact Our Travel Advisors" 
+            />
+            <DynamicContent 
+              slug="contact_description" 
+              className="text-sm sm:text-base leading-relaxed text-muted-foreground max-w-2xl block"
+              fallback="We are here to assist you with visa processing, hotel bookings, flight tickets, or planning your personalized Hajj, Umrah, or Ziyarat journey."
+            />
           </div>
         </Container>
       </section>

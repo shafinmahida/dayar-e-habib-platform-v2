@@ -14,6 +14,7 @@ export const ROUTES = {
   ABOUT: "/about",
   GALLERY: "/gallery",
   CONTACT: "/contact",
+  DESTINATIONS: "/destinations",
 } as const;
 
 export const CTA_BOOK_NOW = {
@@ -32,6 +33,7 @@ export const NAV_LINKS = [
       { label: "Ziyarat Tours", href: ROUTES.ZIYARAT },
     ]
   },
+  { label: "Destinations", href: ROUTES.DESTINATIONS },
   { label: "Hotels", href: ROUTES.HOTELS },
   { label: "Visa Processing", href: ROUTES.VISA },
   { label: "About Us", href: ROUTES.ABOUT },
