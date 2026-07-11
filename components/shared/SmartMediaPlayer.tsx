@@ -3,7 +3,8 @@
 import { useState, useRef, useEffect } from "react";
 import Image from "next/image";
 import { cn } from "@/lib/utils";
-import { Volume2, VolumeX, Maximize } from "lucide-react";
+import { Volume2, VolumeX, Maximize, Play, Pause } from "lucide-react";
+import ReactPlayer from "react-player";
 
 interface SmartMediaPlayerProps {
   url: string;
@@ -14,10 +15,15 @@ interface SmartMediaPlayerProps {
 }
 
 export function SmartMediaPlayer({ url, type = "image", alt = "Media content", className, priority = false }: SmartMediaPlayerProps) {
+  const [isMounted, setIsMounted] = useState(false);
+  const [isPlaying, setIsPlaying] = useState(true);
   const [isMuted, setIsMuted] = useState(true);
   const [lastTap, setLastTap] = useState(0);
   const containerRef = useRef<HTMLDivElement>(null);
-  const videoRef = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    setIsMounted(true);
+  }, []);
 
   const handleFullscreen = () => {
     const el = containerRef.current;
@@ -31,7 +37,7 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
     }
   };
 
-  const handleTouchStart = () => {
+  const handleTouchStart = (e: React.TouchEvent) => {
     const now = Date.now();
     if (now - lastTap < 300) {
       handleFullscreen();
@@ -42,9 +48,11 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
   const toggleMute = (e: React.MouseEvent | React.TouchEvent) => {
     e.stopPropagation();
     setIsMuted(!isMuted);
-    if (videoRef.current) {
-      videoRef.current.muted = !isMuted;
-    }
+  };
+
+  const togglePlay = (e: React.MouseEvent | React.TouchEvent) => {
+    e.stopPropagation();
+    setIsPlaying(!isPlaying);
   };
 
   // If explicitly an image, render an image intrinsically sized
@@ -66,78 +74,49 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
     );
   }
 
-  // Handle Videos
-  
-  // 1. YouTube (Standard & Shorts)
-  const isShort = url.includes('/shorts/');
-  const getYoutubeId = (url: string) => {
-    const match = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=|shorts\/))([\w-]{11})/);
-    return match ? match[1] : null;
-  };
-  
-  const yId = getYoutubeId(url);
-  if (yId) {
-    return (
-      <div 
-        ref={containerRef}
-        className={cn("relative w-full rounded-xl overflow-hidden bg-black flex items-center justify-center", isShort ? "aspect-[9/16]" : "aspect-video", className)}
-        onDoubleClick={handleFullscreen}
-        onTouchStart={handleTouchStart}
-      >
-        <iframe
-          src={`https://www.youtube-nocookie.com/embed/${yId}?autoplay=1&mute=${isMuted ? 1 : 0}&controls=1&modestbranding=1&rel=0&showinfo=0&iv_load_policy=3&disablekb=1&playsinline=1&loop=1&playlist=${yId}&fs=1`}
-          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; fullscreen"
-          className="absolute inset-0 w-full h-full"
-        />
-        {/* We can't overlay buttons cleanly on YouTube without blocking interactions, so we rely on controls=1 */}
-      </div>
-    );
-  }
-
-  // 2. Instagram
-  const getInstagramId = (url: string) => {
-    const match = url.match(/(?:instagram\.com\/(?:p|reel|tv)\/)([a-zA-Z0-9_-]+)/);
-    return match ? match[1] : null;
-  };
-  
-  const igId = getInstagramId(url);
-  if (igId) {
-    return (
-      <div 
-        ref={containerRef}
-        className={cn("relative w-full aspect-[9/16] rounded-xl overflow-hidden bg-black", className)}
-        onDoubleClick={handleFullscreen}
-        onTouchStart={handleTouchStart}
-      >
-        <iframe 
-          src={`https://www.instagram.com/p/${igId}/embed`} 
-          className="absolute inset-0 w-full h-full border-0"
-          frameBorder="0" 
-          scrolling="no" 
-          allowFullScreen
-        />
-      </div>
-    );
-  }
-
-  // 3. Native Video (Uploaded MP4s, etc)
+  // Videos
   return (
     <div 
       ref={containerRef}
-      className={cn("relative w-full overflow-hidden rounded-xl bg-black group", className)}
+      className={cn("relative w-full overflow-hidden rounded-xl bg-black group flex items-center justify-center", className)}
       onDoubleClick={handleFullscreen}
       onTouchStart={handleTouchStart}
     >
-      <video 
-        ref={videoRef}
-        src={url} 
-        autoPlay 
-        muted={isMuted}
-        loop 
-        playsInline 
-        className="w-full h-full object-contain" 
-      />
+      {isMounted && (
+        <div className="absolute inset-0 w-full h-full pointer-events-none scale-[1.05]">
+          {/* We scale the player slightly to hide YouTube's embedded borders/title if they sneak through */}
+          <ReactPlayer 
+            url={url} 
+            playing={isPlaying}
+            muted={isMuted}
+            loop={true}
+            controls={false}
+            playsinline={true}
+            width="100%"
+            height="100%"
+            style={{ pointerEvents: 'none' }} // Crucial: forces player to ignore all clicks/scrolls
+            config={{
+              youtube: {
+                playerVars: { 
+                  showinfo: 0, 
+                  modestbranding: 1, 
+                  rel: 0,
+                  fs: 0,
+                  disablekb: 1,
+                  iv_load_policy: 3
+                }
+              } as any
+            }}
+          />
+        </div>
+      )}
       
+      {/* 
+        The Glass Shield 
+        Intercepts all clicks, scrolls, and swipes perfectly because pointer-events is blocked on the iframe 
+      */}
+      <div className="absolute inset-0 z-10 bg-transparent cursor-pointer" onClick={togglePlay} />
+
       {/* Audio Toggle Overlay */}
       <button 
         onClick={toggleMute}
@@ -146,6 +125,16 @@ export function SmartMediaPlayer({ url, type = "image", alt = "Media content", c
         title="Toggle Audio"
       >
         {isMuted ? <VolumeX className="size-5" /> : <Volume2 className="size-5" />}
+      </button>
+
+      {/* Play/Pause Overlay */}
+      <button 
+        onClick={togglePlay}
+        onTouchEnd={togglePlay}
+        className="absolute bottom-4 left-4 p-3 bg-black/60 hover:bg-black/80 backdrop-blur-md rounded-full text-white opacity-0 group-hover:opacity-100 transition-opacity z-20 shadow-xl"
+        title="Toggle Playback"
+      >
+        {isPlaying ? <Pause className="size-5" /> : <Play className="size-5" />}
       </button>
 
       {/* Double Tap Hint */}
