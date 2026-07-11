@@ -585,7 +585,7 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
               <p className="text-xs text-muted-foreground">Add multiple images and optimize for search engines</p>
             </div>
             
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <div className="flex flex-col xl:grid xl:grid-cols-2 gap-8">
               <StringArrayEditor
                 label="Gallery Image URLs"
                 description="The first image is used as the cover. You can paste any direct image links here."

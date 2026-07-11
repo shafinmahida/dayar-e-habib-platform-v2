@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Plus, X, GripVertical } from "lucide-react";
+import { Plus, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 import { UniversalUploader } from "./UniversalUploader";
@@ -60,12 +60,8 @@ export function StringArrayEditor({
       
       <div className="space-y-4">
         {values?.map((val, idx) => (
-          <div key={idx} className="flex gap-2">
-            <div className="pt-3 text-muted-foreground/50 cursor-grab active:cursor-grabbing hover:bg-muted rounded">
-              <GripVertical className="size-4" />
-            </div>
-            
-            <div className="flex-1">
+          <div key={idx} className="flex items-start gap-3">
+            <div className="flex-1 w-full min-w-0">
               {mode === "media" ? (
                 <UniversalUploader
                   value={val}
@@ -85,7 +81,8 @@ export function StringArrayEditor({
             
             <button
               onClick={() => handleRemove(idx)}
-              className="mt-2 h-8 w-8 flex items-center justify-center shrink-0 text-destructive hover:bg-destructive/10 rounded-lg transition-colors"
+              className="mt-8 h-8 w-8 flex items-center justify-center shrink-0 text-destructive hover:bg-destructive/10 rounded-lg transition-colors border border-transparent hover:border-destructive/20"
+              title="Remove item"
             >
               <X className="size-4" />
             </button>
