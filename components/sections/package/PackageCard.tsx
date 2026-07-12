@@ -25,19 +25,31 @@ export function PackageCard({ pkg }: PackageCardProps) {
   };
 
   // Support multiple images separated by commas from the new admin media editor
-  // We use `any` casting since Supabase raw row returns snake_case but types might be camelCase
   const rawPkg = pkg as any;
-  let defaultSlides = ["/kaaba-sunset.png"];
   let videoSlides: string[] = [];
-
+  let defaultSlides: string[] = [];
   if (rawPkg.image_url) {
     defaultSlides = rawPkg.image_url.split(',').filter(Boolean);
   } else if (rawPkg.imageUrl) {
     defaultSlides = rawPkg.imageUrl.split(',').filter(Boolean);
   }
 
-  const slides = pkg.coverImage ? [pkg.coverImage] : (pkg.cover_image ? [pkg.cover_image] : (slideshowMap[pkg.slug] || defaultSlides));
+  let slides: string[] = [];
   
+  if (pkg.coverImage || pkg.cover_image) {
+    slides.push(pkg.coverImage || pkg.cover_image);
+  }
+  
+  if (defaultSlides.length > 0) {
+    // Add unique gallery images to the slides
+    defaultSlides.forEach(s => {
+      if (!slides.includes(s)) slides.push(s);
+    });
+  }
+
+  if (slides.length === 0) {
+    slides = slideshowMap[pkg.slug] || ["/kaaba-sunset.png"];
+  }
   if (rawPkg.video_url) {
     videoSlides = rawPkg.video_url.split(',').filter(Boolean);
   } else if (rawPkg.videoUrl) {

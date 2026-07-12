@@ -1,98 +1,90 @@
 "use client";
 
-import { useState, useMemo, useEffect } from "react";
+import { useState, useMemo } from "react";
+import Fuse from "fuse.js";
 import { cn } from "@/lib/utils";
+import { Search, MapPin, X, ArrowRight, Play, Maximize2 } from "lucide-react";
 import { SmartMediaPlayer } from "@/components/shared/SmartMediaPlayer";
-import { Play } from "lucide-react";
+import { AnimatePresence, motion } from "framer-motion";
+import Image from "next/image";
 
-export interface HolyPlace {
-  title: string;
-  category?: string;
-  description: string;
-  videoUrl: string;
-}
+export function EnlightenmentClient({ places = [] }: { places: any[] }) {
+  const [searchQuery, setSearchQuery] = useState("");
+  const [activeCategory, setActiveCategory] = useState<string | null>(null);
+  const [selectedPlace, setSelectedPlace] = useState<any | null>(null);
 
-export interface EnlightenmentData {
-  visible: boolean;
-  overline: string;
-  sectionTitle: string;
-  sectionSubtitle: string;
-  holyPlaces: HolyPlace[];
-}
+  // Setup Fuzzy Search
+  const fuse = useMemo(() => new Fuse(places, {
+    keys: ["title", "short_description", "category", "presentation_overview"],
+    threshold: 0.3,
+  }), [places]);
 
-const DEFAULT_DATA: EnlightenmentData = {
-  visible: true,
-  overline: "Spiritual Heritage",
-  sectionTitle: "Enlightenment to Holy Places",
-  sectionSubtitle: "Explore the sacred history, profound stories, and majestic significance of the most revered destinations in Islam.",
-  holyPlaces: [
-    { title: "Masjid Al-Haram", category: "Makkah", description: "The Great Mosque of Makkah", videoUrl: "/kaaba-sunset.png" },
-    { title: "Jabal Al-Nour", category: "Makkah", description: "Cave of Hira", videoUrl: "/kaaba-sunset.png" },
-    { title: "Al-Masjid an-Nabawi", category: "Madinah", description: "The Prophet's Mosque", videoUrl: "/madinah-dawn.png" },
-    { title: "Masjid Quba", category: "Madinah", description: "First Mosque of Islam", videoUrl: "/madinah-dawn.png" },
-    { title: "Al-Balad", category: "Jeddah", description: "Historic District", videoUrl: "/media__1783076608743.png" },
-  ]
-};
+  // Determine active results
+  const results = useMemo(() => {
+    let filtered = places;
+    
+    if (searchQuery.trim() !== "") {
+      filtered = fuse.search(searchQuery).map(res => res.item);
+    } else if (activeCategory) {
+      filtered = places.filter(p => p.category === activeCategory);
+    }
+    
+    return filtered;
+  }, [searchQuery, activeCategory, places, fuse]);
 
-export function EnlightenmentClient({ data }: { data?: EnlightenmentData }) {
-  const finalData = data || DEFAULT_DATA;
-  const places = finalData.holyPlaces || [];
-  
-  // Extract unique categories
   const categories = useMemo(() => {
-    const cats = new Set(places.map(p => p.category || "Other"));
-    return ["All", ...Array.from(cats)];
+    const cats = new Set(places.map(p => p.category || "Uncategorized"));
+    return Array.from(cats);
   }, [places]);
-
-  const [activeCategory, setActiveCategory] = useState("All");
-
-  if (!finalData.visible) return null;
-
-  const filteredPlaces = activeCategory === "All" 
-    ? places 
-    : places.filter(p => (p.category || "Other") === activeCategory);
-
-  const [visibleCount, setVisibleCount] = useState(6);
-
-  // Reset pagination when category changes
-  useEffect(() => {
-    setVisibleCount(6);
-  }, [activeCategory]);
-
-  const visiblePlaces = filteredPlaces.slice(0, visibleCount);
 
   return (
     <section className="relative py-24 md:py-32 bg-[#FAF8F5] overflow-hidden" id="enlightenment">
-      <div className="container mx-auto px-4 md:px-8 max-w-7xl relative z-10">
-        
-        {/* Header Section */}
-        <div className="max-w-3xl mx-auto text-center mb-16 space-y-6">
+      
+      {/* Search Engine & Directory View */}
+      <div className="container mx-auto px-4 max-w-4xl relative z-10">
+        <div className="text-center mb-12 space-y-6">
           <div className="inline-flex items-center gap-3">
             <div className="h-[1px] w-8 bg-[#8A6A36]" />
-            <span className="text-xs md:text-sm font-black tracking-[0.25em] text-[#8A6A36] uppercase">
-              {finalData.overline || "Spiritual Heritage"}
+            <span className="text-[10px] md:text-xs font-black tracking-[0.25em] text-[#8A6A36] uppercase">
+              The Enlightenment Engine
             </span>
             <div className="h-[1px] w-8 bg-[#8A6A36]" />
           </div>
           
-          <h2 className="text-4xl md:text-5xl lg:text-6xl font-black text-[#1A1A1A] tracking-tight leading-[1.1]">
-            {finalData.sectionTitle || "Enlightenment to Holy Places"}
+          <h2 className="text-4xl md:text-6xl font-black text-[#1A1A1A] tracking-tight leading-[1.1]">
+            Explore the Sacred
           </h2>
-          
-          <p className="text-base md:text-lg text-[#1A1A1A]/70 font-medium leading-relaxed max-w-2xl mx-auto">
-            {finalData.sectionSubtitle || "Explore the sacred history, profound stories, and majestic significance of the most revered destinations in Islam."}
+          <p className="text-[#1A1A1A]/60 text-sm md:text-base font-medium max-w-xl mx-auto">
+            Discover the profound stories and visual majesty of Islam's holiest places. Search for a specific destination or explore by city.
           </p>
         </div>
 
-        {/* Filter Tabs */}
-        {categories.length > 1 && (
-          <div className="flex flex-wrap justify-center gap-2 mb-12">
+        {/* Search Bar */}
+        <div className="relative max-w-2xl mx-auto mb-8 group">
+          <div className="absolute inset-y-0 left-6 flex items-center pointer-events-none">
+            <Search className="h-6 w-6 text-[#1A1A1A]/40 group-focus-within:text-[#8A6A36] transition-colors" />
+          </div>
+          <input
+            type="text"
+            className="w-full h-16 md:h-20 pl-16 pr-8 rounded-full bg-white border border-black/5 shadow-2xl shadow-black/5 text-lg md:text-xl font-bold text-[#1A1A1A] placeholder:text-[#1A1A1A]/30 focus:outline-none focus:ring-4 focus:ring-[#8A6A36]/10 focus:border-[#8A6A36] transition-all"
+            placeholder="Where do you want to explore?"
+            value={searchQuery}
+            onChange={(e) => {
+              setSearchQuery(e.target.value);
+              setActiveCategory(null);
+            }}
+          />
+        </div>
+
+        {/* Categories */}
+        {!searchQuery && (
+          <div className="flex flex-wrap justify-center gap-3 mb-12">
             {categories.map(cat => (
               <button
                 key={cat}
-                onClick={() => setActiveCategory(cat)}
+                onClick={() => setActiveCategory(cat === activeCategory ? null : cat)}
                 className={cn(
-                  "px-6 py-2.5 rounded-full text-sm font-bold transition-all duration-300",
+                  "px-6 py-2.5 rounded-full text-xs font-black uppercase tracking-widest transition-all duration-300",
                   activeCategory === cat
                     ? "bg-[#8A6A36] text-white shadow-lg shadow-[#8A6A36]/20 scale-105"
                     : "bg-white text-[#1A1A1A]/60 hover:bg-[#8A6A36]/10 hover:text-[#8A6A36] border border-black/5"
@@ -104,83 +96,122 @@ export function EnlightenmentClient({ data }: { data?: EnlightenmentData }) {
           </div>
         )}
 
-        {/* Responsive Grid System */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {visiblePlaces.map((place, idx) => {
-            let currentVideo = place.videoUrl;
-            if (!currentVideo || currentVideo.trim() === "" || !currentVideo.includes('.')) {
-              // If it's missing or clearly not a URL/file path (e.g. they typed "Makkah" instead of a URL)
-              currentVideo = "/kaaba-sunset.png";
-            }
-            
-            return (
-              <div 
-                key={idx}
-                className="group relative h-[400px] md:h-[450px] w-full rounded-3xl overflow-hidden bg-black isolation-isolate shadow-xl shadow-black/5"
-              >
-                {/* Background Media Engine */}
-                <div className="absolute inset-0 w-full h-full transition-transform duration-[1200ms] ease-out group-hover:scale-105">
-                  <SmartMediaPlayer url={currentVideo} className="w-full h-full object-cover rounded-none border-0" />
-                </div>
-
-                {/* Dark Gradient Overlay for text legibility */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/20 to-transparent opacity-80 group-hover:opacity-95 transition-opacity duration-500 pointer-events-none" />
-
-                {/* Content HUD */}
-                <div className="absolute inset-0 p-8 flex flex-col justify-end pointer-events-none z-20">
-                  <div className="transform translate-y-4 group-hover:translate-y-0 transition-transform duration-500 ease-out">
-                    
-                    {place.category && (
-                      <span className="inline-block px-3 py-1 mb-4 rounded-full bg-white/20 backdrop-blur-md text-white text-[10px] font-black uppercase tracking-widest border border-white/20">
-                        {place.category}
-                      </span>
-                    )}
-                    
-                    <h3 className="font-heading text-2xl md:text-3xl font-black text-white drop-shadow-lg tracking-tight mb-3">
-                      {place.title}
-                    </h3>
-                    
-                    <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] transition-all duration-500 ease-out">
-                      <div className="overflow-hidden">
-                        <p className="text-white/80 text-sm font-medium leading-relaxed drop-shadow-md pb-1">
-                          {place.description}
-                        </p>
-                      </div>
-                    </div>
-                    
-                  </div>
-                </div>
-
-                {/* Subtle Hover Play Icon Overlay */}
-                <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-16 h-16 rounded-full bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 scale-90 group-hover:scale-100 pointer-events-none z-20">
-                  <Play className="w-6 h-6 text-white ml-1" />
-                </div>
-
-              </div>
-            );
-          })}
-        </div>
-
-        {filteredPlaces.length === 0 && (
-          <div className="text-center py-24 px-4 bg-white/50 backdrop-blur-sm rounded-3xl border border-black/5">
-            <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">No places found</h3>
-            <p className="text-[#1A1A1A]/60">There are no holy places in this category yet.</p>
-          </div>
-        )}
-
-        {/* Load More Button */}
-        {visibleCount < filteredPlaces.length && (
-          <div className="mt-12 flex justify-center">
-            <button 
-              onClick={() => setVisibleCount(prev => prev + 6)}
-              className="px-8 py-4 rounded-full bg-[#8A6A36]/10 text-[#8A6A36] font-bold tracking-wide hover:bg-[#8A6A36] hover:text-white transition-all duration-300 border border-[#8A6A36]/20 hover:border-[#8A6A36]"
+        {/* Results List */}
+        <AnimatePresence mode="popLayout">
+          {(searchQuery || activeCategory) && (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="grid grid-cols-1 md:grid-cols-2 gap-4"
             >
-              Load More Ziyarat
-            </button>
-          </div>
-        )}
-
+              {results.length === 0 ? (
+                <div className="col-span-full py-12 text-center text-[#1A1A1A]/40 font-medium">
+                  No sacred places matched your search.
+                </div>
+              ) : (
+                results.map(place => (
+                  <button
+                    key={place.id}
+                    onClick={() => setSelectedPlace(place)}
+                    className="flex flex-col text-left p-6 bg-white rounded-3xl border border-black/5 hover:border-[#8A6A36]/30 hover:shadow-xl hover:-translate-y-1 transition-all group"
+                  >
+                    <span className="text-[9px] font-black tracking-widest text-[#8A6A36] uppercase mb-2">
+                      {place.category}
+                    </span>
+                    <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">{place.title}</h3>
+                    <p className="text-sm text-[#1A1A1A]/60 line-clamp-2">{place.short_description}</p>
+                    
+                    <div className="mt-4 pt-4 border-t border-black/5 flex items-center justify-between text-xs font-bold text-[#1A1A1A]/40 group-hover:text-[#8A6A36] transition-colors">
+                      <span className="flex items-center gap-1.5"><MapPin className="w-4 h-4"/> Explore Presentation</span>
+                      <ArrowRight className="w-4 h-4" />
+                    </div>
+                  </button>
+                ))
+              )}
+            </motion.div>
+          )}
+        </AnimatePresence>
       </div>
+
+      {/* Presentation Overlay */}
+      <AnimatePresence>
+        {selectedPlace && (
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center overflow-hidden"
+          >
+            <motion.div 
+              initial={{ opacity: 0, y: 100, scale: 0.95 }}
+              animate={{ opacity: 1, y: 0, scale: 1 }}
+              exit={{ opacity: 0, y: 100, scale: 0.95 }}
+              transition={{ type: "spring", damping: 25, stiffness: 200 }}
+              className="relative w-full max-w-6xl h-full md:h-[90vh] md:rounded-[3rem] bg-[#0A0A0A] border border-white/10 overflow-y-auto custom-scrollbar flex flex-col shadow-2xl"
+            >
+              {/* Close Button */}
+              <button 
+                onClick={() => setSelectedPlace(null)}
+                className="absolute top-6 right-6 z-50 w-12 h-12 bg-black/50 backdrop-blur-md rounded-full border border-white/20 flex items-center justify-center text-white hover:bg-white hover:text-black transition-all"
+              >
+                <X className="w-6 h-6" />
+              </button>
+
+              {/* Media Header */}
+              <div className="relative w-full aspect-[16/9] md:aspect-[21/9] bg-black shrink-0 border-b border-white/10">
+                {selectedPlace.video_url ? (
+                  <SmartMediaPlayer url={selectedPlace.video_url} type="video" />
+                ) : selectedPlace.gallery_images?.length > 0 ? (
+                  <SmartMediaPlayer url={selectedPlace.gallery_images[0]} type="image" />
+                ) : (
+                  <div className="absolute inset-0 flex items-center justify-center text-white/20">No Media Available</div>
+                )}
+                
+                {/* Gradient Overlay for Title */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none" />
+                
+                <div className="absolute bottom-8 left-8 right-8 z-20">
+                  <span className="inline-block px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-black uppercase tracking-widest rounded-full mb-3">
+                    {selectedPlace.category}
+                  </span>
+                  <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight drop-shadow-2xl">
+                    {selectedPlace.title}
+                  </h1>
+                </div>
+              </div>
+
+              {/* Content Body */}
+              <div className="p-8 md:p-12 space-y-12 shrink-0">
+                <div className="prose prose-invert max-w-3xl">
+                  <p className="text-lg md:text-xl text-white/80 leading-relaxed font-medium">
+                    {selectedPlace.presentation_overview || selectedPlace.short_description}
+                  </p>
+                </div>
+
+                {/* Gallery */}
+                {selectedPlace.gallery_images && selectedPlace.gallery_images.length > 0 && (
+                  <div className="space-y-6">
+                    <h3 className="text-sm font-black uppercase tracking-widest text-white/40">Visual Archives</h3>
+                    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+                      {selectedPlace.gallery_images.map((img: string, idx: number) => (
+                        <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden bg-white/5 group border border-white/10">
+                          <Image 
+                            src={img} 
+                            alt={`${selectedPlace.title} gallery ${idx + 1}`} 
+                            fill 
+                            className="object-cover group-hover:scale-110 transition-transform duration-700" 
+                          />
+                        </div>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </motion.div>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </section>
   );
 }

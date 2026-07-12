@@ -9,7 +9,7 @@ import { Button } from "@/components/ui/button";
 import { CategoriesManager } from "@/components/admin/builder/CategoriesManager";
 import { HomepageHeroManager } from "@/components/admin/builder/HomepageHeroManager";
 
-import { EnlightenmentManager } from "@/components/admin/builder/EnlightenmentManager";
+import { EnlightenmentEngineManager } from "@/components/admin/builder/EnlightenmentEngineManager";
 
 type Tab = 'business_profile' | 'homepage_hero' | 'categories' | 'enlightenment' | 'locations';
 
@@ -191,7 +191,7 @@ export default function WebsiteBuilderPage() {
             {activeTab === 'categories' && <CategoriesManager />}
             {activeTab === 'homepage_hero' && <HomepageHeroManager />}
 
-            {activeTab === 'enlightenment' && <EnlightenmentManager />}
+            {activeTab === 'enlightenment' && <EnlightenmentEngineManager />}
             
             {activeTab === 'locations' && (
               <div className="flex flex-col items-center justify-center h-full text-muted-foreground py-12">

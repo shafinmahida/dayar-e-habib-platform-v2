@@ -1,15 +1,12 @@
 import { createClient } from "@/lib/supabase/server";
-import { EnlightenmentClient, EnlightenmentData } from "./EnlightenmentClient";
+import { EnlightenmentClient } from "./EnlightenmentClient";
 
 export async function Enlightenment() {
   const supabase = await createClient();
-  const { data } = await supabase
-    .from("content_blocks")
-    .select("content")
-    .eq("slug", "homepage_enlightenment")
-    .single();
+  const { data: places } = await supabase
+    .from("enlightenment_places")
+    .select("*")
+    .order("created_at", { ascending: true });
 
-  const enlightenmentData = data?.content as EnlightenmentData | undefined;
-
-  return <EnlightenmentClient data={enlightenmentData as any} />;
+  return <EnlightenmentClient places={places || []} />;
 }
