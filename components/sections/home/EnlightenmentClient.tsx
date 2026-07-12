@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useMemo } from "react";
+import { useState, useMemo, useEffect } from "react";
 import { cn } from "@/lib/utils";
 import { SmartMediaPlayer } from "@/components/shared/SmartMediaPlayer";
 import { Play } from "lucide-react";
@@ -52,6 +52,15 @@ export function EnlightenmentClient({ data }: { data?: EnlightenmentData }) {
     ? places 
     : places.filter(p => (p.category || "Other") === activeCategory);
 
+  const [visibleCount, setVisibleCount] = useState(6);
+
+  // Reset pagination when category changes
+  useEffect(() => {
+    setVisibleCount(6);
+  }, [activeCategory]);
+
+  const visiblePlaces = filteredPlaces.slice(0, visibleCount);
+
   return (
     <section className="relative py-24 md:py-32 bg-[#FAF8F5] overflow-hidden" id="enlightenment">
       <div className="container mx-auto px-4 md:px-8 max-w-7xl relative z-10">
@@ -97,7 +106,7 @@ export function EnlightenmentClient({ data }: { data?: EnlightenmentData }) {
 
         {/* Responsive Grid System */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
-          {filteredPlaces.map((place, idx) => {
+          {visiblePlaces.map((place, idx) => {
             let currentVideo = place.videoUrl;
             if (!currentVideo || currentVideo.trim() === "" || !currentVideo.includes('.')) {
               // If it's missing or clearly not a URL/file path (e.g. they typed "Makkah" instead of a URL)
@@ -156,6 +165,18 @@ export function EnlightenmentClient({ data }: { data?: EnlightenmentData }) {
           <div className="text-center py-24 px-4 bg-white/50 backdrop-blur-sm rounded-3xl border border-black/5">
             <h3 className="text-xl font-bold text-[#1A1A1A] mb-2">No places found</h3>
             <p className="text-[#1A1A1A]/60">There are no holy places in this category yet.</p>
+          </div>
+        )}
+
+        {/* Load More Button */}
+        {visibleCount < filteredPlaces.length && (
+          <div className="mt-12 flex justify-center">
+            <button 
+              onClick={() => setVisibleCount(prev => prev + 6)}
+              className="px-8 py-4 rounded-full bg-[#8A6A36]/10 text-[#8A6A36] font-bold tracking-wide hover:bg-[#8A6A36] hover:text-white transition-all duration-300 border border-[#8A6A36]/20 hover:border-[#8A6A36]"
+            >
+              Load More Ziyarat
+            </button>
           </div>
         )}
 
