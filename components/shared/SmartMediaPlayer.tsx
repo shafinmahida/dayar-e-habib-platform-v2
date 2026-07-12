@@ -6,7 +6,7 @@ import { cn } from "@/lib/utils";
 import { Volume2, VolumeX, Play, Pause, Maximize } from "lucide-react";
 
 // Dynamically import ReactPlayer to avoid SSR hydration issues
-const ReactPlayer: any = dynamic(() => import("react-player/lazy"), { ssr: false });
+const ReactPlayer: any = dynamic(() => import("react-player"), { ssr: false });
 
 interface SmartMediaPlayerProps {
   url: string;
@@ -14,9 +14,10 @@ interface SmartMediaPlayerProps {
   alt?: string;
   className?: string;
   caption?: string;
+  priority?: boolean;
 }
 
-export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", className, caption }: SmartMediaPlayerProps) {
+export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", className, caption, priority }: SmartMediaPlayerProps) {
   const containerRef = useRef<HTMLDivElement>(null);
   const playerRef = useRef<any>(null);
   

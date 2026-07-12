@@ -36,8 +36,9 @@ export function PackageCard({ pkg }: PackageCardProps) {
 
   let slides: string[] = [];
   
-  if (pkg.coverImage || pkg.cover_image) {
-    slides.push(pkg.coverImage || pkg.cover_image);
+  const cover = pkg.coverImage || pkg.cover_image;
+  if (cover) {
+    slides.push(cover as string);
   }
   
   if (defaultSlides.length > 0) {
