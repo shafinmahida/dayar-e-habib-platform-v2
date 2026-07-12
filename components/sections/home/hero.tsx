@@ -138,10 +138,10 @@ export async function Hero() {
             </div>
           </div>
 
-          {/* Right Panel: Portrait Editorial Frame */}
+          {/* Right Panel: Seamless Image Integration */}
           <div className="relative lg:col-span-6 xl:col-span-6 w-full flex items-center justify-center lg:justify-end">
-            <div className="relative w-full aspect-[4/5] max-w-[460px] overflow-hidden rounded-none border border-border bg-card p-3 shadow-[0_24px_60px_rgba(0,0,0,0.02)] group transition-all duration-700 hover:border-accent/40">
-              <div className="relative w-full h-full overflow-hidden border border-border/30 rounded-none bg-muted">
+            <div className="relative w-full aspect-[4/5] max-w-[460px] overflow-hidden rounded-3xl shadow-2xl shadow-black/5 group transition-all duration-700">
+              <div className="relative w-full h-full overflow-hidden bg-muted">
                 {/* Luxury tint overlay */}
                 <div className="absolute inset-0 bg-[#8A6A36]/3 mix-blend-color z-10 pointer-events-none" />
                 <div className="absolute inset-0 bg-gradient-to-t from-[#1E1A16]/20 via-transparent to-transparent z-10 pointer-events-none" />
