@@ -76,7 +76,7 @@ export function EnlightenmentClient({ data }: { data?: EnlightenmentData }) {
         </div>
 
         {/* Filter Tabs */}
-        {categories.length > 2 && (
+        {categories.length > 1 && (
           <div className="flex flex-wrap justify-center gap-2 mb-12">
             {categories.map(cat => (
               <button
@@ -98,7 +98,11 @@ export function EnlightenmentClient({ data }: { data?: EnlightenmentData }) {
         {/* Responsive Grid System */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6 md:gap-8">
           {filteredPlaces.map((place, idx) => {
-            const currentVideo = place.videoUrl || "/kaaba-sunset.png";
+            let currentVideo = place.videoUrl;
+            if (!currentVideo || currentVideo.trim() === "" || !currentVideo.includes('.')) {
+              // If it's missing or clearly not a URL/file path (e.g. they typed "Makkah" instead of a URL)
+              currentVideo = "/kaaba-sunset.png";
+            }
             
             return (
               <div 
