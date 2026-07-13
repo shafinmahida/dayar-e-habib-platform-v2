@@ -30,6 +30,8 @@ export interface TestimonialItem {
   packageType: string;
   package_type?: string;
   content: string;
+  avatar_url?: string;
+  rating?: number;
 }
 
 export interface FaqItem {
