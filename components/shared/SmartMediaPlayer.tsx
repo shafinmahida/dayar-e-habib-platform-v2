@@ -98,18 +98,25 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
     return (
       <div 
         ref={containerRef}
-        className={cn("relative w-full h-full overflow-hidden flex items-center justify-center group", className)}
+        className={cn("relative w-full h-full overflow-hidden flex items-center justify-center group bg-[#1A1814]", className)}
         onDoubleClick={handleFullscreen}
       >
-        {/* eslint-disable-next-line @next/next/no-img-element */}
+        {/* Blurred Background Layer to prevent black spaces */}
+        <img 
+          src={url} 
+          alt="" 
+          className="absolute inset-0 w-full h-full object-cover opacity-60 blur-2xl scale-110 pointer-events-none" 
+        />
+        
+        {/* Main Content Layer (Uncropped) */}
         <img 
           src={url} 
           alt={alt} 
-          className={cn("w-full h-full object-cover pointer-events-none transition-transform duration-700", className?.includes('object-contain') ? 'object-contain' : '')} 
+          className="relative w-full h-full object-contain pointer-events-none transition-transform duration-700 drop-shadow-2xl" 
           onError={() => setHasError(true)}
         />
         {caption && (
-          <div className="absolute bottom-4 left-4 right-4 bg-black/60 backdrop-blur-md text-white text-xs p-2 rounded-lg pointer-events-none">
+          <div className="absolute bottom-4 left-4 right-4 bg-black/60 backdrop-blur-md text-white text-xs p-2 rounded-lg pointer-events-none z-20">
             {caption}
           </div>
         )}
@@ -129,16 +136,31 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
     );
   }
 
+  // Helper for YouTube Thumbnails
+  const getYoutubeThumbnail = (videoUrl: string) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = videoUrl.match(regExp);
+    return (match && match[2].length === 11) ? `https://img.youtube.com/vi/${match[2]}/maxresdefault.jpg` : null;
+  };
+  const ytThumb = getYoutubeThumbnail(url);
+
   // Handle Videos (react-player handles youtube, fb, insta, vimeo, mp4 natively)
   return (
     <div 
       ref={containerRef}
-      className={cn("relative w-full h-full overflow-hidden bg-black group flex items-center justify-center", className)}
+      className={cn("relative w-full h-full overflow-hidden bg-[#1A1814] group flex items-center justify-center", className)}
       onDoubleClick={handleFullscreen}
       onMouseEnter={() => setShowControls(true)}
       onMouseLeave={() => setShowControls(false)}
     >
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-0">
+      {/* Blurred Background to prevent black bars */}
+      {ytThumb ? (
+         <img src={ytThumb} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50 blur-2xl scale-110 pointer-events-none z-0" />
+      ) : (
+         <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black/80 to-accent/20 blur-xl z-0" />
+      )}
+
+      <div className="absolute inset-0 w-full h-full pointer-events-none z-10 flex items-center justify-center">
         <ReactPlayer
           ref={playerRef}
           url={url}
@@ -147,7 +169,7 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
           loop={true}
           width="100%"
           height="100%"
-          style={{ objectFit: 'cover' }}
+          style={{ objectFit: 'contain' }} // Changed from cover to contain
           playsinline={true}
           controls={false} // Disable native controls completely
           config={{
