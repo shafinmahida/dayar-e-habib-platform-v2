@@ -138,82 +138,34 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
   };
   const ytThumb = getYoutubeThumbnail(url);
 
-  // Handle Videos (react-player handles youtube, fb, insta, vimeo, mp4 natively)
+  // Handle Videos (react-player natively handles youtube, fb, insta, vimeo, mp4)
   return (
     <div 
       ref={containerRef}
-      className={cn("relative w-full h-full overflow-hidden bg-transparent group flex items-center justify-center", className)}
+      className={cn("relative w-full h-full overflow-hidden bg-black flex items-center justify-center", className)}
       onDoubleClick={handleFullscreen}
-      onMouseEnter={() => setShowControls(true)}
-      onMouseLeave={() => setShowControls(false)}
     >
-      <div className="relative w-full h-full pointer-events-none z-10 flex items-center justify-center">
+      <div className="relative w-full h-full z-10 flex items-center justify-center">
         <ReactPlayer
           ref={playerRef}
           url={url}
-          playing={playing && isIntersecting}
-          muted={muted}
-          loop={true}
+          light={ytThumb || true}
+          playing={true}
+          controls={true}
           width="100%"
           height="100%"
           style={{ objectFit: className?.includes('object-cover') ? 'cover' : 'contain' }}
           playsinline={true}
-          controls={false}
-          config={{
-            youtube: {
-              playerVars: { showinfo: 0, modestbranding: 1, rel: 0, fs: 0 }
-            }
-          }}
-          onError={() => {
-            setHasError(true);
-          }}
+          onError={() => setHasError(true)}
         />
       </div>
-
-      {/* Invisible interceptor shield for double click and hover detection without pausing native player */}
-      <div 
-        className="absolute inset-0 z-10 bg-transparent cursor-pointer" 
-        onClick={togglePlay}
-        onDoubleClick={handleFullscreen}
-      />
-
-      {/* Custom UI Overlays (z-20) */}
-      <div className={cn("absolute inset-0 z-20 pointer-events-none transition-opacity duration-300", showControls || !(playing && isIntersecting) ? "opacity-100" : "opacity-0")}>
-        
-        {/* Center Play/Pause */}
-        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
-          <button 
-            onClick={togglePlay}
-            className="w-16 h-16 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/60 hover:scale-110 transition-all pointer-events-auto"
-          >
-            {playing ? <Pause className="w-6 h-6" /> : <Play className="w-6 h-6 ml-1" />}
-          </button>
+      
+      {/* Caption */}
+      {caption && (
+        <div className="absolute bottom-4 left-4 max-w-[60%] bg-black/60 backdrop-blur-md text-white text-xs p-3 rounded-xl pointer-events-none border border-white/10 z-30">
+          {caption}
         </div>
-
-        {/* Bottom Corner Mute & Fullscreen */}
-        <div className="absolute bottom-4 right-4 flex items-center gap-2">
-          <button 
-            onClick={toggleMute}
-            className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/60 transition-all pointer-events-auto"
-          >
-            {muted ? <VolumeX className="w-4 h-4" /> : <Volume2 className="w-4 h-4" />}
-          </button>
-          
-          <button 
-            onClick={(e) => { e.stopPropagation(); handleFullscreen(); }}
-            className="w-10 h-10 rounded-full bg-black/40 backdrop-blur-md border border-white/20 flex items-center justify-center text-white hover:bg-black/60 transition-all pointer-events-auto"
-          >
-            <Maximize className="w-4 h-4" />
-          </button>
-        </div>
-
-        {/* Caption */}
-        {caption && (
-          <div className="absolute bottom-4 left-4 max-w-[60%] bg-black/60 backdrop-blur-md text-white text-xs p-3 rounded-xl pointer-events-none border border-white/10">
-            {caption}
-          </div>
-        )}
-      </div>
+      )}
     </div>
   );
 }
