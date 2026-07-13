@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Loader2, Plus, Edit2, Trash2, MapPin, Image as ImageIcon, Video, Save, X } from "lucide-react";
+import { Loader2, Plus, Edit2, Trash2, MapPin, Image as ImageIcon, Video, Save, X, Link2 } from "lucide-react";
 import { UniversalUploader } from "@/components/admin/shared/UniversalUploader";
 import { StringArrayEditor } from "@/components/admin/shared/StringArrayEditor";
 
