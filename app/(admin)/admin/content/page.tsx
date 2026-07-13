@@ -67,11 +67,18 @@ export default function AdminContentHubPage() {
   const handleSave = async () => {
     setSaving(true);
     try {
+      const payload = { ...formData };
+      
+      // Auto-generate slug for representatives if missing
+      if (activeTab === 'representatives' && !payload.slug && payload.name) {
+        payload.slug = payload.name.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '');
+      }
+
       if (editingItem) {
-        const { error } = await supabase.from(activeTab).update(formData).eq('id', editingItem.id);
+        const { error } = await supabase.from(activeTab).update(payload).eq('id', editingItem.id);
         if (error) throw error;
       } else {
-        const { error } = await supabase.from(activeTab).insert([formData]);
+        const { error } = await supabase.from(activeTab).insert([payload]);
         if (error) throw error;
       }
       closeModal();
@@ -88,7 +95,7 @@ export default function AdminContentHubPage() {
     const s = searchTerm.toLowerCase();
     switch (activeTab) {
       case 'faqs': return item.question?.toLowerCase().includes(s) || item.answer?.toLowerCase().includes(s);
-      case 'testimonials': return item.name?.toLowerCase().includes(s) || item.content?.toLowerCase().includes(s);
+      case 'testimonials': return item.name?.toLowerCase().includes(s) || item.content?.toLowerCase().includes(s) || item.package_type?.toLowerCase().includes(s);
       case 'representatives': return item.name?.toLowerCase().includes(s) || item.role?.toLowerCase().includes(s);
       case 'content_blocks': return item.title?.toLowerCase().includes(s) || item.slug?.toLowerCase().includes(s);
       default: return true;
@@ -189,6 +196,10 @@ export default function AdminContentHubPage() {
                       {activeTab === 'testimonials' && (
                         <>
                           <h4 className="font-bold text-foreground">{item.name} <span className="text-xs font-normal text-muted-foreground">({item.location})</span></h4>
+                          <div className="flex items-center gap-1.5 my-1">
+                            <span className="text-[10px] bg-[#8A6A36]/10 text-[#8A6A36] px-1.5 py-0.5 rounded font-black uppercase tracking-wider">{item.package_type || 'General'}</span>
+                            <span className="text-amber-500 font-bold text-[10px]">★ {item.rating || 5}/5</span>
+                          </div>
                           <p className="text-sm text-muted-foreground line-clamp-1 italic">"{item.content}"</p>
                         </>
                       )}
@@ -250,8 +261,11 @@ export default function AdminContentHubPage() {
                     <div><label className="text-xs font-bold">Name</label><input type="text" value={formData.name || ''} onChange={e => setFormData({...formData, name: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
                     <div><label className="text-xs font-bold">Location</label><input type="text" value={formData.location || ''} onChange={e => setFormData({...formData, location: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
                   </div>
+                  <div className="grid grid-cols-2 gap-4">
+                    <div><label className="text-xs font-bold">Package Type</label><input type="text" value={formData.package_type || ''} onChange={e => setFormData({...formData, package_type: e.target.value})} className="w-full p-2 border rounded mt-1" placeholder="e.g. Deluxe Hajj, General" /></div>
+                    <div><label className="text-xs font-bold">Rating (1-5)</label><input type="number" min="1" max="5" value={formData.rating || 5} onChange={e => setFormData({...formData, rating: parseInt(e.target.value)})} className="w-full p-2 border rounded mt-1" /></div>
+                  </div>
                   <div><label className="text-xs font-bold">Content</label><textarea rows={4} value={formData.content || ''} onChange={e => setFormData({...formData, content: e.target.value})} className="w-full p-2 border rounded mt-1" /></div>
-                  <div><label className="text-xs font-bold">Rating (1-5)</label><input type="number" min="1" max="5" value={formData.rating || 5} onChange={e => setFormData({...formData, rating: parseInt(e.target.value)})} className="w-full p-2 border rounded mt-1" /></div>
                   <UniversalUploader value={formData.avatar_url || ''} onChange={url => setFormData({...formData, avatar_url: url})} label="Avatar URL" />
                 </>
               )}
