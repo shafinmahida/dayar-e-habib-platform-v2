@@ -132,13 +132,17 @@ export function EnlightenmentEngineManager() {
               </div>
 
               <div className="space-y-2">
-                <label className="text-xs font-bold text-black/70 flex items-center gap-2"><Video className="w-3 h-3"/> Main Video URL (MP4 Preferred)</label>
-                <input 
-                  value={editingPlace.video_url || ""} 
-                  onChange={e => setEditingPlace({...editingPlace, video_url: e.target.value})}
-                  className="w-full text-sm p-3 border border-black/10 rounded-xl focus:border-[#8A6A36] outline-none"
-                  placeholder="https://...mp4"
-                />
+                <label className="text-xs font-bold text-black/70 flex items-center gap-2"><Video className="w-3 h-3"/> Media URL (YouTube, Vimeo, MP4)</label>
+                <div className="relative">
+                  <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none text-black/40"><Link2 className="w-4 h-4"/></div>
+                  <input
+                    type="url"
+                    value={editingPlace.video_url || ""} 
+                    onChange={e => setEditingPlace({...editingPlace, video_url: e.target.value})}
+                    className="w-full pl-10 pr-4 py-3 bg-white/50 border-2 border-black/5 rounded-2xl text-sm focus:border-black/20 focus:bg-white outline-none transition-all placeholder:text-black/30 text-black font-medium"
+                    placeholder="https://youtube.com/..."
+                  />
+                </div>
               </div>
 
               <div className="pt-4 border-t border-black/5">

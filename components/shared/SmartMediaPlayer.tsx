@@ -141,14 +141,21 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
         <ReactPlayer
           ref={playerRef}
           url={url}
-          light={true}
-          playing={true}
+          playing={false}
           controls={true}
           width="100%"
           height="100%"
           style={{ objectFit: className?.includes('object-cover') ? 'cover' : 'contain' }}
           playsinline={true}
-          onError={() => setHasError(true)}
+          config={{
+            youtube: {
+              playerVars: { showinfo: 1, origin: typeof window !== 'undefined' ? window.location.origin : undefined }
+            }
+          }}
+          onError={(e: any) => {
+            console.error("ReactPlayer Error:", e);
+            setHasError(true);
+          }}
         />
       </div>
       
