@@ -77,7 +77,32 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
 
   const cleanUrl = url.split('?')[0].toLowerCase();
   
-  // 1. Determine Type
+  // 1. Bulletproof Native YouTube Embed
+  const isYouTube = cleanUrl.includes('youtube.com') || cleanUrl.includes('youtu.be');
+  if (isYouTube) {
+    const videoIdMatch = url.match(/(?:youtu\.be\/|youtube\.com\/(?:embed\/|v\/|watch\?v=|watch\?.+&v=))([^&?]+)/);
+    const videoId = videoIdMatch ? videoIdMatch[1] : null;
+    
+    if (videoId) {
+      return (
+        <div ref={containerRef} className={cn("relative w-full h-full overflow-hidden bg-black", className)}>
+          <iframe 
+            src={`https://www.youtube.com/embed/${videoId}?autoplay=1&mute=1&rel=0&modestbranding=1`}
+            className="absolute inset-0 w-full h-full border-0"
+            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+            allowFullScreen
+          />
+          {caption && (
+            <div className="absolute bottom-4 left-4 max-w-[60%] bg-black/60 backdrop-blur-md text-white text-xs p-3 rounded-xl pointer-events-none border border-white/10 z-30">
+              {caption}
+            </div>
+          )}
+        </div>
+      );
+    }
+  }
+
+  // 2. Determine Type for Fallbacks
   let detectedType = type;
   if (detectedType === "auto") {
     if (cleanUrl.match(/\.(jpeg|jpg|gif|png|webp|svg)$/i)) {
@@ -85,7 +110,6 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
     } else if (cleanUrl.match(/\.(pdf)$/i)) {
       detectedType = "document";
     } else {
-      // Treat everything else (mp4, youtube, facebook, instagram) as video for react-player
       detectedType = "video";
     }
   }
@@ -99,7 +123,6 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
         className={cn("relative w-full h-full overflow-hidden flex items-center justify-center group bg-transparent", className)}
         onDoubleClick={handleFullscreen}
       >
-        {/* Main Content Layer */}
         <img 
           src={url} 
           alt={alt} 
@@ -121,22 +144,15 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
   // Handle Documents (PDF)
   if (detectedType === "document") {
     return (
-      <div 
-        ref={containerRef}
-        className={cn("relative w-full h-full overflow-hidden bg-white", className)}
-      >
+      <div ref={containerRef} className={cn("relative w-full h-full overflow-hidden bg-white", className)}>
         <iframe src={`${url}#toolbar=0`} className="w-full h-full border-0" title={alt} />
       </div>
     );
   }
 
-  // Handle Videos (react-player natively handles youtube, fb, insta, vimeo, mp4)
+  // Handle Other Videos (MP4, Vimeo, Facebook, etc.) via react-player
   return (
-    <div 
-      ref={containerRef}
-      className={cn("relative w-full h-full overflow-hidden bg-black flex items-center justify-center", className)}
-      onDoubleClick={handleFullscreen}
-    >
+    <div ref={containerRef} className={cn("relative w-full h-full overflow-hidden bg-black flex items-center justify-center", className)} onDoubleClick={handleFullscreen}>
       <div className="relative w-full h-full z-10 flex items-center justify-center">
         <ReactPlayer
           ref={playerRef}
@@ -147,19 +163,12 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
           height="100%"
           style={{ objectFit: className?.includes('object-cover') ? 'cover' : 'contain' }}
           playsinline={true}
-          config={{
-            youtube: {
-              playerVars: { showinfo: 1, origin: typeof window !== 'undefined' ? window.location.origin : undefined }
-            }
-          }}
           onError={(e: any) => {
             console.error("ReactPlayer Error:", e);
             setHasError(true);
           }}
         />
       </div>
-      
-      {/* Caption */}
       {caption && (
         <div className="absolute bottom-4 left-4 max-w-[60%] bg-black/60 backdrop-blur-md text-white text-xs p-3 rounded-xl pointer-events-none border border-white/10 z-30">
           {caption}
