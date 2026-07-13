@@ -100,6 +100,26 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
       .single();
       
     if (data) {
+      // Provide fallback slides if the DB is empty, so the user can see what is currently showing on the frontend and replace them.
+      const slideshowMap: Record<string, string[]> = {
+        "premium-hajj": ["/kaaba-sunset.png", "/hajj-mina.png", "/hajj-arafat.png"],
+        "short-hajj": ["/hajj-mina.png", "/hajj-arafat.png", "/kaaba-sunset.png"],
+        "deluxe-umrah": ["/pilgrims-tawaf.png", "/hospitality-hotel.png", "/kaaba-sunset.png"],
+        "classic-ziyarat": ["/ziyarat-dome.png", "/ziyarat-najaf.png", "/madinah-dawn.png"],
+      };
+      
+      let fallbackSlides = slideshowMap[data.slug] || ["/kaaba-sunset.png"];
+      
+      const coverImage = data.cover_image || fallbackSlides[0];
+      
+      let defaultGallery: string[] = [];
+      if (data.image_url) {
+         defaultGallery = data.image_url.split(',').filter(Boolean);
+      } else {
+         // Default to the rest of the slides if empty
+         defaultGallery = fallbackSlides.length > 1 ? fallbackSlides.slice(1) : fallbackSlides;
+      }
+
       setPkg({
         ...data,
         highlights: data.highlights || [],
@@ -112,10 +132,10 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
         faqs: data.faqs || [],
         destination_ids: data.destination_ids || [],
         price_currency: data.price_currency || "INR",
-        cover_image: data.cover_image || ""
+        cover_image: coverImage
       });
       // Parse comma-separated strings back into arrays
-      setImageUrls(data.image_url ? data.image_url.split(',').filter(Boolean) : []);
+      setImageUrls(defaultGallery);
       setVideoUrls(data.video_url ? data.video_url.split(',').filter(Boolean) : []);
     }
     setLoading(false);
