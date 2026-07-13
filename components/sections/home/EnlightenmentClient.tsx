@@ -211,26 +211,23 @@ export function EnlightenmentClient({ places = [] }: { places: any[] }) {
                   <div className="h-[1.5px] w-16 bg-[#8A6A36]" />
                 </div>
 
-                {/* Text Content (Above Media) */}
-                <div className="prose prose-lg max-w-none mb-12">
-                  <div className="text-base md:text-lg text-[#1A1A1A]/80 leading-[2.2] font-medium whitespace-pre-wrap text-justify">
-                    {selectedPlace.presentation_overview || selectedPlace.short_description}
-                  </div>
-                </div>
-
-                {/* Media Section (Below Text) */}
-                <div className="space-y-12">
+                {/* Media Section (Video First) */}
+                <div className="space-y-8 mb-8">
                   {selectedPlace.video_url && (
                     <div className="space-y-4">
-                      <h3 className="text-xs font-black uppercase tracking-[0.25em] text-[#8A6A36] flex items-center gap-4">
-                        <span>Video Presentation</span>
-                        <div className="h-[1px] flex-1 bg-[#8A6A36]/20" />
-                      </h3>
                       <div className="relative w-full aspect-[16/9] rounded-3xl overflow-hidden bg-black shadow-xl border border-black/5">
                         <SmartMediaPlayer url={selectedPlace.video_url} type="video" className="w-full h-full" />
                       </div>
                     </div>
                   )}
+                </div>
+
+                {/* Text Content (Below Video) */}
+                <div className="prose prose-lg max-w-none mb-12">
+                  <div className="text-base md:text-lg text-[#1A1A1A]/80 leading-[2.2] font-medium whitespace-pre-wrap text-justify">
+                    {selectedPlace.presentation_overview || selectedPlace.short_description}
+                  </div>
+                </div>
 
                   {/* Gallery */}
                   {selectedPlace.gallery_images && selectedPlace.gallery_images.length > 0 && (
