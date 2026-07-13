@@ -98,21 +98,14 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
     return (
       <div 
         ref={containerRef}
-        className={cn("relative w-full h-full overflow-hidden flex items-center justify-center group bg-[#1A1814]", className)}
+        className={cn("relative w-full overflow-hidden flex items-center justify-center group bg-transparent", className)}
         onDoubleClick={handleFullscreen}
       >
-        {/* Blurred Background Layer to prevent black spaces */}
-        <img 
-          src={url} 
-          alt="" 
-          className="absolute inset-0 w-full h-full object-cover opacity-60 blur-2xl scale-110 pointer-events-none" 
-        />
-        
-        {/* Main Content Layer (Uncropped) */}
+        {/* Main Content Layer (Uncropped, purely intrinsic) */}
         <img 
           src={url} 
           alt={alt} 
-          className="relative w-full h-full object-contain pointer-events-none transition-transform duration-700 drop-shadow-2xl" 
+          className="relative w-full h-auto max-h-full object-contain pointer-events-none drop-shadow-md" 
           onError={() => setHasError(true)}
         />
         {caption && (
@@ -148,19 +141,12 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
   return (
     <div 
       ref={containerRef}
-      className={cn("relative w-full h-full overflow-hidden bg-[#1A1814] group flex items-center justify-center", className)}
+      className={cn("relative w-full overflow-hidden bg-transparent group flex items-center justify-center", className)}
       onDoubleClick={handleFullscreen}
       onMouseEnter={() => setShowControls(true)}
       onMouseLeave={() => setShowControls(false)}
     >
-      {/* Blurred Background to prevent black bars */}
-      {ytThumb ? (
-         <img src={ytThumb} alt="" className="absolute inset-0 w-full h-full object-cover opacity-50 blur-2xl scale-110 pointer-events-none z-0" />
-      ) : (
-         <div className="absolute inset-0 w-full h-full bg-gradient-to-br from-black/80 to-accent/20 blur-xl z-0" />
-      )}
-
-      <div className="absolute inset-0 w-full h-full pointer-events-none z-10 flex items-center justify-center">
+      <div className="relative w-full h-auto pointer-events-none z-10 flex items-center justify-center">
         <ReactPlayer
           ref={playerRef}
           url={url}
@@ -168,17 +154,16 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
           muted={muted}
           loop={true}
           width="100%"
-          height="100%"
-          style={{ objectFit: 'contain' }} // Changed from cover to contain
+          height="auto"
+          style={{ objectFit: 'contain' }}
           playsinline={true}
-          controls={false} // Disable native controls completely
+          controls={false}
           config={{
             youtube: {
               playerVars: { showinfo: 0, modestbranding: 1, rel: 0, fs: 0 }
             }
           }}
           onError={() => {
-            // Fallback to image if react-player fails
             setHasError(true);
           }}
         />

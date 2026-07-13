@@ -88,12 +88,12 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
 
         {/* Carousel Window */}
         <div 
-          className="relative w-full h-[620px] md:h-[500px] flex items-center justify-center"
+          className="relative w-full max-w-[960px] mx-auto flex items-center justify-center"
           onTouchStart={handleTouchStart}
           onTouchMove={handleTouchMove}
           onTouchEnd={handleTouchEnd}
         >
-          <div className="relative w-full h-full flex items-center justify-center">
+          <div className="relative w-full flex items-center justify-center">
             {activePackages.map((pkg, idx) => {
               const count = activePackages.length;
               let diff = idx - activeIndex;
@@ -138,15 +138,15 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
                 <div
                   key={pkg.slug}
                   className={cn(
-                    "absolute w-full max-w-[960px] h-[580px] md:h-[440px] transition-all duration-[600ms] cubic-bezier(0.16, 1, 0.3, 1) flex flex-col md:flex-row bg-[#FCFAF5] border border-border/45 shadow-[0_20px_50px_rgba(0,0,0,0.02)] overflow-hidden rounded-3xl",
-                    isActive && "opacity-100 scale-100 z-30 pointer-events-auto blur-0 translate-x-0 shadow-[0_30px_70px_rgba(138,106,54,0.06)] ring-1 ring-accent/15",
+                    "w-full max-w-[960px] transition-all duration-[600ms] cubic-bezier(0.16, 1, 0.3, 1) flex flex-col md:flex-row bg-[#FCFAF5] border border-border/45 shadow-[0_20px_50px_rgba(0,0,0,0.02)] overflow-hidden rounded-3xl",
+                    isActive ? "relative opacity-100 scale-100 z-30 pointer-events-auto blur-0 translate-x-0 shadow-[0_30px_70px_rgba(138,106,54,0.06)] ring-1 ring-accent/15" : "absolute",
                     isPrev && "opacity-35 scale-[0.78] -translate-x-[75%] md:-translate-x-[60%] lg:-translate-x-[50%] z-10 pointer-events-none blur-[3px] select-none",
                     isNext && "opacity-35 scale-[0.78] translate-x-[75%] md:translate-x-[60%] lg:translate-x-[50%] z-10 pointer-events-none blur-[3px] select-none",
                     isHidden && "opacity-0 scale-[0.6] z-0 pointer-events-none blur-[8px] translate-x-0"
                   )}
                 >
                   {/* Left Column: Visual Photo slideshow Portal (60% width on Desktop) */}
-                  <div className="relative w-full h-[220px] md:h-full md:w-3/5 overflow-hidden border-b md:border-b-0 md:border-r border-border/20 bg-muted shrink-0 rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none">
+                  <div className="relative w-full md:w-3/5 overflow-hidden border-b md:border-b-0 md:border-r border-border/20 bg-muted shrink-0 rounded-t-3xl md:rounded-l-3xl md:rounded-tr-none flex items-center justify-center">
                     <div className="absolute inset-0 bg-[#8A6A36]/3 mix-blend-color z-10 pointer-events-none" />
                     
                     {/* Slideshow inside card */}
@@ -278,31 +278,22 @@ function Slideshow({ images, isActive, pkgTitle }: { images: string[]; isActive:
   }, [isActive, images.length]);
 
   return (
-    <div className="relative w-full h-full bg-[#1A1814]">
+    <div className="relative w-full h-full bg-transparent flex items-center justify-center">
       {images.map((img, idx) => (
         <div 
           key={img}
           className={cn(
-            "absolute inset-0 transition-all duration-[1200ms] ease-in-out",
-            idx === slideIndex ? "opacity-100 scale-100 z-10" : "opacity-0 scale-[1.03] z-0"
+            "transition-all duration-[1200ms] ease-in-out w-full h-full flex items-center justify-center",
+            idx === slideIndex ? "relative opacity-100 scale-100 z-10" : "absolute inset-0 opacity-0 scale-[1.03] z-0"
           )}
         >
-          {/* Blurred Background */}
-          <Image
-            src={img}
-            alt=""
-            fill
-            sizes="(max-width: 768px) 100vw, 40vw"
-            className="object-cover opacity-60 blur-2xl scale-110 pointer-events-none"
-            priority={idx === 0 && isActive}
-          />
-          {/* Main Uncropped Image */}
+          {/* Main Uncropped Image adapting natively */}
           <Image
             src={img}
             alt={`${pkgTitle} Visual Slide ${idx + 1}`}
-            fill
-            sizes="(max-width: 768px) 100vw, 40vw"
-            className="object-contain pointer-events-none drop-shadow-2xl"
+            width={1200}
+            height={800}
+            className="w-full h-auto object-contain pointer-events-none"
             priority={idx === 0 && isActive}
           />
         </div>
