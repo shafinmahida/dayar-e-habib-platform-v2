@@ -23,7 +23,7 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
   
   const [playing, setPlaying] = useState(true);
   const [muted, setMuted] = useState(true);
-  const [isIntersecting, setIsIntersecting] = useState(false);
+  const [isIntersecting, setIsIntersecting] = useState(true); // Default to true so it plays immediately
   const [hasError, setHasError] = useState(false);
   const [showControls, setShowControls] = useState(false);
 
@@ -34,16 +34,13 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
     const observer = new IntersectionObserver(
       (entries) => {
         const [entry] = entries;
-        setIsIntersecting(entry.isIntersecting);
-        if (!entry.isIntersecting) {
-          // Pause if it scrolls out of view to prevent background audio clash
-          setPlaying(false);
+        if (entry.isIntersecting) {
+          setIsIntersecting(true);
         } else {
-          // Play if it scrolls into view (but only if it was already meant to be autoplaying)
-          setPlaying(true);
+          setIsIntersecting(false);
         }
       },
-      { threshold: 0.2 } // 20% visible
+      { threshold: 0.1 } // Lower threshold to ensure it fires in modals
     );
 
     observer.observe(containerRef.current);
@@ -181,7 +178,7 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
       />
 
       {/* Custom UI Overlays (z-20) */}
-      <div className={cn("absolute inset-0 z-20 pointer-events-none transition-opacity duration-300", showControls || !playing ? "opacity-100" : "opacity-0")}>
+      <div className={cn("absolute inset-0 z-20 pointer-events-none transition-opacity duration-300", showControls || !(playing && isIntersecting) ? "opacity-100" : "opacity-0")}>
         
         {/* Center Play/Pause */}
         <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2">
