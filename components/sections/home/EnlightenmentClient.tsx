@@ -185,86 +185,70 @@ export function EnlightenmentClient({ places = [] }: { places: any[] }) {
             exit={{ opacity: 0 }}
             className="fixed inset-0 z-[100] bg-black/95 flex items-center justify-center overflow-hidden"
           >
-            <motion.div 
-                initial={{ opacity: 0, y: 100, scale: 0.95 }}
+              <motion.div 
+                initial={{ opacity: 0, y: 50, scale: 0.98 }}
                 animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: 100, scale: 0.95 }}
-                transition={{ type: "spring", damping: 25, stiffness: 200 }}
-                className="relative w-full max-w-7xl h-full md:h-[90vh] md:rounded-[2rem] bg-white border border-white/10 overflow-hidden flex flex-col md:flex-row shadow-2xl"
+                exit={{ opacity: 0, y: 50, scale: 0.98 }}
+                transition={{ type: "spring", damping: 30, stiffness: 250 }}
+                className="relative w-full max-w-4xl h-full md:h-[85vh] md:rounded-[2.5rem] bg-[#FCFAF5] border border-black/5 overflow-y-auto custom-scrollbar shadow-2xl p-6 md:p-12 flex flex-col"
               >
                 {/* Close Button */}
                 <button 
                   onClick={() => setSelectedPlace(null)}
-                  className="absolute top-6 right-6 z-[110] w-12 h-12 bg-white/10 backdrop-blur-md rounded-full border border-black/10 flex items-center justify-center text-[#1A1A1A] md:bg-black/10 md:text-black hover:bg-black hover:text-white transition-all shadow-xl"
+                  className="absolute top-6 right-6 z-50 w-10 h-10 bg-black/5 hover:bg-black/10 rounded-full flex items-center justify-center text-black/60 hover:text-black transition-all"
                 >
-                  <X className="w-6 h-6" />
+                  <X className="w-5 h-5" />
                 </button>
 
-                {/* Left Side: Cinematic Media Header */}
-                <div className="w-full md:w-[45%] lg:w-1/2 h-[45vh] md:h-full relative bg-black shrink-0 group/header overflow-hidden shadow-2xl z-10">
-                  {/* Dynamic Blurred Background Visualization */}
-                  {selectedPlace.gallery_images?.length > 0 && (
-                    <div className="absolute inset-0 z-0">
-                      <Image 
-                        src={selectedPlace.gallery_images[0]} 
-                        alt="Atmosphere" 
-                        fill 
-                        className="object-cover blur-[80px] opacity-30 scale-110 group-hover/header:scale-125 group-hover/header:opacity-50 transition-all duration-1000"
-                      />
-                    </div>
-                  )}
-                  
-                  <div className="absolute inset-0 z-10 flex items-center justify-center">
-                    {selectedPlace.video_url ? (
-                      <SmartMediaPlayer url={selectedPlace.video_url} type="video" className="w-full h-full" />
-                    ) : selectedPlace.gallery_images?.length > 0 ? (
-                      <SmartMediaPlayer url={selectedPlace.gallery_images[0]} type="image" className="w-full h-full object-cover" />
-                    ) : (
-                      <div className="flex items-center justify-center text-white/20 font-medium tracking-widest uppercase text-sm">Visuals Unavailable</div>
-                    )}
-                  </div>
-                  
-                  {/* Gradient Overlay for Title */}
-                  <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none z-20" />
-                  
-                  <div className="absolute bottom-8 left-8 right-8 md:bottom-12 md:left-12 md:right-12 z-30">
-                    <span className="inline-block px-4 py-1.5 bg-[#8A6A36]/80 backdrop-blur-md border border-[#8A6A36]/30 text-white text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-4 shadow-xl">
-                      {selectedPlace.category}
-                    </span>
-                    <h1 className="text-4xl md:text-5xl lg:text-6xl font-black text-white tracking-tight drop-shadow-2xl">
-                      {selectedPlace.title}
-                    </h1>
+                {/* Header Info */}
+                <div className="space-y-4 mb-8 pr-12">
+                  <span className="inline-block px-3 py-1 bg-[#8A6A36]/10 text-[#8A6A36] text-[10px] font-black uppercase tracking-[0.2em] rounded-md border border-[#8A6A36]/20">
+                    {selectedPlace.category}
+                  </span>
+                  <h1 className="text-3xl md:text-5xl font-black text-[#1A1A1A] tracking-tight">
+                    {selectedPlace.title}
+                  </h1>
+                  <div className="h-[1.5px] w-16 bg-[#8A6A36]" />
+                </div>
+
+                {/* Text Content (Above Media) */}
+                <div className="prose prose-lg max-w-none mb-12">
+                  <div className="text-base md:text-lg text-[#1A1A1A]/80 leading-[2.2] font-medium whitespace-pre-wrap text-justify">
+                    {selectedPlace.presentation_overview || selectedPlace.short_description}
                   </div>
                 </div>
 
-                {/* Right Side: Editorial Content Body */}
-                <div className="w-full md:w-[55%] lg:w-1/2 h-full overflow-y-auto bg-[#FAF8F5] relative p-8 md:p-14 lg:p-16 custom-scrollbar shrink-0">
-                  {/* Decorative Pattern Background */}
-                  <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #8A6A36 1px, transparent 0)', backgroundSize: '32px 32px' }} />
-                  
-                  <div className="prose prose-lg max-w-none relative z-10">
-                    <div className="text-base md:text-lg text-[#1A1A1A]/80 leading-[2.2] font-medium whitespace-pre-wrap text-justify">
-                      {selectedPlace.presentation_overview || selectedPlace.short_description}
+                {/* Media Section (Below Text) */}
+                <div className="space-y-12">
+                  {selectedPlace.video_url && (
+                    <div className="space-y-4">
+                      <h3 className="text-xs font-black uppercase tracking-[0.25em] text-[#8A6A36] flex items-center gap-4">
+                        <span>Video Presentation</span>
+                        <div className="h-[1px] flex-1 bg-[#8A6A36]/20" />
+                      </h3>
+                      <div className="relative w-full aspect-[16/9] rounded-3xl overflow-hidden bg-black shadow-xl border border-black/5">
+                        <SmartMediaPlayer url={selectedPlace.video_url} type="video" className="w-full h-full" />
+                      </div>
                     </div>
-                  </div>
+                  )}
 
                   {/* Gallery */}
                   {selectedPlace.gallery_images && selectedPlace.gallery_images.length > 0 && (
-                    <div className="mt-16 space-y-8 relative z-10">
+                    <div className="space-y-6">
                       <h3 className="text-xs font-black uppercase tracking-[0.25em] text-[#8A6A36] flex items-center gap-4">
-                        <span>Visual Archives</span>
+                        <span>Visual Gallery</span>
                         <div className="h-[1px] flex-1 bg-[#8A6A36]/20" />
                       </h3>
-                      <div className="grid grid-cols-2 gap-4 md:gap-6">
+                      <div className="grid grid-cols-2 md:grid-cols-3 gap-4">
                         {selectedPlace.gallery_images.map((img: string, idx: number) => (
-                          <div key={idx} className="relative aspect-[4/5] rounded-3xl overflow-hidden bg-black/5 group border border-black/10 shadow-lg">
+                          <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden bg-black/5 group border border-black/5 shadow-md">
                             <Image 
                               src={img} 
                               alt={`${selectedPlace.title} gallery ${idx + 1}`} 
                               fill 
-                              className="object-cover group-hover:scale-110 transition-transform duration-700" 
+                              className="object-cover group-hover:scale-105 transition-transform duration-500" 
                             />
-                            <div className="absolute inset-0 bg-[#8A6A36]/0 group-hover:bg-[#8A6A36]/10 transition-colors duration-500" />
+                            <div className="absolute inset-0 bg-black/0 group-hover:bg-black/5 transition-colors duration-500" />
                           </div>
                         ))}
                       </div>
