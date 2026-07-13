@@ -1,125 +1,73 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Image from "next/image";
-import { Play, Image as ImageIcon, Video, X, ChevronLeft, ChevronRight } from "lucide-react";
+import { Play, Image as ImageIcon, Video, X, ChevronLeft, ChevronRight, Link as LinkIcon, Loader2 } from "lucide-react";
 import { SmartMediaPlayer } from "@/components/shared/SmartMediaPlayer";
+import { createClient } from "@/lib/supabase/client";
 
 interface MediaItem {
   id: string;
   title: string;
   type: "video" | "image";
   src: string;
-  category: "Haram" | "Madinah" | "Ziyarat" | "Hospitality" | "General";
+  category: string;
   description: string;
 }
 
-const GALLERY_MEDIA: MediaItem[] = [
-  {
-    id: "med-1",
-    title: "Pilgrim Journey Summary & Highlights",
-    type: "video",
-    src: "/gallery/a2985b7c-1da8-4a9e-a81f-3c3723d003cb.mp4",
-    category: "General",
-    description: "Spiritual overview and group highlights from our recent holy tours."
-  },
-  {
-    id: "med-2",
-    title: "Spiritual Devotion inside Haram Sharif",
-    type: "video",
-    src: "/gallery/1779723475731511.mp4",
-    category: "Haram",
-    description: "Capturing the serene and devotional atmosphere of pilgrims praying in Makkah."
-  },
-  {
-    id: "med-3",
-    title: "Tawaf Rituals around the Kaaba",
-    type: "video",
-    src: "/gallery/1779906473216336.mp4",
-    category: "Haram",
-    description: "Footage of pilgrims performing the circumambulation of the Holy Kaaba."
-  },
-  {
-    id: "med-4",
-    title: "Spiritual Gathering at the Holy Sanctuary",
-    type: "image",
-    src: "/gallery/8aad95ec-1f2f-40dd-b7dd-bdc2edf27c7d.jpg",
-    category: "Haram",
-    description: "Pilgrims gathered in deep contemplation at the courtyard of the Haram."
-  },
-  {
-    id: "med-5",
-    title: "Premium Hospitality Dining & Buffet",
-    type: "video",
-    src: "/gallery/Breakfast.mov",
-    category: "Hospitality",
-    description: "Standard morning breakfast and delicious buffet service arranged for our groups."
-  },
-  {
-    id: "med-6",
-    title: "Madinah Munawwarah Group Arrival",
-    type: "video",
-    src: "/gallery/IMG_5111.MOV",
-    category: "Madinah",
-    description: "Arrival coordinates and transfer of our group to Madinah hotels."
-  },
-  {
-    id: "med-7",
-    title: "Ziyarats at Prophet's Mosque (PBUH)",
-    type: "video",
-    src: "/gallery/IMG_5128.MOV",
-    category: "Madinah",
-    description: "Guided group tours around the sacred boundary of Al-Masjid an-Nabawi."
-  },
-  {
-    id: "med-8",
-    title: "Rawdah Salutations & Devotions",
-    type: "video",
-    src: "/gallery/IMG_5129.MOV",
-    category: "Madinah",
-    description: "Group entry coordination and spiritual prayers inside the Rawdah Sharifah."
-  },
-  {
-    id: "med-9",
-    title: "Historic Battlefields of Uhud Tour",
-    type: "video",
-    src: "/gallery/IMG_5185.MOV",
-    category: "Ziyarat",
-    description: "Visiting the historic Mount Uhud and martyrs' burial sites with scholars."
-  },
-  {
-    id: "med-10",
-    title: "Masjid Quba Visit & Prayers",
-    type: "video",
-    src: "/gallery/IMG_5194.MOV",
-    category: "Ziyarat",
-    description: "Group prayers at the first mosque in Islam, located in Madinah."
-  },
-  {
-    id: "med-11",
-    title: "Makkah Transition & Umrah Preparation",
-    type: "video",
-    src: "/gallery/IMG_5263.MOV",
-    category: "Haram",
-    description: "Traveling to Makkah in Ihram, ready to perform the core Umrah rituals."
-  }
-];
-
 export default function GalleryPage() {
+  const supabase = createClient();
+  const [mediaList, setMediaList] = useState<MediaItem[]>([]);
+  const [loading, setLoading] = useState(true);
+
   const [activeFilter, setActiveFilter] = useState<"all" | "video" | "image">("all");
   const [activeCategory, setActiveCategory] = useState<string>("all");
   const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
 
-  const categories = ["all", ...Array.from(new Set(GALLERY_MEDIA.map((item) => item.category)))];
+  useEffect(() => {
+    fetchMedia();
+  }, []);
 
-  const filteredMedia = GALLERY_MEDIA.filter((item) => {
+  const fetchMedia = async () => {
+    setLoading(true);
+    const { data, error } = await supabase
+      .from('media_assets')
+      .select('*')
+      .eq('folder', 'gallery')
+      .order('created_at', { ascending: false });
+
+    if (data && !error) {
+      const formattedMedia: MediaItem[] = data.map((item) => {
+        let cat = "General";
+        // Attempt to extract category from mime_type or just use General
+        if (item.mime_type.includes('youtube')) cat = "YouTube";
+        else if (item.mime_type.includes('social')) cat = "Social";
+        else if (item.media_type === 'image') cat = "Image Link";
+
+        return {
+          id: item.id,
+          title: item.file_name,
+          type: item.media_type as "video" | "image",
+          src: item.public_url,
+          category: cat,
+          description: item.original_name // we store the original URL here
+        };
+      });
+      setMediaList(formattedMedia);
+    }
+    setLoading(false);
+  };
+
+  const categories = ["all", ...Array.from(new Set(mediaList.map((item) => item.category)))];
+
+  const filteredMedia = mediaList.filter((item) => {
     const matchesType = activeFilter === "all" || item.type === activeFilter;
     const matchesCategory = activeCategory === "all" || item.category === activeCategory;
     return matchesType && matchesCategory;
   });
 
   const openLightbox = (id: string) => {
-    const index = GALLERY_MEDIA.findIndex((item) => item.id === id);
+    const index = filteredMedia.findIndex((item) => item.id === id);
     if (index !== -1) {
       setLightboxIndex(index);
     }
@@ -132,18 +80,18 @@ export default function GalleryPage() {
   const showPrev = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (lightboxIndex !== null) {
-      setLightboxIndex((prev) => (prev === 0 ? GALLERY_MEDIA.length - 1 : prev! - 1));
+      setLightboxIndex((prev) => (prev === 0 ? filteredMedia.length - 1 : prev! - 1));
     }
   };
 
   const showNext = (e: React.MouseEvent) => {
     e.stopPropagation();
     if (lightboxIndex !== null) {
-      setLightboxIndex((prev) => (prev === GALLERY_MEDIA.length - 1 ? 0 : prev! + 1));
+      setLightboxIndex((prev) => (prev === filteredMedia.length - 1 ? 0 : prev! + 1));
     }
   };
 
-  const activeMedia = lightboxIndex !== null ? GALLERY_MEDIA[lightboxIndex] : null;
+  const activeMedia = lightboxIndex !== null ? filteredMedia[lightboxIndex] : null;
 
   return (
     <main className="min-h-screen bg-[#F2EBDB] pt-24 pb-16 sm:pb-24">
@@ -158,7 +106,7 @@ export default function GalleryPage() {
             Our Journey Gallery
           </h1>
           <p className="mt-4 text-xs sm:text-sm md:text-base leading-relaxed text-muted-foreground/90">
-            Browse through real-life video coordinates, spiritual moments, and premium group logistics captured live during our Hajj, Umrah, and Ziyarat programs.
+            Browse through our global media directory powered entirely by external sources like YouTube, Instagram, and Facebook.
           </p>
         </header>
 
@@ -212,14 +160,18 @@ export default function GalleryPage() {
                     : "border-border/50 bg-[#FCFAF5]/30 text-muted-foreground hover:border-[#DDD3C1] hover:text-foreground"
                 }`}
               >
-                {cat === "all" ? "All Sites" : cat}
+                {cat === "all" ? "All Sources" : cat}
               </button>
             ))}
           </div>
         </div>
 
         {/* Media Grid */}
-        {filteredMedia.length > 0 ? (
+        {loading ? (
+          <div className="flex justify-center items-center py-20">
+            <Loader2 className="animate-spin size-8 text-accent" />
+          </div>
+        ) : filteredMedia.length > 0 ? (
           <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
             {filteredMedia.map((item) => (
               <div
@@ -231,9 +183,16 @@ export default function GalleryPage() {
                 <div className="relative aspect-[16/10] w-full bg-muted overflow-hidden flex items-center justify-center bg-black">
                   <div className="absolute inset-0 bg-[#8A6A36]/3 mix-blend-color z-1 pointer-events-none" />
                   
-                  <SmartMediaPlayer url={item.src} type={item.type} className="w-full h-full object-cover transition-transform duration-[1200ms] group-hover:scale-105 opacity-90" />
+                  {item.category === "Social" ? (
+                     <div className="flex flex-col items-center justify-center w-full h-full bg-muted">
+                        <LinkIcon className="size-10 text-muted-foreground opacity-50 mb-2" />
+                        <span className="text-xs text-muted-foreground font-medium">External Social Media</span>
+                     </div>
+                  ) : (
+                     <SmartMediaPlayer url={item.src} type={item.type} className="w-full h-full object-cover transition-transform duration-[1200ms] group-hover:scale-105 opacity-90" />
+                  )}
                   
-                  {item.type === "video" && (
+                  {item.type === "video" && item.category !== "Social" && (
                     <div className="absolute inset-0 bg-black/15 z-1 flex items-center justify-center transition-opacity duration-300 group-hover:bg-black/35 pointer-events-none">
                       <div className="flex size-12 items-center justify-center rounded-full bg-[#FCFAF5] text-accent border border-accent/20 shadow-md transform scale-100 transition-all duration-300 group-hover:scale-105 group-hover:bg-accent group-hover:text-[#FCFAF5] group-hover:border-accent">
                         <Play className="size-5 fill-current translate-x-0.5" />
@@ -252,7 +211,7 @@ export default function GalleryPage() {
                   <h3 className="font-heading text-base font-bold text-foreground leading-snug group-hover:text-accent transition-colors duration-300">
                     {item.title}
                   </h3>
-                  <p className="mt-2 text-xs text-muted-foreground/90 leading-relaxed line-clamp-2">
+                  <p className="mt-2 text-[10px] text-muted-foreground/90 leading-relaxed truncate font-mono">
                     {item.description}
                   </p>
                 </div>
@@ -319,9 +278,9 @@ export default function GalleryPage() {
             <h2 className="mt-3 font-heading text-lg sm:text-xl font-bold text-white leading-tight">
               {activeMedia.title}
             </h2>
-            <p className="mt-2 text-xs sm:text-sm text-white/70 leading-relaxed">
-              {activeMedia.description}
-            </p>
+            <a href={activeMedia.src} target="_blank" rel="noopener noreferrer" className="mt-2 text-xs sm:text-sm text-blue-400 hover:text-blue-300 leading-relaxed block truncate">
+              {activeMedia.src}
+            </a>
           </div>
         </div>
       )}

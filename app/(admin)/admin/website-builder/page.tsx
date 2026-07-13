@@ -10,6 +10,7 @@ import { CategoriesManager } from "@/components/admin/builder/CategoriesManager"
 import { HomepageHeroManager } from "@/components/admin/builder/HomepageHeroManager";
 
 import { EnlightenmentEngineManager } from "@/components/admin/builder/EnlightenmentEngineManager";
+import { LocationsManager } from "@/components/admin/builder/LocationsManager";
 
 type Tab = 'business_profile' | 'homepage_hero' | 'categories' | 'enlightenment' | 'locations';
 
@@ -192,13 +193,7 @@ export default function WebsiteBuilderPage() {
             {activeTab === 'homepage_hero' && <HomepageHeroManager />}
 
             {activeTab === 'enlightenment' && <EnlightenmentEngineManager />}
-            
-            {activeTab === 'locations' && (
-              <div className="flex flex-col items-center justify-center h-full text-muted-foreground py-12">
-                <LayoutDashboard className="size-12 opacity-20 mb-4" />
-                <p>This manager is coming soon in the next sprint.</p>
-              </div>
-            )}
+            {activeTab === 'locations' && <LocationsManager />}
           </div>
         </div>
       </div>
