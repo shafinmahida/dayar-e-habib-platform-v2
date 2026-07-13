@@ -130,14 +130,6 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
     );
   }
 
-  // Helper for YouTube Thumbnails
-  const getYoutubeThumbnail = (videoUrl: string) => {
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
-    const match = videoUrl.match(regExp);
-    return (match && match[2].length === 11) ? `https://img.youtube.com/vi/${match[2]}/maxresdefault.jpg` : null;
-  };
-  const ytThumb = getYoutubeThumbnail(url);
-
   // Handle Videos (react-player natively handles youtube, fb, insta, vimeo, mp4)
   return (
     <div 
@@ -149,7 +141,7 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
         <ReactPlayer
           ref={playerRef}
           url={url}
-          light={ytThumb || true}
+          light={true}
           playing={true}
           controls={true}
           width="100%"
