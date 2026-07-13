@@ -1,13 +1,36 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Breadcrumbs } from "../shared/Breadcrumbs";
 import { ThemeToggle } from "../shared/ThemeToggle";
 import { NotificationCenter } from "./NotificationCenter";
 import { Search, Bell } from "lucide-react";
+import { createClient } from "@/lib/supabase/client";
 
 export function AdminHeader() {
   const [isNotificationsOpen, setIsNotificationsOpen] = useState(false);
+  const supabase = createClient();
+
+  useEffect(() => {
+    const updateActivity = async () => {
+      try {
+        const { data: { user } } = await supabase.auth.getUser();
+        if (user) {
+          await supabase
+            .from("profiles")
+            .update({ last_login: new Date().toISOString() })
+            .eq("id", user.id);
+        }
+      } catch (err) {
+        console.error("Error updating admin activity", err);
+      }
+    };
+
+    updateActivity();
+    // Update active status every 5 minutes while dashboard is open
+    const interval = setInterval(updateActivity, 5 * 60 * 1000);
+    return () => clearInterval(interval);
+  }, []);
 
   return (
     <header className="sticky top-0 z-30 flex items-center justify-between px-6 py-4 bg-background/85 backdrop-blur-[4px] border-b border-border/60">

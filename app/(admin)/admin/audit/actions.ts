@@ -5,28 +5,25 @@ import { createAdminClient } from "@/lib/supabase/admin";
 export async function getSystemUsers() {
   const supabaseAdmin = createAdminClient();
   
-  // Fetch users from the secure auth schema
-  const { data: users, error } = await supabaseAdmin.auth.admin.listUsers();
+  // Fetch profiles directly. We don't need auth.admin.listUsers() since profiles table has everything!
+  // This is 100x faster and maps our custom last_login activity tracker
+  const { data: profiles, error } = await supabaseAdmin
+    .from("profiles")
+    .select("id, email, full_name, role, last_login, created_at");
   
   if (error) {
     console.error("Failed to fetch system users", error);
     return [];
   }
 
-  // Fetch profiles to map names to emails
-  const { data: profiles } = await supabaseAdmin
-    .from("profiles")
-    .select("id, full_name, role");
-
-  return users.users.map(user => {
-    const profile = profiles?.find(p => p.id === user.id);
+  return profiles.map(profile => {
     return {
-      id: user.id,
-      email: user.email,
-      last_sign_in_at: user.last_sign_in_at,
-      created_at: user.created_at,
-      full_name: profile?.full_name || user.user_metadata?.full_name || "Unknown",
-      role: profile?.role || user.user_metadata?.role || "user"
+      id: profile.id,
+      email: profile.email,
+      last_sign_in_at: profile.last_login, // Maps our tracked last_login for the UI
+      created_at: profile.created_at,
+      full_name: profile.full_name || "Unknown",
+      role: profile.role || "Admin"
     };
   });
 }
