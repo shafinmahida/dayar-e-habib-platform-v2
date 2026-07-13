@@ -573,21 +573,21 @@ export default function PackageEditorPage({ params }: { params: Promise<{ slug: 
             
             <div className="flex flex-col gap-8">
               <div className="bg-muted/20 p-6 rounded-2xl border border-border/80">
-                <h3 className="text-sm font-black uppercase tracking-wider text-foreground mb-4">Dedicated Cover Image</h3>
+                <h3 className="text-sm font-black uppercase tracking-wider text-foreground mb-4">Primary Cover Photo (Slideshow Slide 1)</h3>
                 <div className="max-w-xl">
                   <UniversalUploader
                     value={pkg.cover_image}
                     onChange={(url) => setPkg({...pkg, cover_image: url})}
-                    label="Package Cover Photo"
-                    description="This is the main image shown on the Package Card and at the top of the details page."
+                    label="Main Package Image"
+                    description="This is the first image shown on the Homepage Package Card slideshow and at the top of the details page."
                   />
                 </div>
               </div>
 
-              <div className="flex flex-col xl:grid xl:grid-cols-2 gap-8">
+              <div className="flex flex-col xl:grid xl:grid-cols-2 gap-8 mt-6">
                 <StringArrayEditor
-                  label="Gallery Image URLs"
-                  description="Secondary images for the carousel. Do not include the cover photo here."
+                  label="Additional Cover Photos (Slideshow 2, 3, etc.)"
+                  description="These images create the animated swipe/slideshow effect on the homepage package cards. They also appear in the package's gallery."
                   values={imageUrls}
                   onChange={val => setImageUrls(val)}
                   placeholder="https://..."
