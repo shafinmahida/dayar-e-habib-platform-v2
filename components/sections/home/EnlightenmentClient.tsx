@@ -201,34 +201,51 @@ export function EnlightenmentClient({ places = [] }: { places: any[] }) {
               </button>
 
               {/* Media Header */}
-              <div className="relative w-full aspect-[16/9] md:aspect-[21/9] bg-black shrink-0 border-b border-white/10">
-                {selectedPlace.video_url ? (
-                  <SmartMediaPlayer url={selectedPlace.video_url} type="video" />
-                ) : selectedPlace.gallery_images?.length > 0 ? (
-                  <SmartMediaPlayer url={selectedPlace.gallery_images[0]} type="image" />
-                ) : (
-                  <div className="absolute inset-0 flex items-center justify-center text-white/20">No Media Available</div>
+              <div className="relative w-full aspect-[16/9] md:aspect-[21/9] bg-[#050505] shrink-0 border-b border-white/10 overflow-hidden group/header">
+                {/* Dynamic Blurred Background Visualization */}
+                {selectedPlace.gallery_images?.length > 0 && (
+                  <div className="absolute inset-0 z-0">
+                    <Image 
+                      src={selectedPlace.gallery_images[0]} 
+                      alt="Atmosphere" 
+                      fill 
+                      className="object-cover blur-[80px] opacity-30 scale-110 group-hover/header:scale-125 group-hover/header:opacity-50 transition-all duration-1000"
+                    />
+                  </div>
                 )}
                 
-                {/* Gradient Overlay for Title */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/40 to-transparent pointer-events-none" />
+                <div className="absolute inset-0 z-10 flex items-center justify-center">
+                  {selectedPlace.video_url ? (
+                    <SmartMediaPlayer url={selectedPlace.video_url} type="video" className="w-full h-full" />
+                  ) : selectedPlace.gallery_images?.length > 0 ? (
+                    <SmartMediaPlayer url={selectedPlace.gallery_images[0]} type="image" className="w-full h-full" />
+                  ) : (
+                    <div className="flex items-center justify-center text-white/20 font-medium tracking-widest uppercase text-sm">Visuals Unavailable</div>
+                  )}
+                </div>
                 
-                <div className="absolute bottom-8 left-8 right-8 z-20">
-                  <span className="inline-block px-3 py-1 bg-white/10 backdrop-blur-md border border-white/20 text-white text-[10px] font-black uppercase tracking-widest rounded-full mb-3">
+                {/* Gradient Overlay for Title */}
+                <div className="absolute inset-0 bg-gradient-to-t from-[#0A0A0A] via-[#0A0A0A]/40 to-transparent pointer-events-none z-20" />
+                
+                <div className="absolute bottom-8 left-8 right-8 z-30">
+                  <span className="inline-block px-4 py-1.5 bg-[#8A6A36]/20 backdrop-blur-md border border-[#8A6A36]/30 text-[#E8DCC4] text-[10px] font-black uppercase tracking-[0.2em] rounded-full mb-4 shadow-xl">
                     {selectedPlace.category}
                   </span>
-                  <h1 className="text-4xl md:text-6xl font-black text-white tracking-tight drop-shadow-2xl">
+                  <h1 className="text-4xl md:text-6xl lg:text-7xl font-black text-white tracking-tight drop-shadow-2xl">
                     {selectedPlace.title}
                   </h1>
                 </div>
               </div>
 
               {/* Content Body */}
-              <div className="p-8 md:p-12 space-y-12 shrink-0">
-                <div className="prose prose-invert max-w-3xl">
-                  <p className="text-lg md:text-xl text-white/80 leading-relaxed font-medium">
+              <div className="p-8 md:p-12 space-y-12 shrink-0 bg-[#0A0A0A] relative">
+                {/* Decorative Pattern Background (subtle) */}
+                <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
+                
+                <div className="prose prose-invert max-w-4xl mx-auto relative z-10">
+                  <div className="text-lg md:text-xl text-white/90 leading-[2] font-medium whitespace-pre-wrap">
                     {selectedPlace.presentation_overview || selectedPlace.short_description}
-                  </p>
+                  </div>
                 </div>
 
                 {/* Gallery */}

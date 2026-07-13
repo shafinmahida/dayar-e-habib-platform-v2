@@ -141,12 +141,12 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
   return (
     <div 
       ref={containerRef}
-      className={cn("relative w-full overflow-hidden bg-transparent group flex items-center justify-center", className)}
+      className={cn("relative w-full h-full overflow-hidden bg-transparent group flex items-center justify-center", className)}
       onDoubleClick={handleFullscreen}
       onMouseEnter={() => setShowControls(true)}
       onMouseLeave={() => setShowControls(false)}
     >
-      <div className="relative w-full h-auto pointer-events-none z-10 flex items-center justify-center">
+      <div className="relative w-full h-full pointer-events-none z-10 flex items-center justify-center">
         <ReactPlayer
           ref={playerRef}
           url={url}
@@ -154,7 +154,7 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
           muted={muted}
           loop={true}
           width="100%"
-          height="auto"
+          height="100%"
           style={{ objectFit: 'contain' }}
           playsinline={true}
           controls={false}
