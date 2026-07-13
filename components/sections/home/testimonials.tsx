@@ -46,9 +46,9 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                   &ldquo;{test.content}&rdquo;
                 </blockquote>
 
-                <div className="mt-8 flex items-center gap-4 text-left">
+                <div className="mt-8 flex items-center gap-5 text-left">
                   {test.avatar_url && (
-                    <div className="relative size-14 rotate-[-3deg] border-2 border-white rounded-md shadow-md shrink-0 bg-stone-100 overflow-hidden transform hover:rotate-0 transition-transform duration-300 z-10">
+                    <div className="relative size-20 rotate-[-3deg] border-2 border-white rounded-md shadow-md shrink-0 bg-stone-100 overflow-hidden transform hover:rotate-0 transition-transform duration-300 z-10">
                       <img 
                         src={test.avatar_url} 
                         alt={test.name} 
@@ -58,18 +58,18 @@ export function Testimonials({ testimonials }: TestimonialsProps) {
                       <div className="absolute inset-0 bg-gradient-to-tr from-transparent via-white/10 to-white/20 pointer-events-none" />
                     </div>
                   )}
-                  <div className="space-y-1">
-                    <cite className="block font-handwritten text-lg sm:text-xl font-bold text-accent not-italic">
+                  <div className="space-y-1.5">
+                    <cite className="block font-handwritten text-xl sm:text-2xl font-bold text-accent not-italic">
                       — {test.name}
                     </cite>
-                    <div className="text-[9px] font-sans font-black tracking-widest text-muted-foreground uppercase flex flex-wrap items-center gap-x-2 gap-y-1">
+                    <div className="text-[10px] font-sans font-black tracking-widest text-muted-foreground uppercase flex flex-wrap items-center gap-x-2 gap-y-1">
                       <span>{test.location}</span>
                       <span className="text-accent/60" aria-hidden="true">&bull;</span>
                       <span className="text-accent">{test.package_type || test.packageType || 'General'}</span>
                       {test.rating && (
                         <>
                           <span className="text-accent/60" aria-hidden="true">&bull;</span>
-                          <span className="text-amber-500 font-bold flex items-center gap-0.5">
+                          <span className="text-amber-500 font-bold flex items-center gap-0.5 text-xs">
                             ★ {test.rating}
                           </span>
                         </>
