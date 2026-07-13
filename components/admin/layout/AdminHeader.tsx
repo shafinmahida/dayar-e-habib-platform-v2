@@ -15,11 +15,47 @@ export function AdminHeader() {
     const updateActivity = async () => {
       try {
         const { data: { user } } = await supabase.auth.getUser();
-        if (user) {
-          await supabase
+        if (!user) return;
+
+        // 1. Update general profiles last_login
+        await supabase
+          .from("profiles")
+          .update({ last_login: new Date().toISOString() })
+          .eq("id", user.id);
+
+        // 2. Manage admin_session
+        let sessionId = sessionStorage.getItem("admin_session_id");
+        const nowStr = new Date().toISOString();
+
+        if (!sessionId) {
+          // Fetch profile full name
+          const { data: profile } = await supabase
             .from("profiles")
-            .update({ last_login: new Date().toISOString() })
-            .eq("id", user.id);
+            .select("full_name")
+            .eq("id", user.id)
+            .single();
+
+          const { data: session, error: sessError } = await supabase
+            .from("admin_sessions")
+            .insert({
+              user_id: user.id,
+              email: user.email,
+              full_name: profile?.full_name || user.user_metadata?.full_name || "Admin",
+              login_at: nowStr,
+              last_seen_at: nowStr
+            })
+            .select("id")
+            .single();
+
+          if (session) {
+            sessionStorage.setItem("admin_session_id", session.id);
+          }
+        } else {
+          // Update existing session heartbeat
+          await supabase
+            .from("admin_sessions")
+            .update({ last_seen_at: nowStr })
+            .eq("id", sessionId);
         }
       } catch (err) {
         console.error("Error updating admin activity", err);
@@ -27,8 +63,8 @@ export function AdminHeader() {
     };
 
     updateActivity();
-    // Update active status every 5 minutes while dashboard is open
-    const interval = setInterval(updateActivity, 5 * 60 * 1000);
+    // Update heartbeat every 1 minute for finer accuracy of session length
+    const interval = setInterval(updateActivity, 60 * 1000);
     return () => clearInterval(interval);
   }, []);
 
