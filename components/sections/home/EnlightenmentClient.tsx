@@ -238,23 +238,23 @@ export function EnlightenmentClient({ places = [] }: { places: any[] }) {
               </div>
 
               {/* Content Body */}
-              <div className="p-8 md:p-12 space-y-12 shrink-0 bg-[#0A0A0A] relative">
+              <div className="p-8 md:p-12 space-y-12 shrink-0 bg-[#FAF8F5] relative">
                 {/* Decorative Pattern Background (subtle) */}
-                <div className="absolute inset-0 opacity-[0.02] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, white 1px, transparent 0)', backgroundSize: '32px 32px' }} />
+                <div className="absolute inset-0 opacity-[0.03] pointer-events-none" style={{ backgroundImage: 'radial-gradient(circle at 2px 2px, #8A6A36 1px, transparent 0)', backgroundSize: '32px 32px' }} />
                 
-                <div className="prose prose-invert max-w-4xl mx-auto relative z-10">
-                  <div className="text-lg md:text-xl text-white/90 leading-[2] font-medium whitespace-pre-wrap">
+                <div className="prose max-w-4xl mx-auto relative z-10">
+                  <div className="text-lg md:text-xl text-[#1A1A1A]/90 leading-[2] font-medium whitespace-pre-wrap">
                     {selectedPlace.presentation_overview || selectedPlace.short_description}
                   </div>
                 </div>
 
                 {/* Gallery */}
                 {selectedPlace.gallery_images && selectedPlace.gallery_images.length > 0 && (
-                  <div className="space-y-6">
-                    <h3 className="text-sm font-black uppercase tracking-widest text-white/40">Visual Archives</h3>
+                  <div className="space-y-6 relative z-10">
+                    <h3 className="text-sm font-black uppercase tracking-widest text-[#8A6A36]">Visual Archives</h3>
                     <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
                       {selectedPlace.gallery_images.map((img: string, idx: number) => (
-                        <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden bg-white/5 group border border-white/10">
+                        <div key={idx} className="relative aspect-square rounded-2xl overflow-hidden bg-black/5 group border border-black/10 shadow-sm">
                           <Image 
                             src={img} 
                             alt={`${selectedPlace.title} gallery ${idx + 1}`} 

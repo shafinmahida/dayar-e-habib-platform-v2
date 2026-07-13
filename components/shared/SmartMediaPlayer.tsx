@@ -95,17 +95,21 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
 
   // Handle Images
   if (detectedType === "image") {
+    const isCover = className?.includes("object-cover");
     return (
       <div 
         ref={containerRef}
-        className={cn("relative w-full overflow-hidden flex items-center justify-center group bg-transparent", className)}
+        className={cn("relative w-full h-full overflow-hidden flex items-center justify-center group bg-transparent", className)}
         onDoubleClick={handleFullscreen}
       >
-        {/* Main Content Layer (Uncropped, purely intrinsic) */}
+        {/* Main Content Layer */}
         <img 
           src={url} 
           alt={alt} 
-          className="relative w-full h-auto max-h-full object-contain pointer-events-none drop-shadow-md" 
+          className={cn(
+            "relative pointer-events-none",
+            isCover ? "w-full h-full object-cover" : "w-full h-auto max-h-full object-contain drop-shadow-md"
+          )} 
           onError={() => setHasError(true)}
         />
         {caption && (
@@ -155,7 +159,7 @@ export function SmartMediaPlayer({ url, type = "auto", alt = "Media content", cl
           loop={true}
           width="100%"
           height="100%"
-          style={{ objectFit: 'contain' }}
+          style={{ objectFit: className?.includes('object-cover') ? 'cover' : 'contain' }}
           playsinline={true}
           controls={false}
           config={{
