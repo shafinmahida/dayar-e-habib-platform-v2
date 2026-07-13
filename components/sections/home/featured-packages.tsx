@@ -278,20 +278,34 @@ function Slideshow({ images, isActive, pkgTitle }: { images: string[]; isActive:
   }, [isActive, images.length]);
 
   return (
-    <div className="relative w-full h-full">
+    <div className="relative w-full h-full bg-[#1A1814]">
       {images.map((img, idx) => (
-        <Image
+        <div 
           key={img}
-          src={img}
-          alt={`${pkgTitle} Visual Slide ${idx + 1}`}
-          fill
-          sizes="(max-width: 768px) 100vw, 40vw"
           className={cn(
-            "object-cover absolute inset-0 transition-all duration-[1200ms] ease-in-out",
-            idx === slideIndex ? "opacity-100 scale-100" : "opacity-0 scale-[1.03]"
+            "absolute inset-0 transition-all duration-[1200ms] ease-in-out",
+            idx === slideIndex ? "opacity-100 scale-100 z-10" : "opacity-0 scale-[1.03] z-0"
           )}
-          priority={idx === 0 && isActive}
-        />
+        >
+          {/* Blurred Background */}
+          <Image
+            src={img}
+            alt=""
+            fill
+            sizes="(max-width: 768px) 100vw, 40vw"
+            className="object-cover opacity-60 blur-2xl scale-110 pointer-events-none"
+            priority={idx === 0 && isActive}
+          />
+          {/* Main Uncropped Image */}
+          <Image
+            src={img}
+            alt={`${pkgTitle} Visual Slide ${idx + 1}`}
+            fill
+            sizes="(max-width: 768px) 100vw, 40vw"
+            className="object-contain pointer-events-none drop-shadow-2xl"
+            priority={idx === 0 && isActive}
+          />
+        </div>
       ))}
     </div>
   );
