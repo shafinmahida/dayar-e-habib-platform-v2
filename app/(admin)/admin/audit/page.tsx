@@ -165,6 +165,92 @@ export default function AdminAuditLogsPage() {
     );
   };
 
+  const generateHumanReadableExplanation = (log: any) => {
+    const action = log.action;
+    const table = log.table_name;
+    const oldData = log.old_data || {};
+    const newData = log.new_data || {};
+
+    const getIdentifier = (data: any) => {
+      return data.title || data.name || data.slug || data.site_name || data.file_name || log.record_id;
+    };
+
+    const identifier = getIdentifier(action === 'DELETE' ? oldData : newData);
+
+    const getFriendlyTable = (tbl: string) => {
+      switch (tbl) {
+        case 'packages': return 'Package';
+        case 'enlightenment_places': return 'Ziyarat Location';
+        case 'media_assets': return 'Media File';
+        case 'site_settings': return 'Website Settings';
+        case 'company_profile': return 'Company Profile';
+        case 'content_blocks': return 'Content Block';
+        case 'navigation_links': return 'Menu Link';
+        case 'pages': return 'Page';
+        case 'page_sections': return 'Page Section';
+        default: return tbl;
+      }
+    };
+
+    const friendlyTable = getFriendlyTable(table);
+
+    if (action === 'INSERT') {
+      return `Created a new **${friendlyTable}** named **"${identifier}"**.`;
+    }
+
+    if (action === 'DELETE') {
+      return `Deleted the **${friendlyTable}** named **"${identifier}"**.`;
+    }
+
+    if (action === 'UPDATE') {
+      const changes: string[] = [];
+      const keys = Object.keys(newData);
+      
+      keys.forEach(key => {
+        if (['updated_at', 'created_at', 'search_vector', 'id', 'user_id'].includes(key)) return;
+
+        const oldVal = oldData[key];
+        const newVal = newData[key];
+
+        if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) {
+          const formatVal = (val: any) => {
+            if (val === null || val === undefined) return 'empty';
+            if (typeof val === 'object') return 'structured parameters';
+            if (typeof val === 'boolean') return val ? 'Yes' : 'No';
+            return `"${val}"`;
+          };
+
+          const keyFriendly = key.replace(/_/g, ' ');
+          changes.push(`Changed **${keyFriendly}** from ${formatVal(oldVal)} to ${formatVal(newVal)}`);
+        }
+      });
+
+      if (changes.length === 0) {
+        return `Updated **${friendlyTable}** **"${identifier}"** (System metadata updated).`;
+      }
+
+      return `Updated **${friendlyTable}** **"${identifier}"**:\n` + changes.map(c => `• ${c}`).join('\n');
+    }
+
+    return `Performed ${action} action on ${friendlyTable}.`;
+  };
+
+  const renderExplanation = (explanation: string) => {
+    return explanation.split('\n').map((line, idx) => {
+      const parts = line.split('**');
+      return (
+        <div key={idx} className="mb-1 leading-relaxed last:mb-0">
+          {parts.map((part, pIdx) => {
+            if (pIdx % 2 === 1) {
+              return <strong key={pIdx} className="text-[#8A6A36] font-bold">{part}</strong>;
+            }
+            return <span key={pIdx}>{part}</span>;
+          })}
+        </div>
+      );
+    });
+  };
+
   return (
     <div className="p-4 md:p-8 max-w-[1600px] mx-auto space-y-6">
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-4">
@@ -179,8 +265,6 @@ export default function AdminAuditLogsPage() {
 
       <div className="grid grid-cols-1 lg:grid-cols-4 gap-6 h-[calc(100vh-12rem)]">
         
-        {/* Column 1: Live Radar & Filters */}
-        <div className="lg:col-span-1 flex flex-col gap-6 overflow-hidden">
         {/* Column 1: Live Radar / Session History & Filters */}
         <div className="lg:col-span-1 flex flex-col gap-6 overflow-hidden">
           {/* Active Users & Sessions Tab Panel */}
@@ -271,8 +355,15 @@ export default function AdminAuditLogsPage() {
                   onChange={e => setFilterTable(e.target.value)}
                 >
                   <option value="all">All Tables</option>
-
                   <option value="packages">Packages</option>
+                  <option value="enlightenment_places">Ziyarat Locations</option>
+                  <option value="media_assets">Media Files</option>
+                  <option value="site_settings">Website Settings</option>
+                  <option value="company_profile">Company Profile</option>
+                  <option value="content_blocks">Content Blocks</option>
+                  <option value="navigation_links">Menu Links</option>
+                  <option value="pages">Pages</option>
+                  <option value="page_sections">Page Sections</option>
                 </select>
                 <select 
                   className="bg-muted/50 border border-border rounded-lg px-2 py-2 text-xs focus:outline-none"
@@ -344,6 +435,13 @@ export default function AdminAuditLogsPage() {
               </div>
             ) : (
               <div className="space-y-6">
+                {/* 1. Human Summary */}
+                <div className="space-y-2 bg-[#1A1A1A] p-4 rounded-xl border border-white/5 text-xs text-[#F2EBDB]">
+                  <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Action Summary</div>
+                  <div>{renderExplanation(generateHumanReadableExplanation(selectedLog))}</div>
+                </div>
+
+                {/* 2. Target ID */}
                 <div className="space-y-1">
                   <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest">Target ID</div>
                   <div className="text-accent bg-accent/10 px-2 py-1 rounded text-xs font-mono break-all border border-accent/20">
@@ -351,6 +449,7 @@ export default function AdminAuditLogsPage() {
                   </div>
                 </div>
                 
+                {/* 3. Diff Delta */}
                 <div className="space-y-1">
                   <div className="text-[10px] text-muted-foreground uppercase font-bold tracking-widest flex items-center justify-between">
                     <span>Payload Diff</span>
