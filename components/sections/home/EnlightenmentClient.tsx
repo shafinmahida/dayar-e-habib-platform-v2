@@ -98,7 +98,7 @@ export function EnlightenmentClient({ places = [] }: { places: any[] }) {
 
         {/* Results List */}
         <AnimatePresence mode="popLayout">
-          {(searchQuery || activeCategory) && (
+          {(searchQuery || activeCategory) ? (
             <motion.div 
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
@@ -128,6 +128,48 @@ export function EnlightenmentClient({ places = [] }: { places: any[] }) {
                     </div>
                   </button>
                 ))
+              )}
+            </motion.div>
+          ) : (
+            <motion.div 
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -20 }}
+              className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6"
+            >
+              {places.slice(0, 6).map(place => (
+                <button
+                  key={place.id}
+                  onClick={() => setSelectedPlace(place)}
+                  className="flex flex-col text-left group rounded-3xl overflow-hidden bg-white shadow-sm border border-black/5 hover:shadow-2xl hover:border-[#8A6A36]/30 transition-all duration-500 hover:-translate-y-1"
+                >
+                  <div className="relative w-full aspect-[4/3] bg-black overflow-hidden border-b border-black/5">
+                    {place.gallery_images && place.gallery_images.length > 0 ? (
+                      <Image 
+                        src={place.gallery_images[0]} 
+                        alt={place.title} 
+                        fill 
+                        sizes="(max-width: 768px) 100vw, 33vw"
+                        className="object-cover group-hover:scale-110 transition-transform duration-700 opacity-90 group-hover:opacity-100"
+                      />
+                    ) : (
+                      <div className="absolute inset-0 bg-[#FAF8F5] flex items-center justify-center text-[#1A1A1A]/20">No Image</div>
+                    )}
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                    <div className="absolute top-4 left-4 bg-white/95 backdrop-blur-md px-3 py-1 text-[8px] font-black tracking-widest text-[#8A6A36] uppercase rounded-full shadow-sm">
+                      {place.category}
+                    </div>
+                  </div>
+                  <div className="p-6">
+                    <h3 className="text-lg font-bold text-[#1A1A1A] mb-2 line-clamp-1 group-hover:text-[#8A6A36] transition-colors">{place.title}</h3>
+                    <p className="text-sm text-[#1A1A1A]/60 line-clamp-2">{place.short_description}</p>
+                  </div>
+                </button>
+              ))}
+              {places.length === 0 && (
+                <div className="col-span-full py-16 text-center text-[#1A1A1A]/40 font-medium bg-white rounded-3xl border border-black/5">
+                  The Enlightenment Directory is currently empty.
+                </div>
               )}
             </motion.div>
           )}

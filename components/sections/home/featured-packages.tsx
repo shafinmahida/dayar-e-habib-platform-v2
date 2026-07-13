@@ -109,7 +109,30 @@ export function FeaturedPackages({ packages }: FeaturedPackagesProps) {
 
               const destinationNames = pkg.hotels?.[0]?.location || "Saudi Arabia";
 
-              const cardSlides = slideshowMap[pkg.slug] || [pkg.imageUrl || "/kaaba-sunset.png"];
+              const rawPkg = pkg as any;
+              let defaultSlides: string[] = [];
+              if (rawPkg.image_url) {
+                defaultSlides = rawPkg.image_url.split(',').filter(Boolean);
+              } else if (rawPkg.imageUrl) {
+                defaultSlides = rawPkg.imageUrl.split(',').filter(Boolean);
+              }
+
+              let slides: string[] = [];
+              const cover = pkg.coverImage || pkg.cover_image;
+              if (cover) {
+                slides.push(cover as string);
+              }
+              
+              if (defaultSlides.length > 0) {
+                defaultSlides.forEach(s => {
+                  if (!slides.includes(s)) slides.push(s);
+                });
+              }
+
+              if (slides.length === 0) {
+                slides = slideshowMap[pkg.slug] || ["/kaaba-sunset.png"];
+              }
+              const cardSlides = slides;
 
               return (
                 <div
