@@ -251,7 +251,6 @@ export function EnlightenmentClient({ places = [] }: { places: any[] }) {
                       </div>
                     </div>
                   )}
-                </div>
               </motion.div>
           </motion.div>
         )}
