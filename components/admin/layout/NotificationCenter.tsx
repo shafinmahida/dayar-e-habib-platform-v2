@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { createPortal } from "react-dom";
 import { X, Bell, Info, Mail, AlertTriangle, CheckCircle2 } from "lucide-react";
 
 interface NotificationItem {
@@ -68,9 +69,9 @@ export function NotificationCenter({ isOpen, onClose }: NotificationCenterProps)
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, [isOpen, onClose]);
 
-  if (!isOpen) return null;
+  if (!isOpen || typeof window === "undefined") return null;
 
-  return (
+  return createPortal(
     <div className="fixed inset-0 z-50 flex justify-end bg-stone-900/30 backdrop-blur-[1px]">
       <div
         ref={drawerRef}
@@ -142,6 +143,7 @@ export function NotificationCenter({ isOpen, onClose }: NotificationCenterProps)
           </button>
         </div>
       </div>
-    </div>
+    </div>,
+    document.body
   );
 }
