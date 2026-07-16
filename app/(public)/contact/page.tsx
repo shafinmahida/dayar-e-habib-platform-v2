@@ -8,7 +8,7 @@ import { Container } from "@/components/layout/Container";
 import { PackageEnquiry } from "@/components/sections/package/PackageEnquiry";
 
 export const metadata: Metadata = {
-  title: "Contact Us | Dayar-E-Habib",
+  title: "Contact Us",
   description: "Get in touch with our travel advisors to book a package, ask questions, or customize your pilgrimage itinerary.",
 };
 

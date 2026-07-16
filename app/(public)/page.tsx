@@ -11,48 +11,53 @@ import {
 
 import { createClient } from "@/lib/supabase/server";
 
-export const dynamic = "force-dynamic";
-export const revalidate = 0;
+// ISR: revalidate every 60 seconds instead of force-dynamic on every request
+export const revalidate = 60;
 
 export default async function HomePage() {
   const supabase = await createClient();
 
-  // Fetch page sections
+  // Fetch page sections (dependent query — needs homePage.id first)
   const { data: homePage } = await supabase.from('pages').select('id').eq('slug', 'home').single();
-  let sections: any[] = [];
-  if (homePage) {
-    const { data } = await supabase.from('page_sections').select('*').eq('page_id', homePage.id).order('sort_order');
-    if (data) sections = data;
-  }
 
-  // Extract section contents based on type
-  const trustProps = sections.find(s => s.section_type === 'trust')?.content?.props || [];
-  const timelineSteps = sections.find(s => s.section_type === 'timeline')?.content?.steps || [];
+  // Run ALL independent queries in parallel for ~3x speedup
+  const [sectionsResult, packagesResult, testimonialsResult, faqsResult] = await Promise.all([
+    // Sections (depends on homePage, but we handle null safely)
+    homePage
+      ? supabase.from('page_sections').select('*').eq('page_id', homePage.id).order('sort_order')
+      : Promise.resolve({ data: [] }),
 
-  // Fetch active featured packages
-  const { data: featuredPackages } = await supabase
-    .from('packages')
-    .select(`
-      *,
-      package_categories(name)
-    `)
-    .eq('status', 'published')
-    .eq('featured', true)
-    .order('display_order', { ascending: true });
+    // Featured packages
+    supabase
+      .from('packages')
+      .select('*, package_categories(name)')
+      .eq('status', 'published')
+      .eq('featured', true)
+      .order('display_order', { ascending: true }),
 
-  // Fetch Testimonials
-  const { data: testimonials } = await supabase
-    .from('testimonials')
-    .select('*')
-    .eq('active', true)
-    .order('display_order', { ascending: true });
+    // Testimonials
+    supabase
+      .from('testimonials')
+      .select('*')
+      .eq('active', true)
+      .order('display_order', { ascending: true }),
 
-  // Fetch FAQs
-  const { data: faqs } = await supabase
-    .from('faqs')
-    .select('*')
-    .eq('active', true)
-    .order('display_order', { ascending: true });
+    // FAQs
+    supabase
+      .from('faqs')
+      .select('*')
+      .eq('active', true)
+      .order('display_order', { ascending: true }),
+  ]);
+
+  const sections = sectionsResult.data || [];
+  const featuredPackages = packagesResult.data;
+  const testimonials = testimonialsResult.data;
+  const faqs = faqsResult.data;
+
+  // Extract section contents
+  const trustProps = sections.find((s: any) => s.section_type === 'trust')?.content?.props || [];
+  const timelineSteps = sections.find((s: any) => s.section_type === 'timeline')?.content?.steps || [];
 
   return (
     <>

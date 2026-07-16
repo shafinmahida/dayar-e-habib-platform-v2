@@ -8,24 +8,19 @@ export function BrandPreloader() {
   const [unmounted, setUnmounted] = useState(false);
 
   useEffect(() => {
-    // Lock scroll immediately on mount just in case
-    document.body.style.overflow = "hidden";
-
-    // Start transition-out animation after 1.5 seconds of presentation
+    // Start fade-out after 0.6s (just enough to register the brand)
     const fadeTimer = setTimeout(() => {
       setVisible(true);
-    }, 1500);
+    }, 600);
 
-    // Unmount preloader from DOM and restore page flow after animation completes
+    // Unmount after 1.2s total (0.6s display + 0.6s fade animation)
     const hideTimer = setTimeout(() => {
       setUnmounted(true);
-      document.body.style.overflow = "";
-    }, 3900); // 1.5s + 2.4s transition window
+    }, 1200);
 
     return () => {
       clearTimeout(fadeTimer);
       clearTimeout(hideTimer);
-      document.body.style.overflow = "";
     };
   }, []);
 
@@ -33,25 +28,25 @@ export function BrandPreloader() {
 
   return (
     <div
-      className={`fixed inset-0 z-[100] bg-[#F2EBDB] flex items-center justify-center transition-opacity duration-[1000ms] ease-in-out ${
+      aria-hidden="true"
+      className={`fixed inset-0 z-[100] bg-[#F2EBDB] flex items-center justify-center transition-opacity duration-500 ease-out ${
         visible ? "opacity-0 pointer-events-none" : "opacity-100"
       }`}
     >
       <div className="relative flex flex-col items-center gap-8 text-center px-6">
-        {/* Animated Logo - Scaling and translating toward top-left corner */}
         <div
           className="transition-all"
           style={
             visible
               ? {
-                  transform: "translate(-42vw, -45vh) scale(0.08)",
+                  transform: "scale(0.85)",
                   opacity: 0,
-                  transition: "all 2.4s cubic-bezier(0.16, 1, 0.3, 1)",
+                  transition: "all 0.5s cubic-bezier(0.16, 1, 0.3, 1)",
                 }
               : {
-                  transform: "translate(0, 0) scale(1)",
+                  transform: "scale(1)",
                   opacity: 1,
-                  transition: "all 1.2s cubic-bezier(0.16, 1, 0.3, 1)",
+                  transition: "all 0.3s cubic-bezier(0.16, 1, 0.3, 1)",
                 }
           }
         >

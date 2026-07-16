@@ -16,4 +16,5 @@ export type SectionProps = {
 export type LogoProps = {
   className?: string;
   variant?: "full" | "mark";
+  theme?: "dark" | "light";
 };

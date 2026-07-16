@@ -5,7 +5,7 @@ import { PackageCard } from "@/components/sections/package/PackageCard";
 import { createClient } from "@/lib/supabase/server";
 
 export const metadata: Metadata = {
-  title: "All Tours & Packages | Dayar-E-Habib",
+  title: "All Tours & Packages",
   description: "Browse all our premium Hajj, Umrah, and Ziyarat packages.",
 };
 

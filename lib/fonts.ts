@@ -1,4 +1,4 @@
-import { Inter, Manrope, Playfair_Display } from "next/font/google";
+import { Inter, Manrope, Playfair_Display, Caveat } from "next/font/google";
 
 export const fontBody = Inter({
   subsets: ["latin"],
@@ -18,3 +18,9 @@ export const fontSerif = Playfair_Display({
   display: "swap",
 });
 
+export const fontHandwritten = Caveat({
+  subsets: ["latin"],
+  variable: "--font-caveat",
+  weight: ["400", "700"],
+  display: "swap",
+});

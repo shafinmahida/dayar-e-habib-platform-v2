@@ -5,7 +5,12 @@ import { CommandPalette } from "@/components/admin/layout/CommandPalette";
 import { redirect } from "next/navigation";
 import { createClient } from "@/lib/supabase/server";
 
-export const dynamic = 'force-dynamic';
+import type { Metadata } from "next";
+
+export const metadata: Metadata = {
+  title: "Admin Dashboard",
+  robots: { index: false, follow: false },
+};
 
 export default async function AdminLayout({
   children,

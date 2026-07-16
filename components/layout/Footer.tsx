@@ -50,11 +50,18 @@ export async function Footer() {
   const supabase = await createClient();
   const currentYear = new Date().getFullYear();
 
-  // Fetch dynamic data
-  const { data: offices } = await supabase.from('contact_offices').select('*').eq('active', true).order('display_order');
-  const { data: socials } = await supabase.from('social_links').select('*').eq('active', true).order('display_order');
-  const { data: profile } = await supabase.from('company_profile').select('*').single();
-  const { data: settings } = await supabase.from('site_settings').select('*').single();
+  // Fetch all footer data in parallel
+  const [
+    { data: offices },
+    { data: socials },
+    { data: profile },
+    { data: settings },
+  ] = await Promise.all([
+    supabase.from('contact_offices').select('*').eq('active', true).order('display_order'),
+    supabase.from('social_links').select('*').eq('active', true).order('display_order'),
+    supabase.from('company_profile').select('*').single(),
+    supabase.from('site_settings').select('*').single(),
+  ]);
 
   const primaryOffice = offices?.[0];
 
@@ -66,7 +73,7 @@ export async function Footer() {
           {/* Column 1: Logo & Branding */}
           <div className="space-y-6 sm:col-span-2 lg:col-span-4">
             <Link href="/" className="inline-block hover:scale-[1.02] transition-transform duration-300">
-              <Logo className="[--logo-primary:#FCFAF5] h-18 lg:h-22 w-auto text-[#FCFAF5]" />
+              <Logo theme="light" className="h-18 lg:h-22 w-auto" />
             </Link>
             <p className="max-w-xs text-xs sm:text-sm leading-relaxed text-[#FCFAF5]/70">
               {profile?.description || "Serving pilgrims since 1986 with trust, transparency, and dedicated personal care. Guided by years of experience and theological excellence."}
