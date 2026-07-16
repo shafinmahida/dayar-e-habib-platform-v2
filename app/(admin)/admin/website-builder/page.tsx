@@ -1,8 +1,8 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { LayoutDashboard, Building2, MapPin, Navigation, Type, Save, Loader2, Check, FolderOpen, Image as ImageIcon } from "lucide-react";
+import { LayoutDashboard, Building2, Navigation, Type, Save, Loader2, Check, FolderOpen, Image as ImageIcon } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
 // New Components
@@ -14,12 +14,22 @@ import { LocationsManager } from "@/components/admin/builder/LocationsManager";
 
 type Tab = 'business_profile' | 'homepage_hero' | 'categories' | 'enlightenment' | 'locations';
 
+interface CompanyProfile {
+  id?: string;
+  name: string;
+  legal_name: string;
+  established_year: string;
+  license_number: string;
+  slogan: string;
+  description: string;
+}
+
 export default function WebsiteBuilderPage() {
-  const supabase = createClient();
+  const supabase = useMemo(() => createClient(), []);
   const [activeTab, setActiveTab] = useState<Tab>('business_profile');
   
   // Business Profile State
-  const [businessProfile, setBusinessProfile] = useState<any>(null);
+  const [businessProfile, setBusinessProfile] = useState<CompanyProfile | null>(null);
   const [saving, setSaving] = useState(false);
   const [saved, setSaved] = useState(false);
 
@@ -27,12 +37,23 @@ export default function WebsiteBuilderPage() {
     const fetchData = async () => {
       if (activeTab === 'business_profile') {
         const { data } = await supabase.from('company_profile').select('*').limit(1).single();
-        if (data) setBusinessProfile(data);
+        if (data) {
+          setBusinessProfile(data);
+        } else {
+          setBusinessProfile({
+            name: "",
+            legal_name: "",
+            established_year: "",
+            license_number: "",
+            slogan: "",
+            description: ""
+          });
+        }
       }
     };
 
     fetchData();
-  }, [activeTab]);
+  }, [activeTab, supabase]);
 
   const handleSaveBusinessProfile = async () => {
     if (!businessProfile) return;
@@ -79,7 +100,7 @@ export default function WebsiteBuilderPage() {
             <LayoutDashboard className="size-8 text-accent" />
             Website Builder
           </h1>
-          <p className="text-muted-foreground">Flawless control over your platform's core data and visual identity.</p>
+          <p className="text-muted-foreground">Flawless control over your platform&apos;s core data and visual identity.</p>
         </div>
       </div>
 

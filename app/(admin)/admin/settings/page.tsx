@@ -1,29 +1,36 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
 import { Sliders, Save, Loader2, Globe, Shield, MessageSquare } from "lucide-react";
 import { Button } from "@/components/ui/button";
 
+interface SiteSettings {
+  id?: string;
+  site_name: string;
+  site_description: string;
+  announcement_enabled: boolean;
+  announcement_text: string;
+  maintenance_mode: boolean;
+  enable_bookings: boolean;
+  seo_keywords: string[];
+}
+
 export default function AdminSettingsPage() {
   const supabase = createClient();
-  const [settings, setSettings] = useState<any>(null);
+  const [settings, setSettings] = useState<SiteSettings | null>(null);
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
+  const [success, setSuccess] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  useEffect(() => {
-    fetchSettings();
-  }, []);
-
-  const fetchSettings = async () => {
+  const fetchSettings = useCallback(async () => {
     setLoading(true);
-    // Since there's only one global settings row, we fetch the first one or create it.
     const { data } = await supabase.from('site_settings').select('*').limit(1).single();
     
     if (data) {
-      setSettings(data);
+      setSettings(data as SiteSettings);
     } else {
-      // Default empty settings state if none exists yet
       setSettings({
         site_name: "Dayar-E-Habib",
         site_description: "Premium Hajj & Umrah Services",
@@ -35,26 +42,42 @@ export default function AdminSettingsPage() {
       });
     }
     setLoading(false);
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchSettings();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [fetchSettings]);
 
   const handleSave = async () => {
+    if (!settings) return;
     setSaving(true);
+    setError(null);
+    setSuccess(false);
     
-    // Check if a row exists
-    const { data: existing } = await supabase.from('site_settings').select('id').limit(1).single();
-
-    if (existing) {
-      await supabase.from('site_settings').update(settings).eq('id', existing.id);
-    } else {
-      await supabase.from('site_settings').insert([settings]);
+    try {
+      if (settings.id) {
+        const { error: updateError } = await supabase.from('site_settings').update(settings).eq('id', settings.id);
+        if (updateError) throw updateError;
+      } else {
+        const { data: inserted, error: insertError } = await supabase.from('site_settings').insert([settings]).select().single();
+        if (insertError) throw insertError;
+        if (inserted) setSettings(inserted as SiteSettings);
+      }
+      setSuccess(true);
+      setTimeout(() => setSuccess(false), 3000);
+    } catch (err: unknown) {
+      console.error(err);
+      const errMsg = err instanceof Error ? err.message : "Failed to save global configurations.";
+      setError(errMsg);
+    } finally {
+      setSaving(false);
     }
-
-    alert("Global Settings Saved!");
-    setSaving(false);
-    fetchSettings();
   };
 
-  if (loading) {
+  if (loading || !settings) {
     return <div className="p-12 flex justify-center"><Loader2 className="animate-spin text-primary size-8" /></div>;
   }
 
@@ -76,6 +99,18 @@ export default function AdminSettingsPage() {
           {saving ? "Saving..." : "Save Settings"}
         </Button>
       </div>
+
+      {/* Success/Error Banner Feedback */}
+      {success && (
+        <div className="p-4 text-sm bg-emerald-500/10 text-emerald-500 border border-emerald-500/20 rounded-xl animate-in slide-in-from-top-2 duration-300">
+          Global Settings Saved Successfully!
+        </div>
+      )}
+      {error && (
+        <div className="p-4 text-sm bg-destructive/10 text-destructive border border-destructive/20 rounded-xl animate-in slide-in-from-top-2 duration-300">
+          {error}
+        </div>
+      )}
 
       <div className="space-y-6">
         {/* General Details */}

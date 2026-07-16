@@ -77,7 +77,7 @@ export function CommandPalette() {
       icon: ShieldAlert,
       name: "Inspect System Logs",
       category: "System",
-      action: () => { alert("Diagnostics log overview is empty."); setIsOpen(false); }
+      action: () => { router.push("/admin/audit"); setIsOpen(false); }
     }
   ];
 

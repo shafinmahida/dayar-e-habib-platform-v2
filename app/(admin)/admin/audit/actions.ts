@@ -1,8 +1,17 @@
 "use server";
 
 import { createAdminClient } from "@/lib/supabase/admin";
+import { createClient as createServerClient } from "@/lib/supabase/server";
 
 export async function getSystemUsers() {
+  // 1. Authenticate user to prevent unauthorized access/privilege escalation
+  const supabase = await createServerClient();
+  const { data: { user } } = await supabase.auth.getUser();
+
+  if (!user) {
+    throw new Error("Unauthorized - Admin privileges required");
+  }
+
   const supabaseAdmin = createAdminClient();
   
   // Fetch profiles directly. We don't need auth.admin.listUsers() since profiles table has everything!

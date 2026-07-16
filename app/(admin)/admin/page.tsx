@@ -1,23 +1,50 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import Link from "next/link";
 import {
   Database,
   ShieldCheck,
-  TrendingUp,
-  Clock,
   ArrowUpRight,
-  FileText,
-  Activity,
   Layers,
   Inbox
 } from "lucide-react";
 import { createClient } from "@/lib/supabase/client";
 
+interface EnquiryItem {
+  id: string;
+  name: string;
+  phone: string;
+  email?: string;
+  message?: string;
+  package_title?: string;
+  status: string;
+  created_at: string;
+}
+
+interface AuditLogItem {
+  id: string;
+  table_name: string;
+  record_id: string;
+  action: string;
+  old_data?: Record<string, unknown> | null;
+  new_data?: Record<string, unknown> | null;
+  user_id?: string;
+  created_at: string;
+  profiles?: {
+    full_name: string;
+    email?: string;
+  } | null;
+}
+
 export default function AdminDashboardPage() {
   const supabase = createClient();
-  const [greeting, setGreeting] = useState("Good Day");
+  const [greeting] = useState(() => {
+    const hours = new Date().getHours();
+    if (hours < 12) return "Good Morning";
+    if (hours < 18) return "Good Afternoon";
+    return "Good Evening";
+  });
   const [userName, setUserName] = useState("Admin");
   const [loading, setLoading] = useState(true);
 
@@ -27,48 +54,53 @@ export default function AdminDashboardPage() {
   const [totalMedia, setTotalMedia] = useState(0);
 
   // Lists
-  const [latestEnquiries, setLatestEnquiries] = useState<any[]>([]);
-  const [recentLogs, setRecentLogs] = useState<any[]>([]);
+  const [latestEnquiries, setLatestEnquiries] = useState<EnquiryItem[]>([]);
+  const [recentLogs, setRecentLogs] = useState<AuditLogItem[]>([]);
 
-  useEffect(() => {
-    const hours = new Date().getHours();
-    // eslint-disable-next-line react-hooks/set-state-in-effect
-    if (hours < 12) setGreeting("Good Morning");
-    else if (hours < 18) setGreeting("Good Afternoon");
-    else setGreeting("Good Evening");
-
-    fetchDashboardData();
-  }, []);
-
-  const fetchDashboardData = async () => {
+  const fetchDashboardData = useCallback(async () => {
     setLoading(true);
 
-    const { data: { user } } = await supabase.auth.getUser();
-    if (user?.user_metadata?.full_name) {
-      setUserName(user.user_metadata.full_name);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (user?.user_metadata?.full_name) {
+        setUserName(user.user_metadata.full_name);
+      }
+
+      // Execute all 5 database queries in parallel for maximum loading performance
+      const [
+        pkgCountResult,
+        enqCountResult,
+        mediaCountResult,
+        latestEnqResult,
+        logsResult
+      ] = await Promise.all([
+        supabase.from('packages').select('*', { count: 'exact', head: true }),
+        supabase.from('enquiries').select('*', { count: 'exact', head: true }).eq('status', 'new'),
+        supabase.from('media_assets').select('*', { count: 'exact', head: true }),
+        supabase.from('enquiries').select('*').order('created_at', { ascending: false }).limit(4),
+        supabase.from('audit_logs').select('*, profiles:user_id(full_name)').order('created_at', { ascending: false }).limit(6)
+      ]);
+
+      if (pkgCountResult.count) setTotalPackages(pkgCountResult.count);
+      if (enqCountResult.count) setActiveEnquiries(enqCountResult.count);
+      if (mediaCountResult.count) setTotalMedia(mediaCountResult.count);
+      if (latestEnqResult.data) setLatestEnquiries(latestEnqResult.data as EnquiryItem[]);
+      if (logsResult.data) setRecentLogs(logsResult.data as unknown as AuditLogItem[]);
+    } catch (err) {
+      console.error("Failed to load dashboard data", err);
+    } finally {
+      setLoading(false);
     }
+  }, [supabase]);
 
-    // Fetch counts
-    const { count: pkgCount } = await supabase.from('packages').select('*', { count: 'exact', head: true });
-    if (pkgCount) setTotalPackages(pkgCount);
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchDashboardData();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [fetchDashboardData]);
 
-    const { count: enqCount } = await supabase.from('enquiries').select('*', { count: 'exact', head: true }).eq('status', 'new');
-    if (enqCount) setActiveEnquiries(enqCount);
-
-    const { count: mediaCount } = await supabase.from('media_assets').select('*', { count: 'exact', head: true });
-    if (mediaCount) setTotalMedia(mediaCount);
-
-    // Fetch lists
-    const { data: latestEnq } = await supabase.from('enquiries').select('*').order('created_at', { ascending: false }).limit(4);
-    if (latestEnq) setLatestEnquiries(latestEnq);
-
-    const { data: logs } = await supabase.from('audit_logs').select('*, profiles:user_id(full_name)').order('created_at', { ascending: false }).limit(6);
-    if (logs) setRecentLogs(logs);
-
-    setLoading(false);
-  };
-
-  const timeAgo = (dateStr: string) => {
+  const timeAgo = useCallback((dateStr: string) => {
     const seconds = Math.floor((new Date().getTime() - new Date(dateStr).getTime()) / 1000);
     if (seconds < 60) return `${seconds}s ago`;
     const minutes = Math.floor(seconds / 60);
@@ -77,7 +109,7 @@ export default function AdminDashboardPage() {
     if (hours < 24) return `${hours}h ago`;
     const days = Math.floor(hours / 24);
     return `${days}d ago`;
-  };
+  }, []);
 
   return (
     <div className="space-y-10 animate-in fade-in duration-300">

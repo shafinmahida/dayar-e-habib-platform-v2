@@ -1,39 +1,65 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Inbox, CheckCircle, XCircle, Trash2, ShieldAlert } from "lucide-react";
+import { Inbox, CheckCircle, Trash2, ShieldAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
+
+interface EnquiryItem {
+  id: string;
+  name: string;
+  phone: string;
+  email?: string;
+  message?: string;
+  package_title?: string;
+  status: string;
+  created_at: string;
+}
 
 export default function AdminEnquiriesPage() {
   const supabase = createClient();
-  const [enquiries, setEnquiries] = useState<any[]>([]);
+  const [enquiries, setEnquiries] = useState<EnquiryItem[]>([]);
   const [loading, setLoading] = useState(true);
 
-  useEffect(() => {
-    fetchEnquiries();
-  }, []);
-
-  const fetchEnquiries = async () => {
+  const fetchEnquiries = useCallback(async () => {
     setLoading(true);
     const { data } = await supabase
       .from('enquiries')
       .select('*')
       .order('created_at', { ascending: false });
     
-    if (data) setEnquiries(data);
+    if (data) setEnquiries(data as EnquiryItem[]);
     setLoading(false);
-  };
+  }, [supabase]);
+
+  useEffect(() => {
+    const timer = setTimeout(() => {
+      fetchEnquiries();
+    }, 0);
+    return () => clearTimeout(timer);
+  }, [fetchEnquiries]);
 
   const updateStatus = async (id: string, newStatus: string) => {
-    await supabase.from('enquiries').update({ status: newStatus }).eq('id', id);
-    fetchEnquiries();
+    // Optimistic UI state update
+    setEnquiries(prev => prev.map(enq => enq.id === id ? { ...enq, status: newStatus } : enq));
+    
+    const { error } = await supabase.from('enquiries').update({ status: newStatus }).eq('id', id);
+    if (error) {
+      console.error("Failed to update status on server:", error);
+      fetchEnquiries(); // Revert state from server
+    }
   };
 
   const deleteEnquiry = async (id: string) => {
     if (confirm("Are you sure you want to permanently delete this enquiry?")) {
-      await supabase.from('enquiries').delete().eq('id', id);
-      fetchEnquiries();
+      // Optimistic UI state update
+      setEnquiries(prev => prev.filter(enq => enq.id !== id));
+      
+      const { error } = await supabase.from('enquiries').delete().eq('id', id);
+      if (error) {
+        console.error("Failed to delete enquiry on server:", error);
+        fetchEnquiries(); // Revert state from server
+      }
     }
   };
 
@@ -80,7 +106,7 @@ export default function AdminEnquiriesPage() {
                     )}
                     
                     <div className="mt-4 p-4 bg-secondary/30 rounded-lg text-sm border border-border/50 text-foreground/80 italic">
-                      "{enq.message}"
+                      &ldquo;{enq.message}&rdquo;
                     </div>
                     
                     <div className="text-xs text-muted-foreground/60 pt-2">

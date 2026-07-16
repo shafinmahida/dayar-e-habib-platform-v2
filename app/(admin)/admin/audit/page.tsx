@@ -1,18 +1,53 @@
 "use client";
 
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { createClient } from "@/lib/supabase/client";
-import { Activity, Clock, Database, User, FileJson, Search, Filter, ShieldCheck, Users } from "lucide-react";
+import { Activity, Clock, Database, User, FileJson, Search, Filter, ShieldCheck } from "lucide-react";
 import { getSystemUsers } from "./actions";
 import { formatDistanceToNow, parseISO } from "date-fns";
 
+interface AuditLogItem {
+  id: string;
+  table_name: string;
+  record_id: string;
+  action: string;
+  old_data?: Record<string, unknown> | null;
+  new_data?: Record<string, unknown> | null;
+  user_id?: string;
+  created_at: string;
+  profiles?: {
+    full_name: string;
+    email?: string;
+  } | null;
+}
+
+interface SystemUserItem {
+  id: string;
+  email: string;
+  last_sign_in_at: string | null;
+  created_at: string;
+  full_name: string;
+  role: string;
+}
+
+interface AdminSessionItem {
+  id: string;
+  user_id: string;
+  email: string;
+  full_name: string;
+  login_at: string;
+  last_seen_at: string;
+  ip_address?: string;
+  user_agent?: string;
+}
+
 export default function AdminAuditLogsPage() {
   const supabase = createClient();
-  const [logs, setLogs] = useState<any[]>([]);
-  const [systemUsers, setSystemUsers] = useState<any[]>([]);
-  const [sessions, setSessions] = useState<any[]>([]);
+  const [logs, setLogs] = useState<AuditLogItem[]>([]);
+  const [systemUsers, setSystemUsers] = useState<SystemUserItem[]>([]);
+  const [sessions, setSessions] = useState<AdminSessionItem[]>([]);
   const [loading, setLoading] = useState(true);
-  const [selectedLog, setSelectedLog] = useState<any | null>(null);
+  const [selectedLog, setSelectedLog] = useState<AuditLogItem | null>(null);
   const [activeTab, setActiveTab] = useState<"radar" | "sessions">("radar");
   
   // Filters
@@ -20,8 +55,42 @@ export default function AdminAuditLogsPage() {
   const [filterTable, setFilterTable] = useState("all");
   const [filterAction, setFilterAction] = useState("all");
 
+  const fetchData = useCallback(async () => {
+    setLoading(true);
+    try {
+      // Fetch system users, active admin sessions, and audit logs in parallel
+      const [usersData, sessionsResult, logsResult] = await Promise.all([
+        getSystemUsers(),
+        supabase.from('admin_sessions').select('*').order('login_at', { ascending: false }).limit(20),
+        supabase.from('audit_logs').select('*').order('created_at', { ascending: false }).limit(100)
+      ]);
+
+      setSystemUsers(usersData as SystemUserItem[]);
+      if (sessionsResult.data) setSessions(sessionsResult.data as AdminSessionItem[]);
+      
+      const logsData = logsResult.data;
+      if (logsData) {
+        // Manually join with usersData to fix 'Unknown' profiles
+        const enrichedLogs = logsData.map(log => {
+          const user = usersData.find(u => u.id === log.user_id);
+          return {
+            ...log,
+            profiles: user ? { full_name: user.full_name, email: user.email } : null
+          };
+        });
+        setLogs(enrichedLogs as AuditLogItem[]);
+      }
+    } catch (e) {
+      console.error("Failed to fetch system logs:", e);
+    } finally {
+      setLoading(false);
+    }
+  }, [supabase]);
+
   useEffect(() => {
-    fetchData();
+    const timer = setTimeout(() => {
+      fetchData();
+    }, 0);
     
     // Subscribe to real-time audit logs
     const channel = supabase
@@ -30,15 +99,16 @@ export default function AdminAuditLogsPage() {
         'postgres_changes',
         { event: '*', schema: 'public', table: 'audit_logs' },
         (payload) => {
-          setLogs(current => [payload.new, ...current]);
+          setLogs(current => [payload.new as AuditLogItem, ...current]);
         }
       )
       .subscribe();
       
     return () => {
+      clearTimeout(timer);
       supabase.removeChannel(channel);
     };
-  }, []);
+  }, [fetchData, supabase]);
 
   const getSessionDuration = (loginAt: string, lastSeenAt: string) => {
     const diffMs = new Date(lastSeenAt).getTime() - new Date(loginAt).getTime();
@@ -50,45 +120,7 @@ export default function AdminAuditLogsPage() {
     return `${diffHours}h ${remainingMins}m`;
   };
 
-  const fetchData = async () => {
-    setLoading(true);
-    try {
-      // Fetch users securely via server action
-      const usersData = await getSystemUsers();
-      setSystemUsers(usersData);
 
-      // Fetch recent sessions
-      const { data: sessionsData } = await supabase
-        .from('admin_sessions')
-        .select('*')
-        .order('login_at', { ascending: false })
-        .limit(20);
-      if (sessionsData) setSessions(sessionsData);
-
-      // Fetch logs
-      const { data: logsData } = await supabase
-        .from('audit_logs')
-        .select('*')
-        .order('created_at', { ascending: false })
-        .limit(100);
-      
-      if (logsData) {
-        // Manually join with usersData to fix 'Unknown'
-        const enrichedLogs = logsData.map(log => {
-          const user = usersData.find(u => u.id === log.user_id);
-          return {
-            ...log,
-            profiles: user ? { full_name: user.full_name, email: user.email } : null
-          };
-        });
-        setLogs(enrichedLogs);
-      }
-    } catch (e) {
-      console.error(e);
-    } finally {
-      setLoading(false);
-    }
-  };
 
   const ActionBadge = ({ action }: { action: string }) => {
     switch (action) {
@@ -115,7 +147,10 @@ export default function AdminAuditLogsPage() {
   };
 
   // Visual Diff Engine
-  const renderDiff = (oldData: any, newData: any) => {
+  const renderDiff = (
+    oldData: Record<string, unknown> | null | undefined,
+    newData: Record<string, unknown> | null | undefined
+  ) => {
     const oldKeys = Object.keys(oldData || {});
     const newKeys = Object.keys(newData || {});
     const allKeys = Array.from(new Set([...oldKeys, ...newKeys]));
@@ -165,14 +200,14 @@ export default function AdminAuditLogsPage() {
     );
   };
 
-  const generateHumanReadableExplanation = (log: any) => {
+  const generateHumanReadableExplanation = (log: AuditLogItem) => {
     const action = log.action;
     const table = log.table_name;
-    const oldData = log.old_data || {};
-    const newData = log.new_data || {};
+    const oldData = (log.old_data || {}) as Record<string, unknown>;
+    const newData = (log.new_data || {}) as Record<string, unknown>;
 
-    const getIdentifier = (data: any) => {
-      return data.title || data.name || data.slug || data.site_name || data.file_name || log.record_id;
+    const getIdentifier = (data: Record<string, unknown>) => {
+      return (data.title || data.name || data.slug || data.site_name || data.file_name || log.record_id) as string;
     };
 
     const identifier = getIdentifier(action === 'DELETE' ? oldData : newData);
@@ -213,7 +248,7 @@ export default function AdminAuditLogsPage() {
         const newVal = newData[key];
 
         if (JSON.stringify(oldVal) !== JSON.stringify(newVal)) {
-          const formatVal = (val: any) => {
+          const formatVal = (val: unknown) => {
             if (val === null || val === undefined) return 'empty';
             if (typeof val === 'object') return 'structured parameters';
             if (typeof val === 'boolean') return val ? 'Yes' : 'No';
