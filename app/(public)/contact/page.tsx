@@ -198,7 +198,7 @@ export default async function ContactPage() {
 
           {/* Right Column: Sticky Message Box */}
           <div className="lg:col-span-5 xl:col-span-4 lg:sticky lg:top-24">
-            <PackageEnquiry packageTitle="General Enquiry" />
+            <PackageEnquiry packageTitle="General Enquiry" showPrice={false} />
           </div>
 
         </div>

@@ -10,9 +10,10 @@ interface PackageEnquiryProps {
   defaultPhone?: string;
   priceMin?: number | null;
   priceCurrency?: string;
+  showPrice?: boolean;
 }
 
-export function PackageEnquiry({ packageTitle, defaultPhone = "+91 91722 22718", priceMin, priceCurrency = "INR" }: PackageEnquiryProps) {
+export function PackageEnquiry({ packageTitle, defaultPhone = "+91 91722 22718", priceMin, priceCurrency = "INR", showPrice = true }: PackageEnquiryProps) {
   const [submitted, setSubmitted] = useState(false);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -47,7 +48,7 @@ export function PackageEnquiry({ packageTitle, defaultPhone = "+91 91722 22718",
       setPhone("");
       setEmail("");
       setMessage(`Hello, I am interested in booking or receiving details for the ${packageTitle}. Please contact me.`);
-    } catch (err: any) {
+    } catch (err) {
       console.error('Enquiry submission error:', err);
       setError("Unable to submit. Please check your internet connection and try again.");
     } finally {
@@ -67,20 +68,22 @@ export function PackageEnquiry({ packageTitle, defaultPhone = "+91 91722 22718",
     <div className="rounded-md border border-border bg-card p-8 space-y-6 shadow-[0_4px_24px_rgba(0,0,0,0.015)]">
       <div className="space-y-4">
         {/* Pricing Banner */}
-        {priceMin ? (
-          <div className="flex items-baseline gap-2">
-            <span className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">Starts from</span>
-            <span className="font-heading text-2xl font-black text-accent">{formatPrice(priceMin, priceCurrency)}</span>
-          </div>
-        ) : (
-          <div className="flex items-baseline gap-2">
-            <span className="font-heading text-xl font-black text-accent">Price on Request</span>
-          </div>
+        {showPrice && (
+          priceMin ? (
+            <div className="flex items-baseline gap-2">
+              <span className="text-sm font-semibold tracking-wide text-muted-foreground uppercase">Starts from</span>
+              <span className="font-heading text-2xl font-black text-accent">{formatPrice(priceMin, priceCurrency)}</span>
+            </div>
+          ) : (
+            <div className="flex items-baseline gap-2">
+              <span className="font-heading text-xl font-black text-accent">Price on Request</span>
+            </div>
+          )
         )}
 
         <div className="space-y-2">
           <h4 className="font-heading text-xl font-bold tracking-tight text-foreground">
-            Inquire About This Journey
+            {showPrice ? "Inquire About This Journey" : "Send Us a Message"}
           </h4>
           <p className="text-xs sm:text-sm text-muted-foreground leading-relaxed">
             Fill out the secure form below. Our dedicated pilgrimage directors will contact you within 24 hours.
